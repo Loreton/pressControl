@@ -1,0 +1,151 @@
+//
+// updated by ...: Loreto Notarantonio
+// Date .........: 15-04-2025 18.53.36
+// ref: https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html
+//
+
+#include <Arduino.h>    // in testa anche per le definizioni dei type
+
+
+// --- correlated
+#include "@loadSuperiore.h"
+#include "@pinDefinitions.h"
+#include "@structures.h"
+#include "@pinOperations.h"
+#include "@ln_telegram.h" // per tgMsg
+#include "@lnString.h"
+#include "@ln_time.h"
+
+
+// ---------------------------------
+// macros Aliases
+// ---------------------------------
+// #define print           ln_print
+#define printf0_NFN          lnPrintF_NowFN
+#define printf2_NFN //         lnPrintF_NowFN
+#define x_printf0_NFN
+
+
+extern telegram_send_struct_t *tgMsg;
+extern io_output_pin_struct_t  *loadSuperioreRelay;
+// io_output_pin_struct_t  *lsR = loadSuperioreRelay;
+io_output_pin_struct_t  *ls_relay = loadSuperioreRelay;
+
+
+
+
+
+void loadSuperioreToTelegram(uint8_t caller) {
+    if (caller == NO_TELEGRAM ) {return; }
+
+    readOutputPin(ls_relay);
+    uint32_t remaining_pulsetime = remainingPulseTime(ls_relay); // calculate remainig pulsTime if active
+
+    if (caller == LOAD_SUP_ON ) {
+        tgMsg->len = sprintf(tgMsg->data, "<b>LoadSuperiore on</b>\n");
+    }
+    else if (caller == LOAD_SUP_OFF ) {
+        tgMsg->len = sprintf(tgMsg->data, "<b>LoadSuperiore off</b>\n");
+    }
+    else if (caller == ALEXA_REQ ) {
+        tgMsg->len = sprintf(tgMsg->data, "<b>Req by Alexa</b>\n");
+    }
+    else if (caller != CALLED_BY_TELEGRAM ) {
+        tgMsg->len = 0;
+    }
+
+    tgMsg->len += sprintf(tgMsg->data + tgMsg->len, "LS relay: %s\n",  str_OffOn[ls_relay->is_acted]);
+
+    if (ls_relay->pulsetime.cur_duration != 0) {
+        uint32_t remaining_pulsetime = remainingPulseTime(ls_relay); // calculate remainig pulsTime if active
+        tgMsg->len += sprintf(tgMsg->data + tgMsg->len, "remaining: %s\n", ls_relay->pulsetime.hms_remaining);
+    }
+
+    // if (remaining_pulsetime != 0) {
+    //     tgMsg->len += sprintf(tgMsg->data + tgMsg->len, "remaining: %s\n", ls_relay->pulsetime.hms_remaining);
+    // }
+
+    if (tgMsg->len != 0 && caller != CALLED_BY_TELEGRAM) { // l'invio a telegram viene fatto da ln_telegram.cpp
+        sendToTelegram();
+    }
+    // loadSuperioreRelay->alexa_ON = false;
+    // loadSuperioreRelay->alexa_OFF = false;
+}
+
+
+
+
+
+
+
+void loadSuperioreRelayON(uint8_t caller, int32_t mseconds=0) {
+    // digitalWrite(ls_relay->pin, ls_relay->ON);
+    startPulsetime(ls_relay, mseconds, false);
+    loadSuperioreToTelegram(caller);
+}
+
+void loadSuperioreRelayOFF(uint8_t caller) {
+    // digitalWrite(ls_relay->pin, ls_relay->OFF);
+    // stopPulsetime(ls_relay);
+    pinOFF(ls_relay);
+    loadSuperioreToTelegram(caller);
+}
+
+
+void loadSuperioreRelayToggle(uint8_t caller) {
+    // uint8_t is_acted = isActed(ls_relay);
+    if (isActed(ls_relay)) {
+        loadSuperioreRelayOFF(caller);
+    } else {
+        loadSuperioreRelayON(caller);
+    }
+}
+
+
+
+void loadSuperioreRelaySet(bool state, uint8_t caller) {
+    if (state) {
+        loadSuperioreRelayON(caller);
+    } else {
+        loadSuperioreRelayOFF(caller);
+    }
+}
+
+
+void loadSuperioreStatus(uint8_t caller) {
+    if (isPulsetimeExpired(ls_relay))
+        loadSuperioreRelayOFF(LOAD_SUP_OFF);
+    else
+        loadSuperioreToTelegram(caller);
+}
+
+extern const PROGMEM char *splittedResult[];
+void loadSuperioreProcessTelegramMessage(char *msgText) {
+    printf2_NFN("processing telegram message: %s\n", msgText);
+    uint8_t words = splitString(msgText, " ");
+    #if 0
+    printf2_NFN("words found: %d\n", words);
+    for (uint8_t j=0; j<words; j++) {
+        printf2_NFN("%d - %s\n", j, splittedResult[j]);
+    }
+    #endif
+    char *cmd;
+    int32_t seconds =  0;
+    if (words > 0) {
+        cmd = (char *)splittedResult[0];
+    }
+    if (words > 1) {
+        seconds = stringToSeconds((char *)splittedResult[1], ":");
+    }
+
+    if (strcmp(cmd, "on") == 0) {
+        loadSuperioreRelayON(CALLED_BY_TELEGRAM, seconds);
+    }
+    else if (strcmp(cmd, "off") == 0) {
+        loadSuperioreRelayOFF(CALLED_BY_TELEGRAM);
+    }
+    else if (strcmp(cmd, "status") == 0) {
+        loadSuperioreStatus(CALLED_BY_TELEGRAM);
+    }
+
+}

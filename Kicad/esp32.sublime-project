@@ -1,0 +1,93 @@
+{
+    "folders":
+    //  project format
+    // ref: https://www.sublimetext.com/docs/projects.html
+            // "folder_exclude_patterns": ["PressControl_222"],
+            // "file_exclude_patterns": ["*.css"],
+
+
+//  ################################################################
+//  keys per VisualStudio code
+//  toggel comment line  ctrl+q
+//  toggel block comment line  shift+ctrl+q
+//  move line down  alt - downArrow --> shift+ ctrl+downArrow
+//  move line up    alt - downup --> shift+ ctrl+downUp
+//  copy line down - ctrl+d
+//  uppercase  ctrl+k ctrl+u
+//  lowercase  ctrl+k ctrl+l
+//  titlecase  ctrl+k ctrl+t
+//  toggle wrap  alt+w
+//  ################################################################
+
+    [
+        {  // Sublime
+            "path": "/home/loreto/lnProfile/projects/SublimeText", "name": "Sublime project",
+            "path": "/home/loreto/.config/sublime-text/Packages/User", "name": "Sublime user",
+            "path": "",
+        },
+
+        {
+            "path": "/home/loreto/lnProfile", "name": "",
+            "folder_exclude_patterns": ["applsx", "steveWork", "xArduino-ESP32"],
+            // "path": "",
+        },
+
+
+        {  // platformio
+            "path": "/home/loreto/lnProfile/appls/Arduino-ESP32/libraries",
+            "path": "/home/loreto/lnProfile/appls/Arduino-ESP32",
+            "path": "/home/loreto/.platformio/packages/framework-arduinoespressif32/libraries", "name": ",platformio",
+            "path": "",
+        },
+
+        {  // ESP32 libraries
+            "path": "/home/loreto/.arduino15/packages/esp32/hardware/esp32/2.0.11/cores/esp32/",
+            "path": "/home/loreto/lnProfile/appls/Arduino-ESP32",
+            "path": "",
+        },
+        {  // ESP32 - Samples
+            "path": "/home/loreto/lnProfile/appls/Arduino-ESP32/Esp32TEST",
+            "path": "/home/loreto/lnProfile/appls/Arduino-ESP32/Esp32TEST/063-NTPTime",
+            "path": "",
+        },
+        {  // ESP32 - microPython
+            "path": "/home/loreto/GIT-REPO/esp32_microPython/projects/orto_microPython",
+            "path": "/home/loreto/GIT-REPO/HW-Projects/pressControl/Arduino", "name": "pressControl_Arduino",
+            "path": "",
+        },
+ 
+
+// gitkraken tokec: eJwtzLFqwzAQgOF3uVmL5QRHGgOlNSWDgwkli5BPF1dYsZSTXTcNefdC8PrD9z/AIlLObRxoBA07iZYkqsuuQ1lVskSlSmeVKtBVRakKJ8uK3BYEJI4/3hGv9LGezLSu+u9omn1zeD/jW//VNp9/06nt7W2LYakP+49zsamP9eYGAl7ETPdEoKEjy8QgIGN8BeuuftRp7oJHM9BdMFmnI/eCKUUxZ2JNV+uDWCIPlxAXEEC/yTNlYyfQ4xzC8/kPaYBQGQ==
+
+        // ----------------------------
+        // ---       ESP32 - PressControl
+        // ----------------------------
+        {
+            "path": "/home/loreto/GIT-REPO/HW-Projects/pressControl/Arduino", "name": "pressControl_Arduino", //"folder_exclude_patterns": ["Kicad/2020", "Kicad/2023"],
+            "path": "/home/loreto/lnProfile/appls/Arduino-ESP32/Esp32TEST", "name": "",
+            "path": "/home/loreto/lnProfile/appls/Arduino-ESP32", "name": "",
+            "path": "",
+        },
+        // ---------------------------- 
+        // ---       ESP32 - lnLibrary
+        // ----------------------------
+        {
+            "path": "/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/esp32LnLibrary", "name": "esp32LnLibrary",
+            "path": "",
+            "path": "/home/loreto/lnProfile/envars/include", "name": "protected_includes",
+        },
+        {
+            "path": "/home/loreto/GIT-REPO/HW-Projects/pressControl/Arduino", "name": "pressControl_Arduino",
+            "path": "",
+            "path": "/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2", "name": "pressControl_ESP32",
+
+            "folder_exclude_patterns": ["Kicad/2020", "Kicad/2023"],
+            "folder_exclude_patterns": ["Kicad", ".vscode", ".pio", "Arduino"],
+            "folder_exclude_patterns": [".build", "Kicad", ".vscode", ".pio", "Arduino", "ex_orto"],
+        },
+
+
+    ],
+}
+
+

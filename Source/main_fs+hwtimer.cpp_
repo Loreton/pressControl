@@ -1,0 +1,395 @@
+//
+// updated by ...: Loreto Notarantonio
+// Date .........: 06-02-2025 08.53.03
+//
+
+/* --------------------------------------
+    main.cpp
+    main.h
+    pinsFunctions:
+        configPin.cpp
+
+    - checkPins.cpp         tool per scoprire i pin dell'ESP32
+    - pins_definitions.h    setup pins and their structure definitions
+    - initialize.cpp        richiama configPins.cpp per ogni pin
+    -   - configPins()      assegnazione dei valori nelle strutture dei pin
+-------------------------------------- */
+
+#include <Arduino.h>    // in testa anche per le definizioni dei type
+#include <ESP32Time.h>  // ESP32Time.cpp
+#include <WiFi.h>       // ESP32Time.cpp
+
+// #define _I_AM_MAIN_CPP__
+#include "@main.h"
+#include "@lnMacros.h"
+
+// --- others
+#include "@pinDefinitions.h"
+#include "@fileSystem.h"
+#include "@ln_time.h"
+#include "@ln_wifi.h"
+#include "@loadSsid.h"
+#include "@hw_timers.h"
+#include "@projectFunctions.h"
+#include "@inputPinFunctions.h"
+#include "@outputPinFunctions.h"
+#include "@telegram.h"
+
+
+
+
+
+int8_t first_run = 0;
+unsigned long  start_loop_millis;
+
+
+
+
+bool run_1_time = true;
+struct tm timeinfo;
+
+
+
+#define debug02_now                   ln_printf_Now
+#define debug01_nowfn                 ln_printf_NowFN
+#define debug00_fn                    ln_printf_FN
+
+#define fDisplay false
+
+// #########################################
+// # se non c'è ln_time.cpp mi seerver una dummy_Now()
+// #########################################
+char  PROGMEM temp_buffer_time[TIME_BUFFER_LENGTH];
+char *nowTimeDummy() {
+    snprintf(temp_buffer_time, TIME_BUFFER_LENGTH, "%s", "01:02:03");
+    return temp_buffer_time;
+}
+
+
+
+
+
+void checkOutputPin(uint8_t pin, uint8_t mode) {
+
+    Serial.printf("pin: %d - mode: %d", pin, mode);
+
+    // delay(3000); Serial.print(" - LOW"); digitalWrite(pin, LOW); pinMode(pin, OUTPUT_OPEN_DRAIN);
+    delay(3000); Serial.print(" - LOW"); digitalWrite(pin, LOW); pinMode(pin, mode);
+    delay(3000); Serial.print(" - HIGH");  digitalWrite(pin, HIGH);
+    delay(3000); Serial.print(" - LOW"); digitalWrite(pin, LOW);
+    delay(3000); pinMode(pin, INPUT);
+
+    Serial.printf("\n");
+}
+
+
+//######################################################
+//#
+//######################################################
+void setupxx() {
+    Serial.begin(115200);
+    delay(1000);
+    lnprintf("Starting...\n");
+    // discovery_ESP32_Pins();
+    // return;
+}
+
+void printSizeOf() {
+    lnprintf("%-10s %d \n", "bool", sizeof(bool));
+    lnprintf("%-10s %d \n", "int8_t", sizeof(int8_t));
+    lnprintf("%-10s %d \n", "int16_t", sizeof(int16_t));
+    lnprintf("%-10s %d \n", "int32_t", sizeof(int32_t));
+    lnprintf("%-10s %d \n", "long", sizeof(long));
+    lnprintf("%-10s %d \n", "float", sizeof(float));
+    lnprintf("%-10s %d \n", "int64_t", sizeof(int64_t));
+    lnprintf("%-10s %d \n", "long long", sizeof(long long));
+    lnprintf("%-10s %d \n", "double", sizeof(double_t));
+}
+
+
+
+
+void loopxx() {
+    // checkOutputPin(pressControlRelay_pin, OUTPUT);
+    // checkOutputPin(caricaCisterna_pin, OUTPUT);
+    // checkOutputPin(LED_pin, OUTPUT);
+    // // checkOutputPin(led_internal_pin);
+    // checkOutputPin(activeBuzzer_pin, OUTPUT);
+}
+
+//######################################################
+//#
+//######################################################
+void setup() {
+    Serial.begin(115200);
+    delay(1000);
+    lnprintf("Starting...\n");
+    printSizeOf();
+
+    // --- "pins_Initialization.cpp"
+    pinsInitialization();
+
+    lnprintf("turnig led on\n");
+    digitalWrite(LED->pin, LED->ON);
+
+
+    // ---- open "fileSystem.cpp"
+    if (! openLittleFS() ) {return; }
+
+    // ---- read ssid json file "loadSsid.cpp"
+    SSID_ARRAY_COUNT = load_ssidArray(LittleFS, "/ssids.json");
+    lnprintf("loaded  %d ssid network definitions\n", SSID_ARRAY_COUNT);
+    if (SSID_ARRAY_COUNT < 0) {return;}
+
+
+
+    // -----------------------------------
+    // ------ set Time
+    // -----------------------------------
+    time_setup();
+    delay(4000);
+    debug02_now("local time has been set\n");
+
+    // -----------------------------------
+    // ------ start WiFi -----------
+    // -----------------------------------
+    wifi_Start();
+
+    // -----------------------------------
+    // ------ set NTP server
+    // -----------------------------------
+    NTPInit();
+    delay(4000);
+    debug02_now("ntp client has been started\n");
+
+    // -----------------------------------
+    // ------ display pins
+    // -----------------------------------
+    // debug01_nowfn("displaying pins status\n");
+    // if (fDisplay) displayAllPins();
+
+
+    // -----------------------------------
+    // ------ set Hardware timers
+    // -----------------------------------
+    debug02_now("starting hwtimer0\n");
+    hwtimer0->nr=0;
+    hwtimer1->nr=1;
+    hwtimer2->nr=2;
+    hwtimer3->nr=3;
+    hwtimer_1sec = hwtimer0;
+    hwtimer_1min = hwtimer1;
+
+    // ------ set HW timer (allo scadere del secondo)
+    int x=waitForSecond();
+    startHwTimer(hwtimer_1sec, 1, true); // 1 secondo con auto_reload solo per far lampeggiare un led di debug
+
+
+    telegramSetup();
+    sendTelegramMessage(CHAT_ID, "ciao sono in piedi");
+
+}
+
+
+
+// ----------------------------------
+// ------ start HW timer_min at minute o'clock
+// ----------------------------------
+void startTimer1min() {
+    if (!hwtimer_1min->aligned) {
+        if (timeinfo.tm_sec == 0 ) {
+            delay(200);
+            startHwTimer(hwtimer_1min, 60, true); // xx secondi con auto_reload
+            debug01_nowfn("minuto o clock reached, starting hwtimer_1min\n");
+        }
+    }
+
+}
+
+
+
+// void loop() {}
+void loop() {
+    static unsigned long last_second=0;
+    static unsigned long elapsed;
+    static unsigned long seconds;
+    // static struct tm timeinfo;
+
+    // -----------------------------------
+    // ------ get time
+    // -----------------------------------
+    timeinfo = rtc.getTimeStruct();
+
+    // -----------------------------------
+    // ------ 1st run
+    // -----------------------------------
+    if (run_1_time) {
+        run_1_time=false;
+        debug02_now("starting loop....\n");
+        digitalWrite(LED->pin, LED->OFF);
+        hwtimer_1min->aligned=false;
+    }
+
+    #if 0
+    startTimer1min();
+
+    static unsigned long last = millis();
+    if (millis() - last > 50000) {
+        Serial.printf("[MAIN] Free heap: %d bytes\n", ESP.getFreeHeap());
+        last = millis();
+    }
+
+    check_mySwitch();
+    #endif
+
+
+    telgramHandle();
+
+
+    // ----------------------------------
+    // read input pins
+    // ----------------------------------
+    readInputPin(startButton, passiveBuzzer->pin, true); // readPin(io_input_pin_struct_t *p, uint8_t signal_pin=99, bool is_buzzer=false);
+    readInputPin(pumpState, activeBuzzer->pin);
+    readInputPin(pressControlState, activeBuzzer->pin);
+
+
+    // =====================================
+    // = process startButton
+    // =====================================
+    if (startButton->isReleased) {
+        uint8_t state;
+
+        switch (startButton->pressedLevel) {
+            case BUTTON_NORMAL_PRESS:
+                state = toggleOutputPin(pressControlRelay, 50);
+                if (state == pressControlRelay->ON) {
+                    buzzerScaleUp(passiveBuzzer);
+                } else {
+                    buzzerScaleDown(passiveBuzzer);
+                }
+                break;
+
+            case BUTTON_LONG_PRESS:
+                state = toggleOutputPin(loadSuperioreRelay, 50);
+                if (state == loadSuperioreRelay->ON) {
+                    buzzerScaleUp(passiveBuzzer);
+                } else {
+                    buzzerScaleDown(passiveBuzzer);
+                }
+                break;
+
+            // default:
+                // break;
+        } // end switch
+
+        #if 0
+        if (startButton->pressedLevel == BUTTON_NORMAL_PRESS) {
+            uint8_t state = toggleOutputPin(pressControlRelay, 50);
+            if (state == pressControlRelay->ON) {
+                buzzerScaleUp(passiveBuzzer);
+            } else {
+                buzzerScaleDown(passiveBuzzer);
+            }
+        }
+        else if (startButton->pressedLevel == BUTTON_LONG_PRESS) {
+            uint8_t state = toggleOutputPin(pressControlRelay, 50);
+            if (state == loadSuperioreRelay->ON) {
+                buzzerScaleUp(loadSuperioreRelay);
+            } else {
+                buzzerScaleDown(loadSuperioreRelay);
+            }
+        }
+
+        if (startButton->pressedLevel == BUTTON_NORMAL_PRESS) {
+            state = toggleOutputPin(pressControlRelay, 50);
+        }
+        else if (startButton->pressedLevel == BUTTON_LONG_PRESS) {
+            state = toggleOutputPin(loadSuperioreRelay, 50);
+        }
+        #endif
+
+        // if (startButton->pressedLevel == BUTTON_LONG_PRESS) {
+        //     toggleOutputPin(loadSuperioreRelay, 50);
+        // }
+        resetInputPin(startButton);
+    } // end if()
+
+
+    // =====================================
+    // = process pumpState
+    // =====================================
+    if (pumpState->isReleased) {
+        resetInputPin(pumpState);
+        if (pumpState->pressedLevel == BUTTON_NORMAL_PRESS) {
+            buzzerScaleUp(passiveBuzzer);
+        }
+    }
+
+    // =====================================
+    // = process pressControlState
+    // =====================================
+    if (pressControlState->isReleased) {
+        resetInputPin(pressControlState);
+        if (pressControlState->pressedLevel == BUTTON_NORMAL_PRESS) {
+            buzzerScaleDown(passiveBuzzer);
+        }
+    }
+
+
+
+
+
+    // ----------------------------------
+    // - every 1 second
+    // ----------------------------------
+    if (hwtimer_1sec->expired) {
+        hwtimer_1sec->expired = false;
+        toggleOutputPin(LED);
+        if (isTimerExpired(pressControlRelay)) {
+            setOutputPinOFF(pressControlRelay);
+            buzzerScaleDown(passiveBuzzer);
+        }
+        if (isTimerExpired(loadSuperioreRelay)) {
+            setOutputPinOFF(loadSuperioreRelay);
+            buzzerScaleDown(passiveBuzzer);
+        }
+
+    }
+
+
+    // ----------------------------------
+    // - every x minutes
+    // ----------------------------------
+    // if (hwtimer_1min->expired) {
+    //     hwtimer_1min_Actions();
+    // }
+
+    // ----------------------------------
+    // check WiFi at minute 11
+    // ----------------------------------
+    if (timeinfo.tm_min == 49) {
+        #if 0
+        switch (timeinfo.tm_sec) {
+            case 0:
+                wifi_asyncScan();
+                break;
+
+            case 20:
+                int16_t networksFound = wifi_scanComplete();
+                if (processScannedNetworks(networksFound)) {
+                    wifi_connect();
+                }
+                break;
+        }
+        #endif
+    }
+
+
+
+    // if (_check_loop) {
+    //     X_printf("[%s] loop run in %ul millis\n", Now(), millis() - start_loop_millis);
+    // }
+
+}
+

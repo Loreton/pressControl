@@ -1,0 +1,83 @@
+//
+// updated by ...: Loreto Notarantonio
+// Date .........: 19-03-2025 15.22.11
+// ref: https://randomnerdtutorials.com/alexa-echo-with-esp32-and-esp8266/
+//
+
+#include <Arduino.h>    // in testa anche per le definizioni dei type
+#include <fauxmoESP.h>
+fauxmoESP fauxmo;
+
+
+// --- correlated
+#include "@lnMacros.h"
+#include "@pinDefinitions.h"
+#include "@structures.h"
+
+// ---------------------------------
+// macros Aliases
+// ---------------------------------
+// #define print           ln_print
+#define printf0_NFN          lnPrintF_NowFN
+#define x_printf0_NFN
+
+// #define RELAY_PIN_1 pressControlRelay->pin
+// #define RELAY_PIN_2 loadSuperioreRelay->pin
+// #define RELE_01 "autoclave"
+// #define RELE_02 "rele_due" // non funziona. Prende solo il primo relay
+
+
+
+// void AlexaSetup(io_output_pin_struct_t *device01, io_output_pin_struct_t *device02) {
+void AlexaSetup2(void) {
+    io_output_pin_struct_t *device01 = pressControlRelay;
+    io_output_pin_struct_t *device02 = loadSuperioreRelay;
+
+    fauxmo.createServer(true); // not needed, this is the default value
+    fauxmo.setPort(80); // This is required for gen3 devices
+
+    fauxmo.enable(true);
+
+    // Add virtual devices
+    uint8_t device_id;
+
+    device_id = fauxmo.addDevice(device01->name);
+    printf0_NFN("Alexa set up %s, deviceID: %d\n", device01->name, device_id);
+
+    if ( device02 != NULL )  {
+        device_id = fauxmo.addDevice(device02->name);
+        printf0_NFN("Alexa set up %s, deviceID: %d\n", device02->name, device_id);
+    }
+
+
+    fauxmo.onSetState([]
+        (unsigned char device_id, const char * device_name, bool state, unsigned char value) {
+            // Callback when a command from Alexa is received.
+            // You can use device_id or device_name to choose the element to perform an action onto (relay, LED,...)
+            // State is a boolean (ON/OFF) and value a number from 0 to 255 (if you say "set kitchen light to 50%" you will receive a 128 here).
+            // Just remember not to delay too much here, this is a callback, exit as soon as possible.
+            // If you have to do something more involved here set a flag and process it in your main loop.
+
+            printf0_NFN("Alexa Device #%d (%s) state: %s value: %d\n", device_id, device_name, state ? "ON" : "OFF", value);
+
+            if ( (strcmp(device_name, device01->name) == 0) ) {
+                device01->alexa_request = true;
+                device01->alexa_status = state;
+            }
+
+            if ( device02 != NULL )  {
+                if ( (strcmp(device_name, device02->name) == 0) ) {
+                    device02->alexa_request = true;
+                    device02->alexa_status = state;
+                }
+            }
+        }
+    );
+
+}
+
+void chackAlexa() {
+    // fauxmoESP uses an async TCP server but a sync UDP server
+    // Therefore, we have to manually poll for UDP packets
+    fauxmo.handle();
+}

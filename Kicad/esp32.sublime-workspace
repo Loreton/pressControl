@@ -1,0 +1,1259 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"rele",
+				"RELE_01"
+			],
+			[
+				"pres",
+				"pressControlRelay"
+			],
+			[
+				"device",
+				"device01"
+			],
+			[
+				"lo",
+				"loadSuperioreRelay"
+			],
+			[
+				"press",
+				"pressControlRelay"
+			],
+			[
+				"relay",
+				"relay01"
+			],
+			[
+				"io_",
+				"io_output_pin_struct_t"
+			],
+			[
+				"devi",
+				"device_01"
+			],
+			[
+				"set",
+				"setDeviceUniqueId"
+			],
+			[
+				"get",
+				"getDeviceId"
+			],
+			[
+				"loa",
+				"loadSuperioreRelay"
+			],
+			[
+				"load",
+				"loadSuperioreRelayON"
+			],
+			[
+				"uint",
+				"uint32_t"
+			],
+			[
+				"remainin",
+				"remaining"
+			],
+			[
+				"g",
+				"g_TAG"
+			],
+			[
+				"TELE",
+				"TELEGRAM_CMD"
+			],
+			[
+				"isA",
+				"isActed"
+			],
+			[
+				"pre",
+				"pressControlRelay"
+			],
+			[
+				"displ",
+				"displayPinStatus"
+			],
+			[
+				"is",
+				"isActed"
+			],
+			[
+				"pump",
+				"pumpState"
+			],
+			[
+				"ln",
+				"ln_isString"
+			],
+			[
+				"star",
+				"startButton"
+			],
+			[
+				"ip",
+				"io_input_pin_struct_t"
+			],
+			[
+				"ret",
+				"retval"
+			],
+			[
+				"ch",
+				"changedState"
+			],
+			[
+				"di",
+				"displayPinStatus"
+			],
+			[
+				"ac",
+				"active_level"
+			],
+			[
+				"io",
+				"io_output_pin_struct_t"
+			],
+			[
+				"PIN",
+				"PINpulsetime"
+			],
+			[
+				"user",
+				"username"
+			],
+			[
+				"g_",
+				"g_PUSH"
+			],
+			[
+				"tg",
+				"tgMsg"
+			],
+			[
+				"t",
+				"tgMsg"
+			],
+			[
+				"pum",
+				"pumpState"
+			],
+			[
+				"tele",
+				"telegram_send_struct_t"
+			],
+			[
+				"prinf",
+				"printf0_NFN"
+			],
+			[
+				"tex",
+				"text_msg"
+			],
+			[
+				"my",
+				"myBuffer"
+			],
+			[
+				"B",
+				"NO_BUTTON_PRESSED"
+			],
+			[
+				"change",
+				"changedState"
+			],
+			[
+				"str",
+				"structMillisTimer_t"
+			],
+			[
+				"uin",
+				"uint32_t"
+			],
+			[
+				"pup",
+				"pumpStateTimer"
+			],
+			[
+				"pins",
+				"pinsOperations"
+			],
+			[
+				"printf",
+				"printf0_NFN"
+			],
+			[
+				"read",
+				"readMyProjectsList"
+			],
+			[
+				"L",
+				"LAST_LEVEL"
+			],
+			[
+				"teleg",
+				"telegram_sample"
+			],
+			[
+				"time",
+				"timeinfo"
+			],
+			[
+				"ti",
+				"timeinfo"
+			],
+			[
+				"m_",
+				"m_seconds"
+			],
+			[
+				"printf0",
+				"printf0_FN"
+			],
+			[
+				"bes",
+				"bestssid"
+			],
+			[
+				"bestss",
+				"bestssid"
+			],
+			[
+				"cu",
+				"curr_rssi"
+			],
+			[
+				"sc",
+				"scanCompleted"
+			],
+			[
+				"asy",
+				"asyncWifiScan_started"
+			],
+			[
+				"wifi",
+				"wifi_connect"
+			],
+			[
+				"check",
+				"checkScanResult"
+			],
+			[
+				"asyn",
+				"wifi_asyncScan"
+			],
+			[
+				"tim",
+				"timer15MIN"
+			],
+			[
+				"stru",
+				"structMillisTimer"
+			],
+			[
+				"milli",
+				"millisTimer"
+			],
+			[
+				"ssi",
+				"ssid_index"
+			],
+			[
+				"curr",
+				"curr_rssi"
+			],
+			[
+				"S",
+				"BSSIDstr"
+			],
+			[
+				"disconne",
+				"Disconnecting"
+			],
+			[
+				"wi",
+				"wifi_connect"
+			],
+			[
+				"sta",
+				"start_millis"
+			],
+			[
+				"prin",
+				"print_ln"
+			],
+			[
+				"net",
+				"networksFound"
+			],
+			[
+				"printl",
+				"println"
+			],
+			[
+				"SSI",
+				"SSID_NUMBERS"
+			],
+			[
+				"MA",
+				"MAX_SSIDS"
+			],
+			[
+				"ssid",
+				"ssidStruct"
+			],
+			[
+				"sS",
+				"sSSID"
+			],
+			[
+				"cha",
+				"charToString"
+			],
+			[
+				"Stri",
+				"StringToArray"
+			],
+			[
+				"char",
+				"charToString"
+			],
+			[
+				"ss",
+				"ssid_NRs"
+			],
+			[
+				"in",
+				"input"
+			],
+			[
+				"print",
+				"printResult"
+			],
+			[
+				"uit",
+				"uint8_t"
+			],
+			[
+				"str_",
+				"str_INPUT_PULLUP"
+			],
+			[
+				"sear",
+				"search_string"
+			],
+			[
+				"re",
+				"redH"
+			],
+			[
+				"dir",
+				"dir_name"
+			],
+			[
+				"searc",
+				"search_string"
+			],
+			[
+				"Parse",
+				"ParseInput"
+			],
+			[
+				"sea",
+				"search_string"
+			],
+			[
+				"gr",
+				"gray"
+			],
+			[
+				"conte",
+				"content_list"
+			],
+			[
+				"file",
+				"fileOut"
+			],
+			[
+				"se",
+				"search_string"
+			],
+			[
+				"if",
+				"ifmain\tif __name__ == '__main__'"
+			],
+			[
+				"wor",
+				"words"
+			],
+			[
+				"word",
+				"word_index"
+			],
+			[
+				"spli",
+				"split_cStringType"
+			],
+			[
+				"inp",
+				"inputStr"
+			],
+			[
+				"debug",
+				"debug00_fn"
+			],
+			[
+				"rela",
+				"relay02_pin"
+			],
+			[
+				"LED",
+				"LED_BUILTIN"
+			],
+			[
+				"do",
+				"jsonDoc2"
+			],
+			[
+				"vho",
+				"vhosts_list"
+			],
+			[
+				"ind",
+				"index_php"
+			],
+			[
+				"apa",
+				"apache_user"
+			],
+			[
+				"pri",
+				"printf"
+			],
+			[
+				"es",
+				"esptool"
+			],
+			[
+				"esp",
+				"_esptool_read"
+			],
+			[
+				"_pl",
+				"_platformio_run"
+			],
+			[
+				"sheet",
+				"sheet_name"
+			],
+			[
+				"n",
+				"name"
+			],
+			[
+				"open",
+				"openwrt_version"
+			],
+			[
+				"ope",
+				"openwrt_version"
+			],
+			[
+				"serv",
+				"server_name"
+			],
+			[
+				"pla",
+				"platformio_dir"
+			],
+			[
+				"pl",
+				"platformio_dir"
+			],
+			[
+				"O",
+				"OUTPUT"
+			],
+			[
+				"pin",
+				"pin_struct"
+			],
+			[
+				"s",
+				"state"
+			],
+			[
+				"las",
+				"last_PressControlState"
+			],
+			[
+				"last_",
+				"last_PressControlState"
+			],
+			[
+				"hor",
+				"horn_S"
+			],
+			[
+				"hors",
+				"readShortLongPress"
+			],
+			[
+				"acti",
+				"activeBuzzer"
+			],
+			[
+				"p",
+				"passiveBuzzer"
+			],
+			[
+				"le",
+				"led_S"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"ren",
+				"File: Rename File"
+			],
+			[
+				"dup",
+				"File: Duplicate"
+			],
+			[
+				"del",
+				"File: Delete"
+			],
+			[
+				"dupl",
+				"File: Duplicate"
+			],
+			[
+				"mov",
+				"File: Move"
+			],
+			[
+				"in",
+				"Increment Selection"
+			],
+			[
+				"inv",
+				"Snippet: Read File Into Vector"
+			],
+			[
+				"mo",
+				"File: Move"
+			],
+			[
+				"move",
+				"File: Move"
+			],
+			[
+				"inc",
+				"Increment Selection"
+			],
+			[
+				"json",
+				"Pretty JSON: Format JSON"
+			],
+			[
+				"dele",
+				"File: Delete"
+			],
+			[
+				"re",
+				"File: Revert"
+			],
+			[
+				"i",
+				"Increment Selection"
+			],
+			[
+				"de",
+				"File: Delete"
+			],
+			[
+				"m",
+				"File: Move"
+			],
+			[
+				"dul",
+				"File: Duplicate"
+			],
+			[
+				"synt",
+				"Set Syntax: Batch File"
+			],
+			[
+				"remo",
+				"Package Control: Remove Package"
+			],
+			[
+				"ruler",
+				"Wrap at Ruler"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"rule",
+				"Wrap at Ruler"
+			],
+			[
+				"extern",
+				"ExternalTool:"
+			],
+			[
+				"exter",
+				"ExternalTool:"
+			],
+			[
+				"du",
+				"File: Duplicate"
+			],
+			[
+				"jso",
+				"Pretty JSON: Format JSON Lines"
+			],
+			[
+				"DUP",
+				"File: Duplicate"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"ali",
+				"Preferences: AlignTab Context Menu"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"syn",
+				"Set Syntax: Batch File"
+			],
+			[
+				"duo",
+				"Help: Documentation"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"aligntab",
+				"AlignTab: Live Preview Mode"
+			],
+			[
+				"",
+				"AlignTab"
+			],
+			[
+				"dp",
+				"Plugin Development: Profile Events"
+			],
+			[
+				"plugi",
+				"Package Control: Upgrade/Overwrite All Packages"
+			],
+			[
+				"sort",
+				"CSV: Sort by column (Ascending)"
+			],
+			[
+				"copy",
+				"Clipboard Manager: Copy"
+			],
+			[
+				"csv",
+				"CSV: Justify columns"
+			],
+			[
+				"Package Control: ",
+				"Package Control: List Packages"
+			],
+			[
+				"duip",
+				"File: Duplicate"
+			],
+			[
+				"dulp",
+				"File: Duplicate"
+			],
+			[
+				"incre",
+				"Increment Selection"
+			],
+			[
+				"rn",
+				"Run"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"pyth",
+				"Set Syntax: Python"
+			],
+			[
+				"todo",
+				"Set Syntax: Todo"
+			],
+			[
+				"files",
+				"File: Save All"
+			],
+			[
+				"mv",
+				"File: Move"
+			],
+			[
+				"yaml form",
+				"Pretty JSON: Format JSON Lines"
+			],
+			[
+				"rem",
+				"Package Control: Remove Package"
+			],
+			[
+				"notes",
+				"ProjectNotes: edit Settings"
+			],
+			[
+				"projectn",
+				"ProjectNotes: edit Settings"
+			],
+			[
+				"projecn",
+				"ProjectNotes: edit Settings"
+			],
+			[
+				"projectNo",
+				"ProjectNotes: edit Settings"
+			],
+			[
+				"not",
+				"ProjectNotes: Open file"
+			],
+			[
+				"remov",
+				"Package Control: Remove Package"
+			],
+			[
+				"tog",
+				"Toggle Readonly"
+			],
+			[
+				"synta",
+				"Preferences: Settings – Syntax Specific"
+			],
+			[
+				"mark",
+				"Set Syntax: Markdown"
+			],
+			[
+				"sintax",
+				"Preferences: Settings – Syntax Specific"
+			],
+			[
+				"term",
+				"Terminal: Open"
+			],
+			[
+				"ngin",
+				"Set Syntax: nginx"
+			],
+			[
+				"pack",
+				"Package Control: Upgrade Package"
+			],
+			[
+				"env",
+				"Snippet: #!/usr/bin/env"
+			],
+			[
+				"\\",
+				"Snippet: #!/usr/bin/env"
+			],
+			[
+				"ini",
+				"Set Syntax: INI"
+			],
+			[
+				"delf",
+				"Code Folding: Fold"
+			],
+			[
+				"r",
+				"Rename File"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 202.0,
+		"history":
+		[
+			"view.run_command(\"unfold_all\")",
+			"view.run_command(\"fold_all\")",
+			"os.getenv(\"HOME\")",
+			"os.getenv(\"ln_PDF_VIEWER\")",
+			"x=os.getenv(\"ln_PDF_VIEWER\")",
+			"print(os.getenv(\"ln_PDF_VIEWER\"))",
+			"print(os.getenv(\"ln_PDF_VIEWER\")",
+			"print(x)",
+			"x",
+			"x=os.getenv(\"ln_PDF_VIEWER\")",
+			"print(x)",
+			"print(xx)",
+			"x=os.getenv(\"LORETO1\")",
+			"print(\"CIAO\")",
+			"print(\"\\n\".join([view.file_name() for view in sublime.active_window().views() if view and view.file_name()]));\n",
+			"print(\"\\n\".join([view.file_name() for view in sublime.active_window().views() if view and view.file_name()]));\nprint(\"\\n\".join([view.file_name() for view in sublime.active_window().views() if view and view.file_name()]));\nprint(\"\\n\".join([view.file_name() for view in sublime.active_window().views() if view and view.file_name()]));"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/loreto/lnProfile",
+		"/home/loreto/lnProfile/config",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Source",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Source/include"
+	],
+	"file_history":
+	[
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Kicad/esp32.sublime-project",
+		"/etc/hosts",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Source/include/@structures.h",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Source/code/pinOperations.cpp",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/lib/lnLibrary/lnMacros/@lnMacros.h",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/lib/extraLibraries/FauxmoESP-3.4.1/src/fauxmoESP.cpp",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Source/code/pinsInitialization.cpp",
+		"/home/loreto/lnProfile/applsConfig/sublime-text/Packages/telegram.request.json",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Source/main.cpp",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Source/code/ln_Alexa.cpp",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Source/include/@ln_Alexa.h",
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Source/code/pinsInitialization.cpp",
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Source/main.cpp",
+		"/home/loreto/lnProfile/init/aliases/python-pyEnv/platformio.alias",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Source/code/ln_Alexa_01.cpp",
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Source/include/@structures.h",
+		"/home/loreto/lnProfile/appls/Arduino-ESP32/libraries/FauxmoESP/src/fauxmoESP.h",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/lib/extraLibraries/FauxmoESP-3.4.1/examples/fauxmoESP_Basic/fauxmoESP_Basic.ino",
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/esp32LnLibrary/extraLibraries/FauxmoESP-3.4.1/src/fauxmoESP.h",
+		"/home/loreto/Downloads/bitwarden_export_20250319090656.json",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/lib/extraLibraries/FauxmoESP-3.4.1/src/fauxmoESP.h",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/lib/extraLibraries/ArduinoJson-7.3.0/extras/tests/JsonVariant/stl_containers.cpp",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Source/code/loadSuperiore.cpp",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Source/code/pressControl.cpp",
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/esp32LnLibrary/extraLibraries_OldVer/FauxmoESP-3.4.0/src/fauxmoESP.cpp",
+		"/home/loreto/lnProfile/appls/Arduino-ESP32/libraries/FauxmoESP/examples/fauxmoESP_Basic/fauxmoESP_Basic.ino",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/lib/extraLibraries/FauxmoESP-3.4.0/src/fauxmoESP.cpp",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/lib/extraLibraries/FauxmoESP-3.4.0/src/fauxmoESP.h",
+		"/home/loreto/lnProfile/appls/Arduino-ESP32/libraries/FauxmoESP/examples/fauxmoESP_External_Server/fauxmoESP_External_Server.ino",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Source/include/@loadSuperiore.h",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Source/include/@pressControl.h",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/platformio.ini",
+		"/home/loreto/lnProfile/appls/Arduino-ESP32/Esp32TEST/steveWork/Esp32_03/Alexa.cpp",
+		"/home/loreto/lnProfile/appls/Arduino-ESP32/libraries/FauxmoESP/src/fauxmoESP.cpp",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Source/code/ln_Alexa_base.cpp_",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Source/platformio.ini",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Source/lib/lnLibrary/wifi/include/@ln_wifi.h",
+		"/home/loreto/.config/sublime-text/Packages/User/Ln_OpenFileUnderCursor.py",
+		"/home/loreto/lnProfile/envars/include/@ln_ssid_credentials.h",
+		"/home/loreto/lnProfile/envars/include/ssidsTypeArray.h",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Source/lib/lnLibrary/wifi/include/@ln_ssids.h",
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/esp32_relay-X2/ex_orto/wifi/ln_wifi.h",
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/esp32LnLibrary/lnLibrary/wifi/include/@wifiCredentials.h",
+		"/home/loreto/Arduino/libraries/AD985X/examples/steve_test/steve_test.ino",
+		"/home/loreto/Arduino/libraries/AD985X/examples/AD9851_demo/AD9851_demo.ino",
+		"/home/loreto/lnProfile/appls/Arduino-ESP32/Esp32TEST/steveAD985X/platformio.ini",
+		"/home/loreto/Downloads/ad9851.ino",
+		"/home/loreto/lnProfile/appls/Arduino-ESP32/Esp32TEST/steveAD985X/lib/AD985X-master/examples/AD9850_demo/AD9850_demo.ino",
+		"/home/loreto/lnProfile/appls/Arduino-ESP32/Esp32TEST/steveAD985X/ad9851.cpp",
+		"/home/loreto/lnProfile/appls/Arduino-ESP32/Esp32TEST/steveAD985X/lib/AD985X-master/AD985X.cpp",
+		"/home/loreto/lnProfile/appls/Arduino-ESP32/Esp32TEST/steveAD985X/lib/AD985X-master/AD985X.h",
+		"/home/loreto/lnProfile/appls/Arduino-ESP32/Esp32TEST/steveAD985X/lib/AD985X-master/.arduino-ci.yml",
+		"/home/loreto/lnProfile/appls/Arduino-ESP32/Esp32TEST/steveAD985X/AD985X-master/test/unit_test_001.cpp",
+		"/home/loreto/lnProfile/appls/Arduino-ESP32/Esp32TEST/ftpServer/Mischianti/platformio.ini",
+		"/home/loreto/lnProfile/appls/Arduino-ESP32/Esp32TEST/steveWork/libraries/ArduinoJson/extras/tests/Helpers/Arduino.h",
+		"/home/loreto/lnProfile/appls/Arduino-ESP32/Esp32TEST/steveAD985X/AD985X-master/AD985X.h",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Source/ad9851.cpp",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Source/lib/lnLibrary/time/src/ln_time.cpp",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Source/lib/lnLibrary/time/include/@ln_time.h",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Source/include/@pinOperations.h",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Source/lib/lnLibrary/time/src/ln_Timer.cpp_",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/Source/.setlibrary",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/platformio.ini",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/include/@pinOperations.h",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/code/pinOperations.cpp",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/code/loadSuperiore.cpp",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/code/pressControl.cpp",
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/esp32LnLibrary/extraLibraries/FauxmoESP-3.4.0/examples/fauxmoESP_Basic/fauxmoESP_Basic.ino",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/code/ln_telegram.cpp",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/lnLibrary/wifi/include/@ln_ssids.h",
+		"/home/loreto/lnProfile/envars/include/@ln_esp32_ssid_credentials.h",
+		"/home/loreto/lnProfile/envars/include/@ln_esp32_telegram_credentials.h",
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/esp32LnLibrary/extraLibraries/FauxmoESP-3.4.0/examples/fauxmoESP_Basic/credentials.sample.h",
+		"/home/loreto/lnProfile/appls/Arduino-ESP32/libraries/FauxmoESP/CHANGELOG.md",
+		"/home/loreto/lnProfile/appls/Arduino-ESP32/libraries/FauxmoESP/README.md",
+		"/home/loreto/lnProfile/appls/Arduino-ESP32/libraries/RC-switch/README.md",
+		"/home/loreto/lnProfile/appls/Arduino-ESP32/libraries/FauxmoESP/library.properties",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/code/pinsInitialization.cpp",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/code/startButton.cpp",
+		"/home/loreto/lnProfile/liveProduction/gitcommit.lnk.sh",
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/esp32_relay-X2/gitcommit.lnk.sh",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/main.cpp",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/lnLibrary/lnMacros/@lnMacros.h",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/lnLibrary/lnString/src/splitString.cpp",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/include/@loadSuperiore.h",
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/code/pinOperations.cpp",
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/code/loadSuperiore.cpp",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/include/@structures.h",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/include/@pressControl.h",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/code/pump.cpp",
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/HW-Projects/Tasmota/Ln_Tasmota_pgm.cmd",
+		"/home/loreto/lnProfile/applsConfig/sublime-text/Packages/User/Bash.sublime-settings",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/project_code/pressControl.cpp",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/project_code/pinOperations.cpp",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/project_code/include/@pressControl.h",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/project_code/ln_telegram.cpp",
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/esp32LnLibrary/gitcommit.lnk.sh",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/project_code/include/@pinOperations.h",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/project_code/include/@ln_telegram.h",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/project_code/startButton.cpp",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/lnLibrary/lnString/include/@lnString.h",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/lnLibrary/lnString/src/handleString.cpp",
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/esp32LnLibrary/.gitcommit.sh",
+		"/home/loreto/lnProfile/sh_scripts/varie/gitcommit.sh",
+		"/home/loreto/lnProfile/liveProduction/@_create_liveProduction_links.sh",
+		"/tmp/lnSync/rsync/lnpi31/lnpi31_exclude_files.txt",
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/c-cpp/int_array/.vscode/launch.json",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/lnLibrary/lnString/platformio.ini",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/lnLibrary/lnString/src/stringToSeconds.cpp",
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/esp32LnLibrary/lnLibrary/lnMacros/@lnMacros.h",
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/c-cpp/splitString/.vscode/launch.json",
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/c-cpp/Sample/.vscode/settings.json",
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/c-cpp/Sample/.vscode/c_cpp_properties.json",
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/c-cpp/splitString/.vscode/tasks.json",
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/c-cpp/Sample_2/.vscode/launch.json",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/project_code/include/@pinDefinitions.h",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/project_code/include/@structures.h",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/project_code/pinDebug.cpp",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/project_code/pinsInitialization.cpp",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/project_code/pump.cpp",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/project_code/include/@loadSuperiore.h",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/project_code/include/@pump.h",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/project_code/passiveBuzzer.cpp",
+		"/home/loreto/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/project_code/loadSuperiore.cpp",
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/project_code/pinOperations.cpp",
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/project_code/loadSuperiore.cpp",
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/project_code/include/@pinDebug.h",
+		"/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/esp32_relay-X2/src/project_code/include/@pinOperations.h"
+	],
+	"find":
+	{
+		"height": 24.0
+	},
+	"find_in_files":
+	{
+		"height": 119.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"p->name",
+			"p->pin, p->name, ",
+			"[pin:%02d.%-15s]",
+			"pidID",
+			"%-15s.%02d",
+			"p->name, p->pin",
+			"-15s.%02",
+			";\n",
+			"pin:%02d.%-15s",
+			"[%-15s.%02d]",
+			"RELE_02",
+			"RELE_01",
+			"lnPrintF_FN",
+			"relay02",
+			"relay01",
+			"onSetState",
+			"TSetStateCallback",
+			"ale",
+			"imou",
+			"LnSERIAL",
+			"LnSerial",
+			"DEBUG_MSG_FAUXMO",
+			"DEBUG_LORETO",
+			"DEBUG_MSG_FAUXMO",
+			"_dev",
+			"push_back",
+			"setDeviceUniqueId",
+			"_devices",
+			"Responding to M-",
+			"Handling list request",
+			"onSetState",
+			"FAUXMO_DEVICE_UNIQUE_ID_LENGTH",
+			"device.uniqueid",
+			"uniqueid",
+			"device.",
+			"getDeviceId",
+			"setDeviceUniqueId",
+			"457",
+			"onSetState",
+			"FAUXMO_DEVICE_UNIQUE_ID_LENGTH",
+			"DEBUG_MSG_FAUXMO",
+			"ptr",
+			"snprintf(device.uniqueid,",
+			"loadSuperioreRelay->name",
+			"pressControlRelay->name",
+			"Alexa_",
+			"RELAY_PIN_1",
+			"RELE_02",
+			"RELE_01",
+			"RELAY_PIN_1",
+			"VALID_FILENAME_CHARS",
+			"fname",
+			"fname1",
+			"@",
+			"base_SSIDs",
+			"@ln_ssid_credentials.h",
+			"myPaths",
+			"earching for potential fil",
+			"RELE_02",
+			"RELE_01",
+			"RELA_1",
+			"LAMP_2",
+			" RELA_1",
+			"LAMP_1",
+			"Serial.println",
+			"Serial.printf",
+			"TELEGRAM",
+			"Ale",
+			"slaveSelect",
+			"AD9851",
+			"freqGen",
+			"AD9851",
+			"loadSuperioreToTelegram",
+			"loadSuperioreRelayON",
+			"loadSuperioreStatus",
+			"enabled",
+			"time.ac",
+			"cur_value",
+			"msecs_running",
+			"running_time",
+			"msecs_onetime",
+			">pulsetim",
+			"remainig_msecs",
+			"loadSuperiore_response",
+			"loadSuperioreToTelegram",
+			"%H",
+			">pulsetim",
+			"ms_default",
+			"ms_start",
+			"ms_onetime",
+			">pulsetime.",
+			"time.seco",
+			"pulsetime",
+			"build_flags",
+			"remainingPulseTime",
+			"__LN_ESP32_SSID_DEFINITIONS_H__",
+			"loadSuperiore_response",
+			"loadSuperioreToTelegram",
+			"pulsetime",
+			"CMD_PC_ON",
+			"CMD_WHOAMI",
+			"END_OF_ARRAY",
+			"THRESHOLDS_LEVELS_TYPES_length",
+			"-1",
+			"PRESSED_TIME_00",
+			"DATE",
+			"Serial.print",
+			"Serial.",
+			"printf0_NFN",
+			"print_ln",
+			"printf2_NFN",
+			"relay-",
+			"(relay",
+			"relay-",
+			"pressControlRelay",
+			"pcR",
+			"loadSuperioreRelay",
+			"lsR",
+			"pulsetime",
+			"pulsetime.duration",
+			"pulsetime.value",
+			"pulsetime",
+			"printf0_NFN",
+			"printf0",
+			"print_ln",
+			"print_ln2",
+			"printf2_FN",
+			"printf0_FN"
+		],
+		"highlight": false,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"PRESSED_TIME",
+			"lnPrintLN",
+			"lnPrintF",
+			"lnPrintF_FN"
+		],
+		"reverse": false,
+		"scrollbar_highlights": true,
+		"show_context": true,
+		"use_buffer2": true,
+		"use_gitignore": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 24.0
+	},
+	"input":
+	{
+		"height": 45.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.SFTP":
+	{
+		"height": 0.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "esp32.sublime-project",
+	"replace":
+	{
+		"height": 44.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"ren",
+				".ln/LnDoc/Network/Varie/RaspBerry_Network_Config.txt"
+			],
+			[
+				"dupl",
+				".ln/shDevel/ddns/prev/DDNS_updates_V20220721_profiles.sh"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"~/lnProfile/projects/SublimeText/lnprofile.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 285.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

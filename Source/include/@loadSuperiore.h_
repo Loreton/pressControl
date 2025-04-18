@@ -1,0 +1,21 @@
+/*
+// updated by ...: Loreto Notarantonio
+// Date .........: 18-04-2025 11.19.06
+*/
+
+#ifndef __LOAD_SUPERIORE_FUNCTIONS_H__
+    #define __LOAD_SUPERIORE_FUNCTIONS_H__
+    #include "@prjStructures.h"
+
+
+    // uint8_t loadSuperioreStateRead(bool telegramNotify=false);
+
+    void    loadSuperioreRealyON(uint8_t caller=NO_TELEGRAM, int32_t pulsetime=0);
+    void    loadSuperioreRealyOFF(uint8_t caller=NO_TELEGRAM);
+    void    loadSuperioreRelayToggle(uint8_t caller=NO_TELEGRAM);
+    void    loadSuperioreRelaySet(bool state, uint8_t caller=NO_TELEGRAM);
+
+
+    void    loadSuperioreStatus(uint8_t caller=NO_TELEGRAM);
+    void    loadSuperioreProcessTelegramMessage(char *msgText);
+#endif
