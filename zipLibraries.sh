@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # updated by ...: Loreto Notarantonio
-# Date .........: 10-04-2025 19.20.51
+# Date .........: 18-04-2025 20.16.36
 #
 # Updates:
 # #########################################################
@@ -19,12 +19,12 @@ function zip_logical_links() {
     # candidate_dirs="lnLib Source Source/Main Source/lnLib"
     candidate_dirs="lib"
 
+    zipName="${PWD}/lib/lnLibary.zip"
+
+
     for _dir in $candidate_dirs; do
         if [ -d "$_dir" ]; then
             cd "$_dir"
-            my_dir=${_dir//[\/.?!@]/_}
-            echo $my_dir
-            zipName="${my_dir}_logical_links.zip"
             for name in *; do
                 [ -L "$name" ] && zip -x '*.git*' -x '*.pio*' -ur --latest-time  $zipName $name
             done
