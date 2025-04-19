@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # updated by ...: Loreto Notarantonio
-# Date .........: 18-04-2025 20.16.36
+# Date .........: 19-04-2025 07.55.58
 #
 # Updates:
 # #########################################################
@@ -15,7 +15,8 @@
 # #############################################
 function zip_logical_links() {
     # assumiamo che ci troviamo nella prj_dir
-    saved_dir="$PWD"
+    root_dir="$PWD"
+
     # candidate_dirs="lnLib Source Source/Main Source/lnLib"
     candidate_dirs="lib"
 
@@ -29,10 +30,10 @@ function zip_logical_links() {
                 [ -L "$name" ] && zip -x '*.git*' -x '*.pio*' -ur --latest-time  $zipName $name
             done
         fi
-        cd "$saved_dir" # ritorna alla top
+        cd "$root_dir" # ritorna alla root dir
     done
 
-    cd "$saved_dir"
+    cd "$root_dir"
 }
 
 
