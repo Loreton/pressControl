@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 18-04-2025 17.47.11
+// Date .........: 19-04-2025 14.20.21
 // ref: https://randomnerdtutorials.com/alexa-echo-with-esp32-and-esp8266/
 //
 
@@ -25,7 +25,7 @@ fauxmoESP fauxmo;
 
 
 extern io_output_pin_struct_t *pressControlRelay;
-// extern io_output_pin_struct_t *loadSuperioreRelay;
+
 
 // ###############################################################################
 // il device non posso passarlo come parametro altrinmenti incappo nell'errore: error: 'device01' is not captured

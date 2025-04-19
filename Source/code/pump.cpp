@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 18-04-2025 17.53.02
+// Date .........: 19-04-2025 14.04.04
 // ref: https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html
 //
 
@@ -98,29 +98,26 @@ bool pumpStateForAlarm(void) {
 
 
         } // end switch
+
         if (activeBuzzerDuration != 0 && !pumpState->timer.enabled) {
             pressControlRelayStatus(PUMP_STILL_ON);
             pinTimerStart(pumpState, activeBuzzerDuration);
             activeBuzzerON();
             printf1_NFN("%s buzzer ON\n", pumpState->pinID);
         }
-
     }
     else if (pumpState->isReleased) {
         printf1_NFN("%s pump is released\n", pumpState->pinID);
         activeBuzzerOFF();
         pinTimerStop(pumpState);
+        // --- OFF alarms
+        pinOFF(pumpHornAlarmRelay);
         passiveBuzzerScaleDown();
         pinOFF(pumpLED);
+
+        // check status
         pressControlRelayStatus(PUMP_OFF);
-    }// end if
-    // else if (!pumpState->isReleased) {
-        // printf1_NFN"%s: pump is still ON\n", pumpState->pinID);
-        // activeBuzzerON();
-        // pinTimerStop(pumpState);
-        // passiveBuzzerScaleDown();
-        // pressControlRelayStatus(PUMP_OFF);
-    // }// end if
+    }
 
     return 0;
 } // end function

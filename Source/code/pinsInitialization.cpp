@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 18-04-2025 17.47.53
+// Date .........: 19-04-2025 14.52.39
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -10,29 +10,16 @@
 // ---------------------------------
 #define LOG_LEVEL_0
 #include "@logMacros.h"
-// #include "@lnLibrary.h"
 #include "@mainStructures.h"
 #include "@pinOperations.h"
-
-
-
 
 // ---------------------------------
 // - project headers files
 // ---------------------------------
+#define _I_AM_PIN_INITIALIZATION_CPP_
 #include "@pinDefinitions.h"
 #include "@prjStructures.h"
 
-
-
-
-
-/*
-    valori di soglia per pressione tasti
-*/
-
-        const char * PROGMEM THRESHOLD_LEVEL_TYPES[] = {"NO_PRESSED_BUTTON", "PRESSED_LEVEL_01", "PRESSED_LEVEL_02", "PRESSED_LEVEL_03", "PRESSED_LEVEL_04", "PRESSED_LEVEL_05", "PRESSED_LEVEL_06", "OVERFLOW_TIME"};
-        const int8_t THRESHOLDS_LEVELS_TYPES_length = sizeof(THRESHOLD_LEVEL_TYPES)/sizeof(char *);
 
 
 #define END_OF_ARRAY -1 // --- thresholds value (terminated by -1 as last element)
@@ -42,31 +29,13 @@
     const int32_t PROGMEM pumpState_thresholds_level_values[]   = {0, 100, 10*1000,   20*1000,     30*1000,     40*1000,     50*1000,  END_OF_ARRAY};
 #endif
 
-const int32_t PROGMEM base_thresholds_level_values[]        = {0, 100, 1000, END_OF_ARRAY};
-const int32_t PROGMEM startButton_thresholds_level_values[] = {0, 1000, 2000, END_OF_ARRAY};
+const int32_t PROGMEM base_thresholds_level_values[]            = {0, 100, 1000, END_OF_ARRAY};
+const int32_t PROGMEM startButton_thresholds_level_values[]     = {0, 1000, 2000, END_OF_ARRAY};
 
 
 
 
-const int8_t INPUT_PINS  = 3;
-io_input_pin_struct_t inpPINs[INPUT_PINS+1];
-io_input_pin_struct_t *pumpState           = &inpPINs[0]; // input
-io_input_pin_struct_t *startButton         = &inpPINs[1]; // input
-io_input_pin_struct_t *pressControlState   = &inpPINs[2]; // input
 
-
-const int8_t OUTPUT_PINS = 6;
-io_output_pin_struct_t outPINs[OUTPUT_PINS+1];
-io_output_pin_struct_t *pressControlRelay   = &outPINs[0];
-// io_output_pin_struct_t *loadSuperioreRelay  = &outPINs[1];
-io_output_pin_struct_t *activeBuzzer        = &outPINs[2];
-io_output_pin_struct_t *passiveBuzzer       = &outPINs[3];
-io_output_pin_struct_t *pumpLED             = &outPINs[4];
-io_output_pin_struct_t *pressControlLED     = &outPINs[5];
-
-
-// io_output_pin_struct_t *LED                = &outPINs[4];
-// io_output_pin_struct_t *led_internal       = &outPINs[5];
 /*
     #########################################
     # array ending with negative number
@@ -181,7 +150,7 @@ void pinsInitialization(void) {
     //====================================================
     // ------  name,                 pin_nr                 , pin_struct       , mode (inp/out), active_level);
     outputPinInit("autoclave"         , pressControlRelay_pin , pressControlRelay  , OUTPUT , LOW);
-    // outputPinInit("loadSuperiore"     , loadSuperiore_pin     , loadSuperioreRelay , OUTPUT , LOW);
+    outputPinInit("pumpHornAlarm"     , pumpHornAlarm_pin     , pumpHornAlarmRelay , OUTPUT , LOW);
     // outputPinInit("LED"               , LED_pin               , LED                , OUTPUT , LOW);
     // outputPinInit("led_internal_pin"  , led_internal_pin      , led_internal       , OUTPUT , LOW);
     outputPinInit("activeBuzzer"      , activeBuzzer_pin      , activeBuzzer       , OUTPUT , HIGH);
@@ -190,7 +159,7 @@ void pinsInitialization(void) {
     outputPinInit("pressControlLED"   , pressControlLED_pin   , pressControlLED    , OUTPUT , HIGH);
 
     pressControlRelay->pulsetime.msecs_default=30*60*1000;  // seconds default pulsetime per PressControl = 30 minuti
-    // loadSuperioreRelay->pulsetime.msecs_default=5*60*1000; // seconds default pulsetime per loadSuperiore = 5 minuti
+    // pumpHornAlarmRelay->pulsetime.msecs_default=5*60*1000; // seconds default pulsetime per loadSuperiore = 5 minuti
 }
 
 

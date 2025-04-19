@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # updated by ...: Loreto Notarantonio
-# Date .........: 19-04-2025 07.59.07
+# Date .........: 19-04-2025 08.06.48
 #
 # Updates:
 # #########################################################
@@ -55,4 +55,4 @@ function zip_logical_links() {
 
 
 zip_logical_links
-echo -e "${TAB}${yellowH}$zipName has been created."
+echo -e "${TAB}${yellowH}$zipName has been created.${colorReset}"

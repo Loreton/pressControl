@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 18-04-2025 17.47.27
+// Date .........: 19-04-2025 14.25.01
 */
 //  telegram2 async https://github.com/cotestatnt/AsyncTelegram2/tree/master
 //                  https://github.com/cotestatnt/AsyncTelegram/blob/master/REFERENCE.md
@@ -68,7 +68,7 @@
 #include "@ln_telegram.h" // /home/loreto/lnProfile/envars/include/@ln_esp32_telegram_definitions.h
 #include "@ln_esp32_telegram_credentials.h" // /home/loreto/lnProfile/envars/include/@ln_esp32_telegram_definitions.h
 #include "@pressControl.h"
-// #include "@loadSuperiore.h"
+
 
 
 #define BOTtoken        LoretoEsp32BotToken
@@ -133,7 +133,8 @@ AsyncTelegram2 myBot(client);
 
 // local variable to store telegram message data
 TBMessage msg;
-telegram_send_struct_t tgMSG; telegram_send_struct_t *tgMsg = &tgMSG;
+telegram_send_struct_t tgMSG;
+telegram_send_struct_t *tgMsg = &tgMSG;
 
 // String PROGMEM  welcome = "Welcome, " + from_name + ".\n";
 const PROGMEM char *help_text = "<b>Available commands</b>:\n\n"\

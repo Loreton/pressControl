@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 18-04-2025 17.48.25
+// Date .........: 19-04-2025 14.26.08
 //
 
 #include <Arduino.h>
@@ -10,75 +10,25 @@
 #define ESP32_WROOM_32_MODULE           2
 
 #define ESP32_BOARD_TYPE                ESP32_WROOM_32_MODULE
+#define RELEASE_TYPE                    0
 
 #ifndef __PINS_DEFINITIONS_H__
     #define __PINS_DEFINITIONS_H__
 
-/*
-ESP32 Pinout Description https://www.teachmemicro.com/esp32-pinout-diagram-wroom-32/
-The ESP32 pins are categorized into digital pins, analog pins, and power pins.
-Refer to the table below for details on pins with secondary functions. Moreover, these secondary pins often serve communication purposes, such as I2C and SPI or as ADC channels.
 
-Pin Name            Description                             Pin     Name                Description
-3V3     3.3         V power supply                          GND     Ground
-EN      CHIP_PU,    Reset                                   IO23    GPIO23
-VP      GPIO36      ADC1_CH0  S_VP                          IO22    GPIO22
-VN      GPIO39      ADC1_CH3  S_VN  TX                      GPIO1   U0TXD
-IO34    GPIO34      ADC1_CH6  VDET_1                        RX      GPIO3  U0RXD
-IO35    GPIO35      ADC1_CH7  VDET_2                        IO21    GPIO21
-IO32    GPIO32      ADC1_CH4  TOUCH_CH9 XTAL_32K_P          GND     Ground
-IO33    GPIO33      ADC1_CH5  TOUCH_CH8 XTAL_32K_N          IO19    GPIO19
-IO25    GPIO25      ADC1_CH8  DAC_1                         IO18    GPIO18
-IO26    GPIO26      ADC2_CH9  DAC_2                         IO5     GPIO5
-IO27    GPIO27      ADC2_CH7  TOUCH_CH7                     IO17    GPIO17 3
-IO14    GPIO14      ADC2_CH6  TOUCH_CH6 MTMS                IO16    GPIO16 3
-IO12    GPIO12      ADC2_CH5  TOUCH_CH5 MTDI                IO4     GPIO4  ADC2_CH0 TOUCH_CH0
-GND     Ground                                              IO0     GPIO0  ADC2_CH1 TOUCH_CH1 Boot
-IO13    GPIO13      ADC2_CH4  TOUCH_CH4 MTCK                IO2     GPIO2  ADC2_CH2 TOUCH_CH2
-D2      GPIO9       D2 2                                    IO15    GPIO15 ADC2_CH3 TOUCH_CH3 MTDO
-D3      GPIO10      D3 2                                    D1      GPIO8  D1 2
-CMD     GPIO11      CMD 2                                   D0      GPIO7  D0 2
-5V  5   V power supply  CLK GPIO6 ,                         CLK     2
+
+
+/*
+    ESP32 Pinout Description https://www.teachmemicro.com/esp32-pinout-diagram-wroom-32/
+    The ESP32 pins are categorized into digital pins, analog pins, and power pins.
+    Refer to the table below for details on pins with secondary functions.
+    Moreover, these secondary pins often serve communication purposes, such as I2C and SPI or as ADC channels.
 */
 
 
-//                   GPIO          Input       Output   Notes
-    // #define D00        0        // pulled up   OK       outputs PWM signal at boot, must be LOW to enter flashing mode
-    // #define D01        1        // --          OK       TX pin debug output at boot
-    // #define D02        2        // OK          OK       GPIO1, TXD connected to on-board LED, must be left floating or LOW to enter flashing mode
-    // #define D03        3        // OK          --       GPIO3, RXD HIGH at boot
-    // #define D04        4        // OK          OK       ADC2_CH0 TOUCH_CH0
-    // #define D05        5        // OK          OK       outputs PWM signal at boot, strapping pin
-
-    // #define D06        6        // avoid - connected to the integrated SPI flash
-    // #define D07        7        // avoid - connected to the integrated SPI flash
-    // #define D08        8        // avoid - connected to the integrated SPI flash
-    // #define D09        9        // avoid - connected to the integrated SPI flash
-    // #define D10       10        // avoid - connected to the integrated SPI flash
-    // #define D11       11        // avoid - connected to the integrated SPI flash
-
-    // #define D12       12        // OK          OK       boot fails if pulled high, strapping pin
-    // #define D13       13        // OK          OK       ADC2_CH4  TOUCH_CH4 MTCK
-    // #define D14       14        // OK          OK       outputs PWM signal at boot
-    // #define D15       15        // OK          OK       outputs PWM signal at boot, strapping pin
-    // #define D16       16        // OK          OK       RELAY1
-    // #define D17       17        // OK          OK       RELAY2
-    // #define D18       18        // OK          OK
-    // #define D19       19        // OK          OK
-    // #define D21       21        // OK          OK
-    // #define D22       22        // OK          OK
-    // #define D23       23        // OK          OK       LED_ON_BOARD
-    // #define D25       25        // OK          OK
-    // #define D26       26        // OK          OK
-    // #define D27       27        // OK          OK
-    // #define D32       32        // OK          OK
-    // #define D33       33        // OK          OK
-    // #define D34       34        // OK          --   input only
-    // #define D35       35        // OK          --   input only
-    // #define D36       36        // OK          --   input only
-    // #define D39       39        // OK          --   input only
 
 
+//           GPIO                      description                                   Input       Output   Notes
     #define GPIO_00        0        // avoid - IO0   ADC2_CH1 TOUCH_CH1 Boot         pulled up   OK       outputs PWM signal at boot, must be LOW to enter flashing mode
     #define GPIO_01        1        // avoid - U0TXD -                               --          OK       TX pin debug output at boot
     #define GPIO_02        2        // avoid - IO2   ADC2_CH2 TOUCH_CH2              OK          OK       GPIO1, TXD connected to on-board LED, must be left floating or LOW to enter flashing mode
@@ -118,7 +68,7 @@ CMD     GPIO11      CMD 2                                   D0      GPIO7  D0 2
 
 
 
-    #define PROTOTYPE
+    // #define PROTOTYPE
 
     #if ESP32_BOARD_TYPE == ESP32_WROOM_32E_2RELAY_MODULE
         #define pumpState_pin               GPIO_12  // INPUT
@@ -126,7 +76,7 @@ CMD     GPIO11      CMD 2                                   D0      GPIO7  D0 2
         #define pressControlState_pin       GPIO_14  // INPUT
 
         #define pressControlRelay_pin       GPIO_16  // OUTPUT  GPIO16 mandatory on Esp32_X2_realy_board
-        // #define loadSuperiore_pin           GPIO_17  // OUTPUT  GPIO17 mandatory on Esp32_X2_realy_board
+        #define pumpHornAlarm_pin           GPIO_17  // OUTPUT  GPIO17 mandatory on Esp32_X2_realy_board
         #define led_internal_pin            GPIO_23  // OUTPUT  GPIO23 mandatory on Esp32_X2_realy_board
 
         #define activeBuzzer_pin            GPIO_18  // OUTPUT
@@ -141,7 +91,7 @@ CMD     GPIO11      CMD 2                                   D0      GPIO7  D0 2
         #define pumpLED_pin                 GPIO_15  // OUTPUT
 
         #define pressControlRelay_pin       GPIO_16  // OUTPUT
-        // #define loadSuperiore_pin           GPIO_17  // OUTPUT
+        #define pumpHornAlarm_pin           GPIO_17  // OUTPUT
 
         #define pressControlState_pin       GPIO_18  // INPUT
         #define pumpState_pin               GPIO_19  // INPUT
@@ -153,37 +103,7 @@ CMD     GPIO11      CMD 2                                   D0      GPIO7  D0 2
 
 
 
-    // #ifdef PROTOTYPE
-    //     #define pumpState_pin               D02  // INPUT
-    //     #define startButton_pin             D03  // INPUT
-    //     #define pressControlState_pin       D04  // INPUT
 
-    //     #define activeBuzzer_pin            D12  // OUTPUT
-    //     #define passiveBuzzer_pin           D13  // OUTPUT
-    //     #define LED_pin                     D22  // OUTPUT
-
-    //     #define pressControlRelay_pin       D16  // OUTPUT  mandatory on Esp32_X2_realy_board
-    //     #define loadSuperiore_pin           D17  // OUTPUT  mandatory on Esp32_X2_realy_board
-    //     #define led_internal_pin            D23  // OUTPUT  mandatory on Esp32_X2_realy_board
-
-    // #else
-    //     #define pumpState_pin               D02  // INPUT
-    //     #define startButton_pin             D03  // INPUT
-    //     #define pressControlState_pin       D04  // INPUT
-
-    //     #define activeBuzzer_pin            D12  // OUTPUT
-    //     #define passiveBuzzer_pin           D13  // OUTPUT
-    //     #define LED_pin                     D22  // OUTPUT
-
-    //     #define pressControlRelay_pin       D16  // OUTPUT  mandatory on Esp32_X2_realy_board
-    //     #define loadSuperiore_pin           D17  // OUTPUT  mandatory on Esp32_X2_realy_board
-    //     #define led_internal_pin            D23  // OUTPUT  mandatory on Esp32_X2_realy_board
-
-
-    // #endif
-
-    // ---- pins_Initialize.cpp
-    // void pinInitialize(void);
     void pinsInitialization(void);
 
 

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 18-04-2025 15.03.31
+// Date .........: 19-04-2025 14.51.55
 //
 
 #include <Arduino.h>
@@ -14,14 +14,6 @@
     enum outo_on     : bool { fAUTO_ON_OFF = true, fNO_AUTO_ON_OFF = false};
 
     enum displayData : uint8_t { NO_DISPLAY=0, DISPLAY_STATUS}; // come parametro per fare il display in alcune funzioni (es.: is_acted())
-    // enum PressType   : uint8_t { NO_BUTTON_PRESSED = 0,
-    //                             PRESSED_TIME_01,
-    //                             PRESSED_TIME_02,
-    //                             PRESSED_TIME_03,
-    //                             PRESSED_TIME_04,
-    //                             PRESSED_TIME_05,
-    //                             PRESSED_TIME_06,
-    //                             OVERFLOW_TIME};
 
     enum caller      : uint8_t { NO_TELEGRAM = 0,
                                 CALLED_BY_TELEGRAM,
@@ -42,36 +34,42 @@
 
 
 
-
-    extern const char *str_action[];
-    extern const char *str_pinLevel[];
-    extern const char *str_TrueFalse[];
-    extern const char *str_OffOn[];
-    extern const char *str_INPUT;
-    extern const char *str_INPUT_PULLUP;
-    extern const char *str_OUTPUT;
-    extern const int8_t INPUT_PINS;
-    extern const int8_t OUTPUT_PINS;
+    #ifdef _I_AM_PIN_INITIALIZATION_CPP_
+        const int8_t INPUT_PINS  = 3;
+        io_input_pin_struct_t  inpPINs[INPUT_PINS+1];
+        io_input_pin_struct_t *pumpState           = &inpPINs[0]; // input
+        io_input_pin_struct_t *startButton         = &inpPINs[1]; // input
+        io_input_pin_struct_t *pressControlState   = &inpPINs[2]; // input
 
 
+        const int8_t OUTPUT_PINS = 6;
+        io_output_pin_struct_t  outPINs[OUTPUT_PINS+1];
+        io_output_pin_struct_t *pressControlRelay   = &outPINs[0];
+        io_output_pin_struct_t *pumpHornAlarmRelay  = &outPINs[1];
+        io_output_pin_struct_t *activeBuzzer        = &outPINs[2];
+        io_output_pin_struct_t *passiveBuzzer       = &outPINs[3];
+        io_output_pin_struct_t *pumpLED             = &outPINs[4];
+        io_output_pin_struct_t *pressControlLED     = &outPINs[5];
 
-    extern io_input_pin_struct_t PINs[];
-    extern io_input_pin_struct_t *pumpState; // pin che rileva se la pompa è accesa (c'è un relè in parallelo alla pompa)
-    extern io_input_pin_struct_t *startButton; // input
-    extern io_input_pin_struct_t *pressControlState; // pin che rileva se il presscontrol è acceso (c'è un relè in parallelo al PC)
+    #else
+        // definito in ... pinsInitialization.cpp
+        extern io_input_pin_struct_t PINs[];
+        extern io_input_pin_struct_t *pumpState; // pin che rileva se la pompa è accesa (c'è un relè in parallelo alla pompa)
+        extern io_input_pin_struct_t *startButton; // input
+        extern io_input_pin_struct_t *pressControlState; // pin che rileva se il presscontrol è acceso (c'è un relè in parallelo al PC)
 
-    extern io_output_pin_struct_t *pressControlRelay; // pin per attivare relè per accendere il presscontrol
-    extern io_output_pin_struct_t *loadSuperioreRelay; // pin per attivare relè per accendere il presscontrol
-    extern io_output_pin_struct_t *activeBuzzer;
-    extern io_output_pin_struct_t *passiveBuzzer;
-    extern io_output_pin_struct_t *pumpLED;
-    extern io_output_pin_struct_t *pressControlLED;
-    // extern io_output_pin_struct_t *LED;
-    // extern io_output_pin_struct_t *led_internals;
-    // extern io_output_pin_struct_t *relay02;
+        extern io_output_pin_struct_t *pressControlRelay; // pin per attivare relè per accendere il presscontrol
+        extern io_output_pin_struct_t *pumpHornAlarmRelay; // pin per attivare relè per accendere il presscontrol
+        extern io_output_pin_struct_t *activeBuzzer;
+        extern io_output_pin_struct_t *passiveBuzzer;
+        extern io_output_pin_struct_t *pumpLED;
+        extern io_output_pin_struct_t *pressControlLED;
+        // extern io_output_pin_struct_t *LED;
+        // extern io_output_pin_struct_t *led_internals;
+        // extern io_output_pin_struct_t *relay02;
 
-    extern const char * PROGMEM THRESHOLD_LEVEL_TYPES[];
-
+        extern const char * PROGMEM THRESHOLD_LEVEL_TYPES[];
+    #endif
 
 
 #endif

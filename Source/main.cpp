@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 18-04-2025 17.46.11
+// Date .........: 19-04-2025 13.02.17
 // ref: https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html
 //
 
@@ -15,7 +15,10 @@ extern fauxmoESP fauxmo;
 // ---------------------------------
 // - lnLibrary headers files
 // ---------------------------------
-#define LOG_LEVEL 0
+#define LOG_LEVEL_1
+#define LOG_LEVEL_2
+#define LOG_LEVEL_3x
+#define LOG_LEVEL_4x
 #include "@logMacros.h"
 #include "@lnLibrary.h"
 
@@ -23,28 +26,18 @@ extern fauxmoESP fauxmo;
 // ---------------------------------
 // - project headers files
 // ---------------------------------
-
 #include "@pinDefinitions.h"
-#include "@ln_telegram.h"
 #include "@startButton.h"
-#include "@pump.h"
 #include "@pressControl.h"
-// #include "@loadSuperiore.h"
+#include "@pump.h"
+#include "@ln_telegram.h"
 #include "@ln_Alexa.h"
-
-// #include "@SerialRead.h"
 
 
 extern ESP32Time     rtc;
 extern struct tm timeinfo; // capire se va bene uno per tutti i moduli oppure mantenerli separati per evitare overwrites
 
 
-// ---------------------------------
-// macros Aliases for LOG
-// ---------------------------------
-#define LOG_LEVEL_1
-#define LOG_LEVEL_4
-#include "@logMacros.h"
 
 
 // #####################################
@@ -134,7 +127,7 @@ Smart life the user you are inviting are located in different data centers. Devi
 
 
 
-#define LN_RESCAN_WIFI
+#define LN_RESCAN_WIFIxx
 
 uint8_t blink_secs=5;
 
@@ -168,15 +161,14 @@ void loop() {
     // =====================================
     uint8_t pressedLevel = startButtonLongPress();
     if (pressedLevel == PRESSED_TIME_01) {
-        printf1_NFN("toggling pressControlRelay....\n");
+        printf4_NFN("toggling pressControlRelay....\n");
         pressControlRelayToggle(CALLED_BY_STARTBUTTON);
     }
     else if (pressedLevel == PRESSED_TIME_02) {
-        printf1_NFN("toggling loadSuperioreRelay....\n");
-        // loadSuperioreRelayToggle(CALLED_BY_STARTBUTTON);
+        printf4_NFN("toggling pumpHornAlarmRelay....\n");
+        pinToggle(pumpHornAlarmRelay);
     }
 
-    #if 0
 
     // ===================================================
     // --- press control Relay status
@@ -202,7 +194,8 @@ void loop() {
 
     // ---- E R R O R ------
     if (pumpState->is_ON && pressControlState->is_OFF) {
-        pulseGenerator(activeBuzzer, 1000, 500);
+        pulseGenerator(activeBuzzer, 1000, 500); // buzzer pulsante
+        pinON(pumpHornAlarmRelay);   //HORN acceso fisso
     }
     else {
         // pinOFF(activeBuzzer); // nel caso fossimo andati in allarme
@@ -223,18 +216,15 @@ void loop() {
 
 
 
-
-
-    // if (pumpState->is_ON && pressControlState->is_OFF) {
-    //     pinPulseON(activeBuzzer, 5, fAUTO_ON_OFF);
-    // }
+    // mantieni pumpLED acceso fisso
     if (pumpState->is_ON && pumpLED->is_OFF) {
-        // printf4_NFN("turning pin ON\n");
+        printf4_NFN("turning pin ON\n");
         pinON(pumpLED);
     }
     else if (pumpState->is_OFF) {
+        // pumpLED lampeggiante
         if ( (timeinfo.tm_sec%5 == 1) && (timeinfo.tm_sec != last_pumpLED_second) ) {
-            // printf4_NFN("calling start pulseTime\n");
+            printf4_NFN("calling start pulseTime\n");
             pinPulseON(pumpLED, 20, fAUTO_ON_OFF);
             last_pumpLED_second=timeinfo.tm_sec;
         }
@@ -256,11 +246,11 @@ void loop() {
             ptr->alexa_request = false;
         }
 
-        ptr = loadSuperioreRelay;
-        if (ptr->alexa_request) {
-            loadSuperioreRelaySet(ptr->alexa_status, ALEXA_REQ);
-            ptr->alexa_request = false;
-        }
+        // ptr = loadSuperioreRelay;
+        // if (ptr->alexa_request) {
+        //     loadSuperioreRelaySet(ptr->alexa_status, ALEXA_REQ);
+        //     ptr->alexa_request = false;
+        // }
     }
 
 
@@ -310,6 +300,7 @@ void loop() {
 
 
 
+    #if 0
 
 
     // last_loop_time = millis();
