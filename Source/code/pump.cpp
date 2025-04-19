@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 19-04-2025 14.04.04
+// Date .........: 19-04-2025 14.59.35
 // ref: https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html
 //
 
@@ -20,6 +20,7 @@
 // ---------------------------------
 // - project headers files
 // ---------------------------------
+#include "@a_mainProject.h"
 #include "@pinDefinitions.h"
 #include "@readPressedButton.h"
 #include "@pressControl.h"
@@ -29,7 +30,7 @@
 
 
 
-extern io_input_pin_struct_t   *pumpState;
+// extern io_input_pin_struct_t   *pumpState;
 
 // =====================================
 // = process lo stato della pompa

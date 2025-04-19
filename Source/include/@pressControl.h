@@ -1,11 +1,11 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 18-04-2025 11.18.53
+// Date .........: 19-04-2025 14.57.36
 */
 
 #ifndef __PRESS_CONTROL_FUNCTIONS_H__
     #define __PRESS_CONTROL_FUNCTIONS_H__
-    #include "@prjStructures.h"
+    #include "@a_mainProject.h"
 
     void    pressControlRelayToggle(uint8_t caller=NO_TELEGRAM);
     void    pressControlRelayON(uint8_t caller=NO_TELEGRAM, int32_t pulsetime=0);

@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 19-04-2025 14.52.39
+// Date .........: 19-04-2025 14.59.45
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -17,8 +17,8 @@
 // - project headers files
 // ---------------------------------
 #define _I_AM_PIN_INITIALIZATION_CPP_
+#include "@a_mainProject.h"
 #include "@pinDefinitions.h"
-#include "@prjStructures.h"
 
 
 

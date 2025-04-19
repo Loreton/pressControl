@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 18-04-2025 12.57.26
+// Date .........: 19-04-2025 14.59.40
 // ref: https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html
 //
 
@@ -19,9 +19,9 @@
 // ---------------------------------
 // - project headers files
 // ---------------------------------
+#include "@a_mainProject.h"
 #include "@pressControl.h"
 #include "@pinDefinitions.h"
-#include "@prjStructures.h"
 #include "@ln_telegram.h"
 #include "@pump.h"
 
@@ -29,8 +29,8 @@
 
 
 
-extern io_output_pin_struct_t *pressControlRelay;
-extern io_input_pin_struct_t  *pressControlState;
+// extern io_output_pin_struct_t *pressControlRelay;
+// extern io_input_pin_struct_t  *pressControlState;
 
 
 

@@ -1,11 +1,11 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 18-04-2025 11.19.37
+// Date .........: 19-04-2025 14.57.44
 */
 
 #ifndef __PUMP_FUNCTIONS_H__
     #define __PUMP_FUNCTIONS_H__
-    #include "@prjStructures.h"
+    #include "@a_mainProject.h"
 
 
     uint8_t pumpStatusRead(uint8_t fromModule=NO_TELEGRAM);

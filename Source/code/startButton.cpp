@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 18-04-2025 17.52.09
+// Date .........: 19-04-2025 14.59.27
 // ref: https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html
 //
 
@@ -18,6 +18,7 @@
 // ---------------------------------
 // - project headers files
 // ---------------------------------
+#include "@a_mainProject.h"
 #include "@pinDefinitions.h"
 #include "@readPressedButton.h"
 
@@ -26,7 +27,7 @@
 
 #define fTeleframNotify          true
 
-extern io_input_pin_struct_t *startButton;
+// extern io_input_pin_struct_t *startButton;
 
 
 
