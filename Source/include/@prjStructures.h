@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 19-04-2025 14.51.55
+// Date .........: 19-04-2025 14.54.16
 //
 
 #include <Arduino.h>
@@ -35,14 +35,14 @@
 
 
     #ifdef _I_AM_PIN_INITIALIZATION_CPP_
-        const int8_t INPUT_PINS  = 3;
+        #define INPUT_PINS  3
         io_input_pin_struct_t  inpPINs[INPUT_PINS+1];
         io_input_pin_struct_t *pumpState           = &inpPINs[0]; // input
         io_input_pin_struct_t *startButton         = &inpPINs[1]; // input
         io_input_pin_struct_t *pressControlState   = &inpPINs[2]; // input
 
 
-        const int8_t OUTPUT_PINS = 6;
+        #define OUTPUT_PINS  6
         io_output_pin_struct_t  outPINs[OUTPUT_PINS+1];
         io_output_pin_struct_t *pressControlRelay   = &outPINs[0];
         io_output_pin_struct_t *pumpHornAlarmRelay  = &outPINs[1];
@@ -52,7 +52,6 @@
         io_output_pin_struct_t *pressControlLED     = &outPINs[5];
 
     #else
-        // definito in ... pinsInitialization.cpp
         extern io_input_pin_struct_t PINs[];
         extern io_input_pin_struct_t *pumpState; // pin che rileva se la pompa è accesa (c'è un relè in parallelo alla pompa)
         extern io_input_pin_struct_t *startButton; // input
