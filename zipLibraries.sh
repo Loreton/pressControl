@@ -1,10 +1,27 @@
 #!/bin/bash
 #
 # updated by ...: Loreto Notarantonio
-# Date .........: 19-04-2025 07.55.58
+# Date .........: 19-04-2025 07.59.07
 #
 # Updates:
 # #########################################################
+####################à
+# Colors:
+# Black        0;30     Dark Gray     1;30
+# Red          0;31     Light Red     1;31
+# Green        0;32     Light Green   1;32
+# Brown/Orange 0;33     Yellow        1;33
+# Blue         0;34     Light Blue    1;34
+# Purple       0;35     Light Purple  1;35
+# Cyan         0;36     Light Cyan    1;36
+# Light Gray   0;37     White         1;37
+redH='\033[1;31m'
+cyanH='\033[1;36m'
+yellowH='\033[1;33m'
+purpleH='\033[1;35m'
+colorReset='\033[0m' # No Color
+TAB='    '
+
 
 
 
@@ -38,4 +55,4 @@ function zip_logical_links() {
 
 
 zip_logical_links
-echo "$zipName has been created."
+echo -e "${TAB}${yellowH}$zipName has been created."
