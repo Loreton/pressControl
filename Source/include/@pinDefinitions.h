@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 19-04-2025 14.26.08
+// Date .........: 23-05-2025 10.51.34
 //
 
 #include <Arduino.h>
@@ -25,7 +25,14 @@
     Moreover, these secondary pins often serve communication purposes, such as I2C and SPI or as ADC channels.
 */
 
+/*
+    per il debugger JTAG:
+    ref: https://www.instructables.com/How-to-Use-a-Debugger-on-an-ESP32/
+    debugger_image: /media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/esp32LnLibrary/lnLibrary/JTAG-debugger/JTAG-debugger.webp
+    debugger_pins:  /media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/esp32LnLibrary/lnLibrary/JTAG-debugger/JTAG-pin-connection.webp
+    platformio-guide: https://docs.platformio.org/en/latest/plus/debug-tools/esp-prog.html#drivers
 
+*/
 
 
 //           GPIO                      description                                   Input       Output   Notes
@@ -43,10 +50,10 @@
     #define GPIO_10       10        // avoid - D3    D3 2                            connected to the integrated SPI flash
     #define GPIO_11       11        // avoid - CMD   CMD 2                           connected to the integrated SPI flash
 
-    #define GPIO_12       12        // good  - IO12  ADC2_CH5  TOUCH_CH5 MTDI        OK          OK       boot fails if pulled high, strapping pin
-    #define GPIO_13       13        // good  - IO13  ADC2_CH4  TOUCH_CH4 MTCK        OK          OK       ADC2_CH4  TOUCH_CH4 MTCK
-    #define GPIO_14       14        // good  - IO14  ADC2_CH6  TOUCH_CH6 MTMS        OK          OK       outputs PWM signal at boot
-    #define GPIO_15       15        // good  - IO15  ADC2_CH3  TOUCH_CH3 MTDO         OK          OK       outputs PWM signal at boot, strapping pin
+    #define GPIO_12       12        // good  - IO12  ADC2_CH5  TOUCH_CH5 M-TDI        OK          OK       boot fails if pulled high, strapping pin
+    #define GPIO_13       13        // good  - IO13  ADC2_CH4  TOUCH_CH4 M-TCK        OK          OK       ADC2_CH4  TOUCH_CH4 MTCK
+    #define GPIO_14       14        // good  - IO14  ADC2_CH6  TOUCH_CH6 M-TMS        OK          OK       outputs PWM signal at boot
+    #define GPIO_15       15        // good  - IO15  ADC2_CH3  TOUCH_CH3 M-TDO         OK          OK       outputs PWM signal at boot, strapping pin
     #define GPIO_16       16        // good  - IO16  3                               OK          OK       RELAY1
     #define GPIO_17       17        // good  - IO17  3                               OK          OK       RELAY2
     #define GPIO_18       18        // good  - IO18                                  OK          OK

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 08-05-2025 19.47.59
+// Date .........: 08-05-2025 17.34.59
 // ref: https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html
 //
 
@@ -20,23 +20,7 @@ extern fauxmoESP fauxmo;
 #define LOG_LEVEL_3x
 #define LOG_LEVEL_4x
 #include "@logMacros.h"
-// #include "@lnLibrary.h"
-// #include "@logMacros.h"
-#include "@mainStructures.h"
-
-#include "@fileSystem.h"
-// #include "@lnString.h"
-
-#include "@pinOperations.h"
-// #include "@pinDebug.h"
-
-// #include "@SerialRead.h"
-
-// #include "@ln_MillisTimer.h"
-#include "@ln_time.h"
-
-#include "@ln_wifi.h"
-// #include "@wifiCredentials.h"
+#include "@lnLibrary.h"
 
 
 // ---------------------------------
@@ -62,6 +46,9 @@ extern struct tm timeinfo; // capire se va bene uno per tutti i moduli oppure ma
 extern io_input_pin_struct_t *startButton;
 
 
+void  check_wifi_status(void);
+void  check_wifi_rescan(void);
+void  start_wifi_rescan(void);
 
 // #########################################
 // # se non c'è ln_time.cpp mi seerver una dummy_Now()
@@ -208,13 +195,17 @@ void loop() {
     readOutputPin(pumpLED);
     readOutputPin(pressControlLED);
 
-    // ---- E R R O R ------
+
+
+
+    // ---------------------------------
+    // ---- A L A R M ------
+    // ---------------------------------
     if (pumpState->is_ON && pressControlState->is_OFF) {
         pulseGenerator(activeBuzzer, 1000, 500); // buzzer pulsante
         pinON(pumpHornAlarmRelay);   //HORN acceso fisso
     }
     else {
-        // pinOFF(activeBuzzer); // nel caso fossimo andati in allarme
         if (pressControlState->is_ON) {
             if (pressControlLED->is_OFF) {
                 printf4_NFN("turning pin ON\n");
@@ -232,8 +223,11 @@ void loop() {
 
 
 
-    // mantieni pumpLED acceso fisso
+    // ---------------------------------
+    //  pumpLED operation
+    // ---------------------------------
     if (pumpState->is_ON && pumpLED->is_OFF) {
+        // mantieni pumpLED acceso fisso
         printf4_NFN("turning pin ON\n");
         pinON(pumpLED);
     }
@@ -249,7 +243,9 @@ void loop() {
 
 
 
-    // int8_t fPRESS_CONTROL_ACTIVE = pumpState->is_ON + pressControlState->is_ON;
+    // ---------------------------------
+    // actions on second o_clock
+    // ---------------------------------
     if (isSecondOClock()) {
         handleTelegram();
 
@@ -261,71 +257,37 @@ void loop() {
             pressControlRelaySet(ptr->alexa_status, ALEXA_REQ);
             ptr->alexa_request = false;
         }
-
-        // ptr = loadSuperioreRelay;
-        // if (ptr->alexa_request) {
-        //     loadSuperioreRelaySet(ptr->alexa_status, ALEXA_REQ);
-        //     ptr->alexa_request = false;
-        // }
     }
 
 
     // ---------------------------------
-    // actions on 01 minutes timer
+    // actions on minute o_clock
     // ---------------------------------
     if (isMinuteOClock()) {
         printf2_NFN("minute o'clock routine\n");
 
-        if (! wifi_isConnected()) {
-            printf1_NFN("connection lost\n");
-            wifi_reconnect();
-        }
+        check_wifi_status();
 
         #ifdef LN_RESCAN_WIFI
-        // ---------------------------------
-        // if wifiScan has been started check for results
-        // ---------------------------------
-        if (asyncWifiScan_started > 0) {
-            asyncWifiScan_started++; // aumentiamo
-            int16_t networksFound = wifi_scanComplete();
-            printf2_NFN("networks found: %d (-1 means still_running)\n", networksFound);
-            if (networksFound >= 0) {
-                connectOnScanResult(networksFound);
-                asyncWifiScan_started=0; // chiudiamo il flag
-                wifi_scanDelete();
-            }
-            if (asyncWifiScan_started > 4) { // inutile dopo 4 minuti....
-                asyncWifiScan_started=0; // chiudiamo il flag
-                wifi_scanDelete();
-            }
-        }
+            check_wifi_rescan();
+        #endif
+
+
+    }
+
+
+    // ---------------------------------
+    // actions on a quarted o_clock
+    // ---------------------------------
+    if (isQuarterOClock()) {
+        printf2_NFN("it's a quarter of hour routine\n");
+        #ifdef LN_RESCAN_WIFI
+            start_wifi_rescan();
         #endif
     }
 
 
-    #ifdef LN_RESCAN_WIFI
-    // ---------------------------------
-    // actions every 15 minutes (at any quarter)
-    // ---------------------------------
-    if (isQuarterOClock()) {
-        printf2_NFN("it's a quarter of hour routine\n");
-        wifi_asyncScan();
-        asyncWifiScan_started=1;
-    }
-    #endif
 
-
-
-    #if 0
-
-
-    // last_loop_time = millis();
-    // Serial.println(millis()%1000);
-    // printf2_FN("millis() %ld - reminder: %d - delay: %d\n", millis(), reminder, 1000-reminder);
-
-    // m_reminder = (millis()%1000);
-    // delay(200);
-    #endif
 }
 
 
