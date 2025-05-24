@@ -92,10 +92,15 @@
         #error "BOARD sbagliata"
 
     #elif ESP32_BOARD_TYPE == ESP32_WROOM_32_MODULE
-        #define passiveBuzzer_pin           GPIO_12  // OUTPUT
-        #define activeBuzzer_pin            GPIO_13  // OUTPUT
-        #define pressControlLED_pin         GPIO_14  // OUTPUT
-        #define pumpLED_pin                 GPIO_15  // OUTPUT
+        #define passiveBuzzer_pin           GPIO_22  // OUTPUT
+        #define activeBuzzer_pin            GPIO_23  // OUTPUT
+        #define pressControlLED_pin         GPIO_25  // OUTPUT
+        #define pumpLED_pin                 GPIO_26  // OUTPUT
+        
+        #define JTAG_TDI_reserved           GPIO_12  // TDI
+        #define JTAG_TCK_reserved           GPIO_13  // TCK
+        #define JTAG_TMS_reserved           GPIO_14  // TMS
+        #define JTAG_TDO_reserved           GPIO_15  // TDO
 
         #define pressControlRelay_pin       GPIO_16  // OUTPUT
         #define pumpHornAlarm_pin           GPIO_17  // OUTPUT

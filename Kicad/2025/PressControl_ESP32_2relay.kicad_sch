@@ -7839,16 +7839,6 @@
 	)
 	(wire
 		(pts
-			(xy 222.25 123.19) (xy 222.25 118.11)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "04d73eec-e1cc-4169-9f6d-2f909bdae694")
-	)
-	(wire
-		(pts
 			(xy 125.73 158.75) (xy 132.08 158.75)
 		)
 		(stroke
@@ -7951,7 +7941,7 @@
 	)
 	(wire
 		(pts
-			(xy 210.82 100.33) (xy 231.14 100.33)
+			(xy 181.61 100.33) (xy 231.14 100.33)
 		)
 		(stroke
 			(width 0)
@@ -7991,6 +7981,16 @@
 			(color 43 2 255 1)
 		)
 		(uuid "0ffee19d-9ff8-47c0-97f2-c58bc53d2f30")
+	)
+	(wire
+		(pts
+			(xy 186.69 87.63) (xy 231.14 87.63)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "10fb8ae7-87ac-4aaa-ae6f-c073d3b26976")
 	)
 	(wire
 		(pts
@@ -8067,6 +8067,16 @@
 	)
 	(wire
 		(pts
+			(xy 194.31 95.25) (xy 194.31 123.19)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1b274f6e-a930-4ddb-ab72-49d5fc2820a2")
+	)
+	(wire
+		(pts
 			(xy 96.52 161.29) (xy 125.73 161.29)
 		)
 		(stroke
@@ -8075,16 +8085,6 @@
 			(color 43 2 255 1)
 		)
 		(uuid "1bb447a6-0a05-4816-94ff-099e98b22116")
-	)
-	(wire
-		(pts
-			(xy 219.71 115.57) (xy 231.14 115.57)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1c438759-6246-46ee-b08b-9b95349f7775")
 	)
 	(wire
 		(pts
@@ -8203,7 +8203,7 @@
 	)
 	(wire
 		(pts
-			(xy 219.71 120.65) (xy 219.71 115.57)
+			(xy 191.77 92.71) (xy 191.77 120.65)
 		)
 		(stroke
 			(width 0)
@@ -8221,16 +8221,6 @@
 			(color 43 2 255 1)
 		)
 		(uuid "2d2224d7-4658-4f60-b360-53e1f3af5f96")
-	)
-	(wire
-		(pts
-			(xy 217.17 113.03) (xy 231.14 113.03)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "2dde9d7d-db2d-41bb-8d97-e833c48be2be")
 	)
 	(wire
 		(pts
@@ -8271,6 +8261,16 @@
 			(type default)
 		)
 		(uuid "310a2e09-ba48-4b6f-835b-8b6f81706515")
+	)
+	(wire
+		(pts
+			(xy 194.31 95.25) (xy 231.14 95.25)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "379de927-3df2-458d-9ca3-950bf4ebddd0")
 	)
 	(wire
 		(pts
@@ -8374,7 +8374,7 @@
 	)
 	(wire
 		(pts
-			(xy 151.13 123.19) (xy 222.25 123.19)
+			(xy 151.13 123.19) (xy 194.31 123.19)
 		)
 		(stroke
 			(width 0)
@@ -8499,7 +8499,7 @@
 	)
 	(wire
 		(pts
-			(xy 147.32 115.57) (xy 214.63 115.57)
+			(xy 147.32 115.57) (xy 186.69 115.57)
 		)
 		(stroke
 			(width 0)
@@ -8592,7 +8592,7 @@
 	)
 	(wire
 		(pts
-			(xy 210.82 102.87) (xy 231.14 102.87)
+			(xy 184.15 102.87) (xy 231.14 102.87)
 		)
 		(stroke
 			(width 0)
@@ -8785,13 +8785,23 @@
 	)
 	(wire
 		(pts
-			(xy 148.59 118.11) (xy 217.17 118.11)
+			(xy 148.59 118.11) (xy 189.23 118.11)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "73524573-6379-49ef-8b80-faaed299017a")
+	)
+	(wire
+		(pts
+			(xy 191.77 92.71) (xy 231.14 92.71)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "74f15566-6788-4efb-9246-30ae4de5c616")
 	)
 	(wire
 		(pts
@@ -8822,6 +8832,16 @@
 			(type default)
 		)
 		(uuid "7aabadac-84d2-455a-80a3-48be2ba0368e")
+	)
+	(wire
+		(pts
+			(xy 196.85 97.79) (xy 231.14 97.79)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7be7c227-0e7a-48be-b666-dd6f11d17a55")
 	)
 	(wire
 		(pts
@@ -8937,16 +8957,6 @@
 	)
 	(wire
 		(pts
-			(xy 214.63 110.49) (xy 231.14 110.49)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8e64990c-9570-46b8-bf38-198408231464")
-	)
-	(wire
-		(pts
 			(xy 265.43 66.04) (xy 265.43 57.15)
 		)
 		(stroke
@@ -9055,16 +9065,6 @@
 			(type default)
 		)
 		(uuid "99639d2d-b796-4148-b47f-a78d6567addf")
-	)
-	(wire
-		(pts
-			(xy 187.96 97.79) (xy 231.14 97.79)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9a2edada-6665-4c9c-839a-687428288945")
 	)
 	(wire
 		(pts
@@ -9273,6 +9273,16 @@
 	)
 	(wire
 		(pts
+			(xy 189.23 90.17) (xy 231.14 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b9cd59eb-d99d-45f2-b2c6-2e38ec6a1262")
+	)
+	(wire
+		(pts
 			(xy 142.24 153.67) (xy 148.59 153.67)
 		)
 		(stroke
@@ -9386,7 +9396,7 @@
 	)
 	(wire
 		(pts
-			(xy 149.86 120.65) (xy 219.71 120.65)
+			(xy 149.86 120.65) (xy 191.77 120.65)
 		)
 		(stroke
 			(width 0)
@@ -9426,7 +9436,7 @@
 	)
 	(wire
 		(pts
-			(xy 214.63 115.57) (xy 214.63 110.49)
+			(xy 186.69 87.63) (xy 186.69 115.57)
 		)
 		(stroke
 			(width 0)
@@ -9581,16 +9591,6 @@
 	)
 	(wire
 		(pts
-			(xy 222.25 118.11) (xy 231.14 118.11)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e0ee382e-0cb7-4221-93ef-4ccfa0733beb")
-	)
-	(wire
-		(pts
 			(xy 38.1 85.09) (xy 38.1 87.63)
 		)
 		(stroke
@@ -9642,7 +9642,7 @@
 	)
 	(wire
 		(pts
-			(xy 187.96 125.73) (xy 187.96 97.79)
+			(xy 196.85 125.73) (xy 196.85 97.79)
 		)
 		(stroke
 			(width 0)
@@ -9652,7 +9652,7 @@
 	)
 	(wire
 		(pts
-			(xy 152.4 125.73) (xy 187.96 125.73)
+			(xy 152.4 125.73) (xy 196.85 125.73)
 		)
 		(stroke
 			(width 0)
@@ -9672,7 +9672,7 @@
 	)
 	(wire
 		(pts
-			(xy 217.17 118.11) (xy 217.17 113.03)
+			(xy 189.23 90.17) (xy 189.23 118.11)
 		)
 		(stroke
 			(width 0)
@@ -9860,7 +9860,7 @@
 	)
 	(text "violet"
 		(exclude_from_sim no)
-		(at 208.28 120.65 0)
+		(at 194.818 92.71 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10087,7 +10087,7 @@
 	)
 	(text "white"
 		(exclude_from_sim no)
-		(at 208.28 123.19 0)
+		(at 194.818 95.25 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10131,7 +10131,7 @@
 	)
 	(text "gray"
 		(exclude_from_sim no)
-		(at 213.36 97.79 0)
+		(at 197.612 97.79 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10142,7 +10142,7 @@
 	)
 	(text "green"
 		(exclude_from_sim no)
-		(at 208.28 115.57 0)
+		(at 194.818 87.63 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10175,7 +10175,7 @@
 	)
 	(text "blue"
 		(exclude_from_sim no)
-		(at 208.28 118.11 0)
+		(at 194.818 90.17 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10185,7 +10185,7 @@
 		(uuid "f3bd9590-2762-4c37-af42-62f168ed4a97")
 	)
 	(label "startButton"
-		(at 196.85 97.79 0)
+		(at 201.93 97.79 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10195,7 +10195,7 @@
 		(uuid "4122275a-75f5-46e9-a5d1-cd88f6824df6")
 	)
 	(label "passiveBuzzer"
-		(at 191.77 123.19 0)
+		(at 201.93 95.25 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10205,7 +10205,7 @@
 		(uuid "4b0355b3-629a-4385-acd0-57cc7dad0f5f")
 	)
 	(label "pressControlLed"
-		(at 191.77 118.11 0)
+		(at 201.93 90.17 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10215,7 +10215,7 @@
 		(uuid "bb840bd3-1685-4547-8a67-995daff8369c")
 	)
 	(label "activeBuzzer"
-		(at 191.77 120.65 0)
+		(at 201.93 92.71 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10225,7 +10225,7 @@
 		(uuid "e48dd57f-0b2f-4098-9642-00cfa73361d8")
 	)
 	(label "pumpLED"
-		(at 191.77 115.57 0)
+		(at 201.93 87.63 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10236,7 +10236,7 @@
 	)
 	(global_label "PressControlState"
 		(shape input)
-		(at 210.82 102.87 180)
+		(at 184.15 102.87 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -10246,7 +10246,7 @@
 		)
 		(uuid "1016136f-66c0-43f0-9287-25426c21401d")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 194.8369 102.87 0)
+			(at 168.1669 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10302,7 +10302,7 @@
 	)
 	(global_label "PumpState"
 		(shape input)
-		(at 210.82 100.33 180)
+		(at 181.61 100.33 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -10312,7 +10312,7 @@
 		)
 		(uuid "c4c8af6d-4983-42c2-aeb8-aa54f40562ab")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 200.3041 100.33 0)
+			(at 171.0941 100.33 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10392,7 +10392,7 @@
 	)
 	(symbol
 		(lib_id "Graphic:SYM_Arrow_Normal")
-		(at 227.33 118.11 0)
+		(at 227.33 95.25 0)
 		(mirror y)
 		(unit 1)
 		(exclude_from_sim yes)
@@ -10401,7 +10401,7 @@
 		(dnp no)
 		(uuid "00000000-0000-0000-0000-00005e07f78f")
 		(property "Reference" "#SYM?"
-			(at 227.33 116.586 0)
+			(at 227.33 93.726 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10410,7 +10410,7 @@
 			)
 		)
 		(property "Value" "SYM_Arrow_Normal"
-			(at 227.076 119.38 0)
+			(at 227.076 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10419,7 +10419,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 227.33 118.11 0)
+			(at 227.33 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10428,7 +10428,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 227.33 118.11 0)
+			(at 227.33 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10437,7 +10437,7 @@
 			)
 		)
 		(property "Description" "Filled arrow, 200mil"
-			(at 227.33 118.11 0)
+			(at 227.33 95.25 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10456,7 +10456,7 @@
 	)
 	(symbol
 		(lib_id "Graphic:SYM_Arrow_Normal")
-		(at 227.33 110.49 0)
+		(at 227.33 87.63 0)
 		(mirror y)
 		(unit 1)
 		(exclude_from_sim yes)
@@ -10465,7 +10465,7 @@
 		(dnp no)
 		(uuid "095eb96d-ac74-4462-b6e3-5af98ca4cfaa")
 		(property "Reference" "#SYM7"
-			(at 227.33 108.966 0)
+			(at 227.33 86.106 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10474,7 +10474,7 @@
 			)
 		)
 		(property "Value" "SYM_Arrow_Normal"
-			(at 227.076 111.76 0)
+			(at 227.076 88.9 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10483,7 +10483,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 227.33 110.49 0)
+			(at 227.33 87.63 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10492,7 +10492,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 227.33 110.49 0)
+			(at 227.33 87.63 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10501,7 +10501,7 @@
 			)
 		)
 		(property "Description" "Filled arrow, 200mil"
-			(at 227.33 110.49 0)
+			(at 227.33 87.63 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12082,7 +12082,6 @@
 		)
 	)
 	(symbol
-		(lib_name "lnDevice:Buzzer Active")
 		(lib_id "lnDevice:Buzzer Active")
 		(at 25.4 104.14 0)
 		(mirror y)
@@ -12591,7 +12590,7 @@
 	)
 	(symbol
 		(lib_id "Graphic:SYM_Arrow_Normal")
-		(at 227.33 115.57 0)
+		(at 227.33 92.71 0)
 		(mirror y)
 		(unit 1)
 		(exclude_from_sim yes)
@@ -12600,7 +12599,7 @@
 		(dnp no)
 		(uuid "c07bb1dd-ed9e-4f9c-a143-7478ffb35a7a")
 		(property "Reference" "#SYM1"
-			(at 227.33 114.046 0)
+			(at 227.33 91.186 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12609,7 +12608,7 @@
 			)
 		)
 		(property "Value" "SYM_Arrow_Normal"
-			(at 227.076 116.84 0)
+			(at 227.076 93.98 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12618,7 +12617,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 227.33 115.57 0)
+			(at 227.33 92.71 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12627,7 +12626,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 227.33 115.57 0)
+			(at 227.33 92.71 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12636,7 +12635,7 @@
 			)
 		)
 		(property "Description" "Filled arrow, 200mil"
-			(at 227.33 115.57 0)
+			(at 227.33 92.71 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13460,7 +13459,6 @@
 		)
 	)
 	(symbol
-		(lib_name "lnDevice:Buzzer Passive")
 		(lib_id "lnDevice:Buzzer Passive")
 		(at 35.56 104.14 0)
 		(mirror y)
@@ -13744,7 +13742,7 @@
 	)
 	(symbol
 		(lib_id "Graphic:SYM_Arrow_Normal")
-		(at 227.33 113.03 0)
+		(at 227.33 90.17 0)
 		(mirror y)
 		(unit 1)
 		(exclude_from_sim yes)
@@ -13753,7 +13751,7 @@
 		(dnp no)
 		(uuid "fcd9183c-3291-4bda-aa28-de43d29f8d41")
 		(property "Reference" "#SYM3"
-			(at 227.33 111.506 0)
+			(at 227.33 88.646 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13762,7 +13760,7 @@
 			)
 		)
 		(property "Value" "SYM_Arrow_Normal"
-			(at 227.076 114.3 0)
+			(at 227.076 91.44 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13771,7 +13769,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 227.33 113.03 0)
+			(at 227.33 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13780,7 +13778,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 227.33 113.03 0)
+			(at 227.33 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13789,7 +13787,7 @@
 			)
 		)
 		(property "Description" "Filled arrow, 200mil"
-			(at 227.33 113.03 0)
+			(at 227.33 90.17 0)
 			(effects
 				(font
 					(size 1.27 1.27)

@@ -115,7 +115,7 @@ void pressControlRelayOFF(uint8_t caller) {
 
 
 // ##############################################################
-// # non uso pinToggle perché mi servwe di richiamare le funzioni relayON relaOGG
+// # non uso pinToggle perché mi serve di richiamare le funzioni relayON relaOGG
 // ##############################################################
 void pressControlRelayToggle(uint8_t caller) {
     if (isActed(pressControlRelay)) {
