@@ -83,7 +83,7 @@ char *nowTimeDummy() {
 void setup() {
     // Serial.begin(115200);
     lnSERIAL.begin(115200);
-    delay(2000);
+     delay(2000);
 
     // -----------------------------------
     // --- "pins_Initialization.cpp"

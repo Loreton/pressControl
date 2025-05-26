@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 19-04-2025 14.59.35
+// Date .........: 26-05-2025 17.39.58
 // ref: https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html
 //
 
@@ -11,6 +11,7 @@
 // - lnLibrary headers files
 // ---------------------------------
 #define LOG_LEVEL_1
+#define LOG_LEVEL_2x
 #include "@logMacros.h"
 #include "@pinOperations.h"
 #include "@lnString.h"
@@ -104,7 +105,7 @@ bool pumpStateForAlarm(void) {
             pressControlRelayStatus(PUMP_STILL_ON);
             pinTimerStart(pumpState, activeBuzzerDuration);
             activeBuzzerON();
-            printf1_NFN("%s buzzer ON\n", pumpState->pinID);
+            printf2_NFN("%s buzzer ON\n", pumpState->pinID);
         }
     }
     else if (pumpState->isReleased) {
