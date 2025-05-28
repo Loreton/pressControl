@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-05-2025 11.10.14
+// Date .........: 28-05-2025 13.45.24
 */
 //  telegram2 async https://github.com/cotestatnt/AsyncTelegram2/tree/master
 //                  https://github.com/cotestatnt/AsyncTelegram/blob/master/REFERENCE.md
@@ -52,6 +52,16 @@
 
 
 #define USE_CLIENTSSL false
+/*
+(SSLClient)(SSL_ERROR)(connected): Not connected because write error is set
+(SSLClient)(SSL_ERROR)(m_print_ssl_error): SSL_BR_WRITE_ERROR
+(SSLClient)(SSL_ERROR)(m_run_until): SSL internals timed out! This could be an internal error, bad data sent from the server, or data being discarded due to a buffer overflow. If you are using Ethernet, did you modify the library properly (see README)?
+(SSLClient)(SSL_ERROR)(connected): Not connected because write error is set
+(SSLClient)(SSL_ERROR)(m_print_ssl_error): SSL_BR_WRITE_ERROR
+(SSLClient)(SSL_ERROR)(m_start_ssl): Failed to initlalize the SSL layer
+(SSLClient)(SSL_ERROR)(m_print_br_error): Unknown error code: 0
+
+*/
 #include <AsyncTelegram2.h>
 
 #include <WiFi.h>
