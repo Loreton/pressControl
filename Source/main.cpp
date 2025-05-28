@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-05-2025 12.08.03
+// Date .........: 28-05-2025 14.27.45
 // ref: https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html
 //
 
@@ -12,9 +12,11 @@ extern fauxmoESP fauxmo;
 
 #define ESP32_WROOM_32E_2RELAY_MODULE   1
 #define ESP32_WROOM_32_MODULE           2
-#define ESP32_BOARD_TYPE                ESP32_WROOM_32E_2RELAY_MODULE
 #define PRODUCTION                      1
 #define DEVEL                           2
+
+
+#define ESP32_BOARD_TYPE                ESP32_WROOM_32E_2RELAY_MODULE
 #define RELEASE_TYPE                    PRODUCTION
 
 

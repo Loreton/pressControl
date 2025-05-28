@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-05-2025 08.06.39
+// Date .........: 28-05-2025 14.27.10
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -155,10 +155,14 @@ void pinsInitialization(void) {
     //====================================================
     // ------  name,                 pin_nr                 , pin_struct       , mode (inp/out), active_level);
     // outputPinInit("autoclave"         , pressControlRelay_pin , pressControlRelay  , OUTPUT , LOW);
-    outputPinInit(alexaName           , pressControlRelay_pin , pressControlRelay  , OUTPUT , LOW);
-    outputPinInit("pumpHornAlarm"     , pumpHornAlarm_pin     , pumpHornAlarmRelay , OUTPUT , LOW);
-    // outputPinInit("LED"               , LED_pin               , LED                , OUTPUT , LOW);
-    // outputPinInit("led_internal_pin"  , led_internal_pin      , led_internal       , OUTPUT , LOW);
+    #if ESP32_BOARD_TYPE == ESP32_WROOM_32E_2RELAY_MODULE
+        outputPinInit(alexaName           , pressControlRelay_pin , pressControlRelay  , OUTPUT , HIGH);
+        outputPinInit("pumpHornAlarm"     , pumpHornAlarm_pin     , pumpHornAlarmRelay , OUTPUT , HIGH);
+    #else
+        outputPinInit(alexaName           , pressControlRelay_pin , pressControlRelay  , OUTPUT , LOW);
+        outputPinInit("pumpHornAlarm"     , pumpHornAlarm_pin     , pumpHornAlarmRelay , OUTPUT , LOW);
+    #endif
+
     outputPinInit("activeBuzzer"      , activeBuzzer_pin      , activeBuzzer       , OUTPUT , HIGH);
     outputPinInit("passiveBuzzer"     , passiveBuzzer_pin     , passiveBuzzer      , OUTPUT , HIGH);
     outputPinInit("pumpLED"           , pumpLED_pin           , pumpLED            , OUTPUT , HIGH);
