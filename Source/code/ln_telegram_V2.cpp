@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-05-2025 13.45.24
+// Date .........: 28-05-2025 20.23.16
 */
 //  telegram2 async https://github.com/cotestatnt/AsyncTelegram2/tree/master
 //                  https://github.com/cotestatnt/AsyncTelegram/blob/master/REFERENCE.md
@@ -60,8 +60,8 @@
 (SSLClient)(SSL_ERROR)(m_print_ssl_error): SSL_BR_WRITE_ERROR
 (SSLClient)(SSL_ERROR)(m_start_ssl): Failed to initlalize the SSL layer
 (SSLClient)(SSL_ERROR)(m_print_br_error): Unknown error code: 0
-
 */
+
 #include <AsyncTelegram2.h>
 
 #include <WiFi.h>
@@ -78,13 +78,6 @@
 
 
 
-
-
-
-
-// #include <AsyncTelegram2.h>
-// #include <WiFiClientSecure.h>
-// #define USE_CLIENTSSL false
 
 // ---------------------------------
 // - lnLibrary headers files
