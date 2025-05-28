@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 19-04-2025 14.59.45
+// Date .........: 28-05-2025 08.06.39
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -8,7 +8,7 @@
 // ---------------------------------
 // - lnLibrary headers files
 // ---------------------------------
-#define LOG_LEVEL_0
+#define LOG_LEVEL_0x
 #include "@logMacros.h"
 #include "@mainStructures.h"
 #include "@pinOperations.h"
@@ -23,14 +23,19 @@
 
 
 #define END_OF_ARRAY -1 // --- thresholds value (terminated by -1 as last element)
-#ifdef PRODUCTION
-    const int32_t PROGMEM pumpState_thresholds_level_values[]   = {0, 100, 1*60*1000,  2*60*1000,  3*60*1000,  4*60*1000,  5*60*1000,  END_OF_ARRAY};
+#if RELEASE_TYPE == PRODUCTION
+    // -                                                              bounce      1 min        3 min      3 min       4 min        5 min     alarm
+    const int32_t PROGMEM pumpState_thresholds_level_values[]   = {0, 100,       1*60*1000,  2*60*1000,  3*60*1000,  4*60*1000,  5*60*1000,  END_OF_ARRAY};
+    const char *alexaName="autoclave";
 #else
-    const int32_t PROGMEM pumpState_thresholds_level_values[]   = {0, 100, 10*1000,   20*1000,     30*1000,     40*1000,     50*1000,  END_OF_ARRAY};
+    // -                                                              bounce       10 sec    20 sec       30 sec       40 sec       50 sec    alarm
+    const int32_t PROGMEM pumpState_thresholds_level_values[]   = {0, 100,        10*1000,   20*1000,     30*1000,     40*1000,     50*1000,  END_OF_ARRAY};
+    const char *alexaName="test_auto_clave";
 #endif
 
-const int32_t PROGMEM base_thresholds_level_values[]            = {0, 100, 1000, END_OF_ARRAY};
-const int32_t PROGMEM startButton_thresholds_level_values[]     = {0, 1000, 2000, END_OF_ARRAY};
+    // -                                                              bounce    msecs
+const int32_t PROGMEM base_thresholds_level_values[]            = {0, 100,      1000, END_OF_ARRAY};
+const int32_t PROGMEM startButton_thresholds_level_values[]     = {0, 1000,     2000, END_OF_ARRAY};
 
 
 
@@ -149,7 +154,8 @@ void pinsInitialization(void) {
     //= set output pins
     //====================================================
     // ------  name,                 pin_nr                 , pin_struct       , mode (inp/out), active_level);
-    outputPinInit("autoclave"         , pressControlRelay_pin , pressControlRelay  , OUTPUT , LOW);
+    // outputPinInit("autoclave"         , pressControlRelay_pin , pressControlRelay  , OUTPUT , LOW);
+    outputPinInit(alexaName           , pressControlRelay_pin , pressControlRelay  , OUTPUT , LOW);
     outputPinInit("pumpHornAlarm"     , pumpHornAlarm_pin     , pumpHornAlarmRelay , OUTPUT , LOW);
     // outputPinInit("LED"               , LED_pin               , LED                , OUTPUT , LOW);
     // outputPinInit("led_internal_pin"  , led_internal_pin      , led_internal       , OUTPUT , LOW);

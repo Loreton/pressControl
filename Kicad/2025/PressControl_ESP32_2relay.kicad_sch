@@ -10204,7 +10204,7 @@
 		)
 		(uuid "4b0355b3-629a-4385-acd0-57cc7dad0f5f")
 	)
-	(label "pressControlLed"
+	(label "pressControlLED"
 		(at 201.93 90.17 0)
 		(effects
 			(font
@@ -11302,7 +11302,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "PressControlLed"
+		(property "Value" "pressControlLED"
 			(at 24.13 136.525 0)
 			(effects
 				(font
@@ -12902,7 +12902,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "PumpLed"
+		(property "Value" "PumpLED"
 			(at 35.56 77.216 0)
 			(effects
 				(font
@@ -13270,7 +13270,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "PumpLed"
+		(property "Value" "PumpLED"
 			(at 35.56 143.256 0)
 			(effects
 				(font
@@ -13407,7 +13407,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "PressControlLed"
+		(property "Value" "pressControlLED"
 			(at 25.4 71.12 0)
 			(effects
 				(font

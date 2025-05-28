@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 19-04-2025 14.59.40
+// Date .........: 27-05-2025 18.22.41
 // ref: https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html
 //
 
@@ -151,12 +151,8 @@ extern const PROGMEM char *splittedResult[];
 void pressControlProcessTelegramMessage(char *msgText) {
     printf1_NFN("processing telegram message: %s\n", msgText);
     uint8_t words = splitString(msgText, " ");
-    #if 0
-    printf1_NFN("words found: %d\n", words);
-    for (uint8_t j=0; j<words; j++) {
-        printf1_NFN("%d - %s\n", j, splittedResult[j]);
-    }
-    #endif
+
+
     char *cmd;
     int32_t mseconds =  0;
     if (words > 0) {

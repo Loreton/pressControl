@@ -1,16 +1,12 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 26-05-2025 16.50.39
+// Date .........: 27-05-2025 18.05.26
 //
 
 #include <Arduino.h>
 
 // #include "pins_Initialization.h"
-#define ESP32_WROOM_32E_2RELAY_MODULE   1
-#define ESP32_WROOM_32_MODULE           2
 
-#define ESP32_BOARD_TYPE                ESP32_WROOM_32_MODULE
-#define RELEASE_TYPE                    0
 
 #ifndef __PINS_DEFINITIONS_H__
     #define __PINS_DEFINITIONS_H__
@@ -78,20 +74,21 @@
     // #define PROTOTYPE
 
     #if ESP32_BOARD_TYPE == ESP32_WROOM_32E_2RELAY_MODULE
-        #define pumpState_pin               GPIO_12  // INPUT
-        #define startButton_pin             GPIO_13  // INPUT
-        #define pressControlState_pin       GPIO_14  // INPUT
+        #define passiveBuzzer_pin           GPIO_22  // OUTPUT
+        #define activeBuzzer_pin            GPIO_23  // OUTPUT
+        #define pressControlLED_pin         GPIO_25  // OUTPUT
+        #define pumpLED_pin                 GPIO_26  // OUTPUT
 
         #define pressControlRelay_pin       GPIO_16  // OUTPUT  GPIO16 mandatory on Esp32_X2_realy_board
         #define pumpHornAlarm_pin           GPIO_17  // OUTPUT  GPIO17 mandatory on Esp32_X2_realy_board
         #define led_internal_pin            GPIO_23  // OUTPUT  GPIO23 mandatory on Esp32_X2_realy_board
 
-        #define activeBuzzer_pin            GPIO_18  // OUTPUT
-        #define passiveBuzzer_pin           GPIO_19  // OUTPUT
-        #define LED_pin                     GPIO_21  // OUTPUT
-        #error "BOARD sbagliata"
+        #define pressControlState_pin       GPIO_18  // INPUT
+        #define pumpState_pin               GPIO_19  // INPUT
+        #define startButton_pin             GPIO_21  // INPUT
 
     #elif ESP32_BOARD_TYPE == ESP32_WROOM_32_MODULE
+        #error "BOARD sbagliata"
         #define passiveBuzzer_pin           GPIO_22  // OUTPUT
         #define activeBuzzer_pin            GPIO_23  // OUTPUT
         #define pressControlLED_pin         GPIO_25  // OUTPUT
@@ -102,11 +99,6 @@
         #define JTAG_TMS_reserved           GPIO_14  // TMS
         #define JTAG_TDO_reserved           GPIO_15  // TDO
 
-        // #define passiveBuzzer_pin           GPIO_12  // OUTPUT
-        // #define activeBuzzer_pin            GPIO_13  // OUTPUT
-        // #define pressControlLED_pin         GPIO_14  // OUTPUT
-        // #define pumpLED_pin                 GPIO_15  // OUTPUT
-        
 
         #define pressControlRelay_pin       GPIO_16  // OUTPUT
         #define pumpHornAlarm_pin           GPIO_17  // OUTPUT

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 08-05-2025 19.47.59
+// Date .........: 28-05-2025 12.08.03
 // ref: https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html
 //
 
@@ -10,33 +10,29 @@
 
 extern fauxmoESP fauxmo;
 
+#define ESP32_WROOM_32E_2RELAY_MODULE   1
+#define ESP32_WROOM_32_MODULE           2
+#define ESP32_BOARD_TYPE                ESP32_WROOM_32E_2RELAY_MODULE
+#define PRODUCTION                      1
+#define DEVEL                           2
+#define RELEASE_TYPE                    PRODUCTION
+
 
 #define __I_AM_MAIN_CPP__
 // ---------------------------------
 // - lnLibrary headers files
 // ---------------------------------
+#define LOG_LEVEL_0
 #define LOG_LEVEL_1
-#define LOG_LEVEL_2
+#define LOG_LEVEL_2x
 #define LOG_LEVEL_3x
 #define LOG_LEVEL_4x
 #include "@logMacros.h"
-// #include "@lnLibrary.h"
-// #include "@logMacros.h"
 #include "@mainStructures.h"
-
 #include "@fileSystem.h"
-// #include "@lnString.h"
-
 #include "@pinOperations.h"
-// #include "@pinDebug.h"
-
-// #include "@SerialRead.h"
-
-// #include "@ln_MillisTimer.h"
 #include "@ln_time.h"
-
 #include "@ln_wifi.h"
-// #include "@wifiCredentials.h"
 
 
 // ---------------------------------
@@ -75,11 +71,6 @@ char *nowTimeDummy() {
 }
 
 
-
-// structMillisTimer_t timer1MIN;  structMillisTimer_t *timer1min = &timer1MIN;
-// structMillisTimer_t timer15MIN; structMillisTimer_t *timer15min = &timer15MIN;
-
-
 void setup() {
     // Serial.begin(115200);
     lnSERIAL.begin(115200);
@@ -89,7 +80,7 @@ void setup() {
     // --- "pins_Initialization.cpp"
     // -----------------------------------
     pinsInitialization();
-    printf2_NFN("turning led on\n");
+    printf1_NFN("turning led on\n");
 
     // -----------------------------------
     // ------ set Time
@@ -97,7 +88,7 @@ void setup() {
     pinON(pressControlLED);
     time_setup();
     delay(4000);
-    printf1_NFN("local time has been set\n");
+    printf0_NFN("local time has been set\n");
     pinOFF(pressControlLED);
 
     // -----------------------------------
@@ -107,7 +98,7 @@ void setup() {
     wifi_Start();
     digitalWrite(pressControlLED->pin, !digitalRead(pressControlLED->pin));
     for (int8_t i=0; i<SSID_ELEMENTS; i++) {
-        printf2_NFN("%d - new_ssid: %s\n", i, mySSID[i].ssid);
+        printf1_NFN("%d - new_ssid: %s\n", i, mySSID[i].ssid);
     }
     delay(1000);
     pinOFF(pressControlLED);
@@ -115,11 +106,11 @@ void setup() {
     // -----------------------------------
     // ------ set NTP server
     // -----------------------------------
-    pinON(pressControlLED);
+    pinToggle(pressControlLED);
     NTPInit();
     // digitalWrite(pressControlLED->pin, !digitalRead(pressControlLED->pin));
     delay(1000);
-    printf1_NFN("ntp client has been started\n");
+    printf0_NFN("ntp client has been started\n");
     pinOFF(pressControlLED);
 
     // -----------------------------------
@@ -127,6 +118,7 @@ void setup() {
     // -----------------------------------
     pinON(pressControlLED);
     AlexaSetup();
+    printf0_NFN("Alexa has been started\n");
     delay(1000);
     pinOFF(pressControlLED);
 
@@ -143,11 +135,11 @@ Smart life the user you are inviting are located in different data centers. Devi
 
 
 
-#define LN_RESCAN_WIFIxx
+#define LN_RESCAN_WIFI
 
 uint8_t blink_secs=5;
 
-
+uint32_t wifi_diconnection_elapsed = 0;
 
 
 io_output_pin_struct_t *ptr;
@@ -163,12 +155,14 @@ void loop() {
     // -----------------------------------
     if (first_run) {
         first_run=false;
-        printf1_NFN("starting loop....\n");
+        printf0_NFN("starting loop....\n");
         // alignToMinute(); // allineamento al minuto ... non so se mi serve
         // digitalWrite(pressControlLED->pin, pressControlLED->OFF);
         pinOFF(pressControlLED);
         pinOFF(pumpLED);
     }
+
+
 
 
     // =====================================
@@ -210,7 +204,9 @@ void loop() {
 
     // ---- E R R O R ------
     if (pumpState->is_ON && pressControlState->is_OFF) {
-        pulseGenerator(activeBuzzer, 1000, 500); // buzzer pulsante
+        // pulseGenerator(activeBuzzer, 1000, 500); // buzzer
+        pinPeriodPulse(activeBuzzer, 1000, 500); // buzzer
+        // pinPulseON(activeBuzzer, 1000, fAUTO_ON_OFF) {
         pinON(pumpHornAlarmRelay);   //HORN acceso fisso
     }
     else {
@@ -223,7 +219,6 @@ void loop() {
         }
         else {
             if ( (timeinfo.tm_sec%5 == 0) && (timeinfo.tm_sec != last_pressControlLED_second) ) {
-                // printf4_NFN("calling start pulseTime\n");
                 pinPulseON(pressControlLED, 20, fAUTO_ON_OFF);
                 last_pressControlLED_second=timeinfo.tm_sec;
             }
@@ -249,12 +244,15 @@ void loop() {
 
 
 
-    // int8_t fPRESS_CONTROL_ACTIVE = pumpState->is_ON + pressControlState->is_ON;
     if (isSecondOClock()) {
         handleTelegram();
 
+
+        // ---------------------------------
+        // - check for Alexa connection
         // fauxmoESP uses an async TCP server but a sync UDP server
         // Therefore, we have to manually poll for UDP packets
+        // ---------------------------------
         chackAlexa();
         ptr = pressControlRelay;
         if (ptr->alexa_request) {
@@ -262,24 +260,70 @@ void loop() {
             ptr->alexa_request = false;
         }
 
-        // ptr = loadSuperioreRelay;
-        // if (ptr->alexa_request) {
-        //     loadSuperioreRelaySet(ptr->alexa_status, ALEXA_REQ);
-        //     ptr->alexa_request = false;
-        // }
+
+
+        // ---------------------------------
+        // - check for WiFi connection
+        // ---------------------------------
+        if (wifi_isConnected()) {
+            wifi_diconnection_elapsed = millis();
+        }
+        else {
+            printf0_NFN("connection lost (elapsed: %ld)\n", (millis() - wifi_diconnection_elapsed) );
+
+            if (millis() - wifi_diconnection_elapsed > 5*60*1000) { // 5 minuti
+                delay(10000);
+                ESP.restart();
+            }
+            else if (millis() - wifi_diconnection_elapsed > 2*60*1000) { // 2 minuti
+                wifi_reconnect();
+            }
+        }
+
     }
+
+
+
+
 
 
     // ---------------------------------
     // actions on 01 minutes timer
     // ---------------------------------
     if (isMinuteOClock()) {
-        printf2_NFN("minute o'clock routine\n");
+        printf1_NFN("minute o'clock routine\n");
 
-        if (! wifi_isConnected()) {
-            printf1_NFN("connection lost\n");
-            wifi_reconnect();
+        if (wifi_isConnected()) {
+            printf0_NFN("WiFi status:\n");
+            printConnection();
+            // pingHost("www.google.com");
+            // pingHost("api.telegram.com");
         }
+
+        #if 0
+        if (! wifi_isConnected()) {
+            printf0_NFN("connection lost\n");
+            if (millis() - wifi_diconnection_elapsed > 2*60*1000) {
+                wifi_reconnect();
+            }
+        }
+        else {
+            wifi_diconnection_elapsed = millis();
+            printf0_NFN("WiFi status:\n");
+            printConnection();
+            pingHost("www.google.com");
+            if (! pingHost("api.telegram.com")) {
+                // setupTelegram();
+                // sendTelegramGroup((char *)"press /h for help\n");
+            }
+        }
+        #endif
+
+
+
+
+
+
 
         #ifdef LN_RESCAN_WIFI
         // ---------------------------------
@@ -288,12 +332,16 @@ void loop() {
         if (asyncWifiScan_started > 0) {
             asyncWifiScan_started++; // aumentiamo
             int16_t networksFound = wifi_scanComplete();
-            printf2_NFN("networks found: %d (-1 means still_running)\n", networksFound);
-            if (networksFound >= 0) {
+            if (networksFound == -1) {
+                printf1_NFN("discovery networks still running!!\n");
+            }
+            else {
+                printf1_NFN("networks found: %d\n", networksFound);
                 connectOnScanResult(networksFound);
                 asyncWifiScan_started=0; // chiudiamo il flag
                 wifi_scanDelete();
             }
+
             if (asyncWifiScan_started > 4) { // inutile dopo 4 minuti....
                 asyncWifiScan_started=0; // chiudiamo il flag
                 wifi_scanDelete();
@@ -308,7 +356,7 @@ void loop() {
     // actions every 15 minutes (at any quarter)
     // ---------------------------------
     if (isQuarterOClock()) {
-        printf2_NFN("it's a quarter of hour routine\n");
+        printf1_NFN("it's a quarter of hour routine\n");
         wifi_asyncScan();
         asyncWifiScan_started=1;
     }
@@ -316,16 +364,6 @@ void loop() {
 
 
 
-    #if 0
-
-
-    // last_loop_time = millis();
-    // Serial.println(millis()%1000);
-    // printf2_FN("millis() %ld - reminder: %d - delay: %d\n", millis(), reminder, 1000-reminder);
-
-    // m_reminder = (millis()%1000);
-    // delay(200);
-    #endif
 }
 
 

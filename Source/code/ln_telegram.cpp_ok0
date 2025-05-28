@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 19-04-2025 14.25.01
+// Date .........: 28-05-2025 09.00.43
 */
 //  telegram2 async https://github.com/cotestatnt/AsyncTelegram2/tree/master
 //                  https://github.com/cotestatnt/AsyncTelegram/blob/master/REFERENCE.md
@@ -58,7 +58,7 @@
 // ---------------------------------
 // - lnLibrary headers files
 // ---------------------------------
-#define LOG_LEVEL_0
+#define LOG_LEVEL_0x
 #include "@logMacros.h"
 #include "@mainStructures.h"
 
@@ -81,48 +81,8 @@
 // ---------------------------------
 // macros Aliases for LOG
 // ---------------------------------
-#define LOG_LEVEL_0
+#define LOG_LEVEL_1
 #include "@logMacros.h"
-
-// #if  LOG_LEVEL >= 2
-//     #define printf2_NFN          lnPrintF_NowFN
-//     #define printf2              lnPrintF
-// #else
-//     #define printf2_NFN
-//     #define printf2
-// #endif
-
-// #if  LOG_LEVEL >= 1
-//     #define printf1_NFN          lnPrintF_NowFN
-//     #define printf1                    lnPrintF
-// #else
-//     #define printf1_NFN
-//     #define printf1
-// #endif
-
-
-
-
-// enum _tg_commands : uint8_t { CMD_HELP=0, CMD_WHOAMI, CMD_PC_ON, CMD_PC_OFF, CMD_LS_ON, CMD_LS_OFF, CMD_TG_COMMANDS}; // come parametro per fare il display in alcune funzioni (es.: isActed())
-
-// const PROGMEM char * tgCommand[CMD_TG_COMMANDS+1] = {
-//                                                     "/help",
-//                                                     "/whoami"
-//                                                     "/pc on",
-//                                                     "/pc off",
-//                                                     "/ls on",
-//                                                     "/ls off",
-//                                                 };
-
-
-// const PROGMEM char * tgDescr[CMD_TG_COMMANDS+1] = {
-//                                                     "",
-//                                                     ""
-//                                                     "hh mm ss",
-//                                                     "",
-//                                                     "hh mm ss",
-//                                                     "",
-//                                                 };
 
 
 
@@ -137,14 +97,21 @@ telegram_send_struct_t tgMSG;
 telegram_send_struct_t *tgMsg = &tgMSG;
 
 // String PROGMEM  welcome = "Welcome, " + from_name + ".\n";
+// const PROGMEM char *help_text_0 = "<b>Available commands</b>:\n\n"\
+//                                 "/pc on [hh:mm:ss|secs]\n"\
+//                                 "/pc off\n"\
+//                                 "/pc status\n"\
+//                                 "/whoami\n"\
+//                                 "/help\n";
+
 const PROGMEM char *help_text = "<b>Available commands</b>:\n\n"\
-                                "/pc on [hh:mm:ss|secs]\n"\
-                                "/pc off\n"\
-                                "/pc status\n"\
-                                "/ls on [hh:mm:ss|secs]\n"\
-                                "/ls off\n"\
-                                "/ls status\n"\
-                                "/whoami\n";
+                                "/on [hh:mm:ss|secs]\n"\
+                                "/off\n"\
+                                "/status\n"\
+                                "/whoami\n"\
+                                "/h[elp]\n";
+
+
 
 
 
@@ -161,13 +128,13 @@ void setupTelegram() {
 
     printf1_NFN("\nTelegram connection... ");
     if (myBot.begin()) {
-        printf1("OK\n");
+        printf1_NFN("OK\n");
     }
     else {
-        printf1("NOK\n");
+        printf1_NFN("NOK\n");
     }
 
-    printf2_NFN("Bot name: @%s\n", myBot.getBotName());
+    printf1_NFN("Bot name: @%s\n", myBot.getBotName());
 }
 
 
@@ -207,13 +174,17 @@ void handleTelegram() {
         // - check received message
         // ----------------------------
         if (msgText.startsWith("pc ")) {                 // pressControl
-            pressControlProcessTelegramMessage((char *)msgText.substring(3).c_str());  // prepara tgMsg<->data passo un testo solo per forzare la preparazione del messaggio
+            pressControlProcessTelegramMessage((char *)msgText.substring(3).c_str());  // skip 'pc '
         }
 
-        // else if (msgText.startsWith("ls ")) {            // load superiore
-        //     loadSuperioreProcessTelegramMessage((char *)msgText.substring(3).c_str());  // prepara tgMsg<->data passo un testo solo per forzare la preparazione del messaggio
 
-        // }
+        // ----------------------------
+        // - check received message
+        // ----------------------------
+        else if (msgText.startsWith("on ") || msgText.startsWith("off") || msgText.startsWith("status") ) {                 // pressControl
+            pressControlProcessTelegramMessage((char *)msgText.c_str());
+        }
+
 
         else if (msgText.startsWith("whoami")) {
             tgMsg->len += sprintf(tgMsg->data + tgMsg->len, "username: %s\n"  , username);
