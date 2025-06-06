@@ -1,6 +1,6 @@
 #
 # updated by ...: Loreto Notarantonio
-# Date .........: 06-06-2025 11.53.14
+# Date .........: 06-06-2025 11.56.55
 #
 
 
@@ -212,18 +212,18 @@ def main():
 #####################################################
 # input: env var "REL_LEVEL:PROD|DEVEL"
 #####################################################
-# USE_MAIN=True
-TAB=' '*4
-# if USE_MAIN: # if _*4_name__ == '__main__': NON FUNZIONA
+USE_MAIN=False
 
-Import("env")
-main()
-env = DefaultEnvironment()
-main()
-print(f"{TAB}{C.greenH}Current CLI targets", COMMAND_LINE_TARGETS, C.colorReset)
-keyPrompt(msg="[BEFORE COMPILE]", continue_char=["c"], quit_char=["x", "q"])
+if USE_MAIN: # if _*4_name__ == '__main__': NON FUNZIONA
+    TAB=' '*4
+    Import("env")
+    main()
+    env = DefaultEnvironment()
+    main()
+    print(f"{TAB}{C.greenH}Current CLI targets", COMMAND_LINE_TARGETS, C.colorReset)
+    keyPrompt(msg="[BEFORE COMPILE]", continue_char=["c"], quit_char=["x", "q"])
 
 
-# env.AddPostAction("$PROGPATH", post_program_action)
-# env.AddPreAction("upload", before_upload)
-# env.AddPostAction("upload", after_upload)
+    # env.AddPostAction("$PROGPATH", post_program_action)
+    # env.AddPreAction("upload", before_upload)
+    # env.AddPostAction("upload", after_upload)

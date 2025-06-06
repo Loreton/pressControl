@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 06-06-2025 11.50.54
+// Date .........: 06-06-2025 12.13.31
 //
 
 #include <Arduino.h>
@@ -9,12 +9,15 @@
     #define __PROJECT_STRUCTURES_H__
     #include "@mainStructures.h"
 
-    #define xln_ESP32_WROOM_32E_MODULE         10
-    #define xln_ESP32_WROOM_32E_MODULE_2RELAY  20
-    #define xln_DEVEL                          30
-    #define xln_PRODUCTION                     40
-    #define xln_RELEASE_TYPE                   ln_DEVEL
-    #define xln_ESP32_BOARD_TYPE               ln_ESP32_WROOM_32E_MODULE
+    #define ln_ESP32_WROOM_32E_MODULE         1
+    #define ln_ESP32_WROOM_32E_MODULE_2RELAY  2
+    // #define ln_ESP32_BOARD_TYPE               ln_ESP32_WROOM_32E_MODULE
+    #define ln_ESP32_BOARD_TYPE               ln_ESP32_WROOM_32E_MODULE_2RELAY
+
+    #define ln_DEVEL                          1
+    #define ln_PRODUCTION                     2
+    // #define ln_RELEASE_TYPE                   ln_DEVEL
+    #define ln_RELEASE_TYPE                   ln_PRODUCTION
 
 
 

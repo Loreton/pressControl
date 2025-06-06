@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 06-06-2025 11.49.04
+// Date .........: 06-06-2025 13.24.00
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -26,11 +26,12 @@
 
 #if ln_RELEASE_TYPE == ln_DEVEL
     #pragma message("Simao in DEVEL mode")
-    const int32_t PROGMEM pumpState_thresholds_level_values[]   = {0, 100,        10*1000,   20*1000,     30*1000,     40*1000,     50*1000,  END_OF_ARRAY};
+    const int32_t PROGMEM pumpState_thresholds_level_values[]   = {0, 100, 10*1000,   20*1000,     30*1000,     40*1000,     50*1000,  END_OF_ARRAY};
     const char *alexaName="test_auto_clave";
 #elif ln_RELEASE_TYPE == ln_PRODUCTION
     #pragma message("Simao in PRODUCTION mode")
-    const int32_t PROGMEM pumpState_thresholds_level_values[]   = {0, 100,       1*60*1000,  2*60*1000,  3*60*1000,  4*60*1000,  5*60*1000,  END_OF_ARRAY};
+    // const int32_t PROGMEM pumpState_thresholds_level_values[]   = {0, 100, 1*60*1000,  2*60*1000,  3*60*1000,  4*60*1000,  5*60*1000,  END_OF_ARRAY};
+    const int32_t PROGMEM pumpState_thresholds_level_values[]   = {0, 100, 60*1000,  2*57*1000,  3*54*1000,  4*51*1000,  5*48*1000,  6*45*1000,  END_OF_ARRAY};
     const char *alexaName="autoclave";
 #else
     #error "Wrong ln_RELEASE_TYPE"

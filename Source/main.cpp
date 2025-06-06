@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 06-06-2025 11.52.31
+// Date .........: 06-06-2025 13.25.46
 // ref: https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html
 //
 
@@ -82,12 +82,6 @@ void setup() {
     lnSERIAL.begin(115200);
      delay(2000);
 
-    // Serial.printf("ln_RELEASE_TYPE:                  %d\n", ln_RELEASE_TYPE);
-    // Serial.printf("ln_PRODUCTION:                    %d\n", ln_PRODUCTION);
-    // Serial.printf("ln_DEVEL:                         %d\n", ln_DEVEL);
-    // Serial.printf("ln_ESP32_BOARD_TYPE:              %d\n", ln_ESP32_BOARD_TYPE);
-    // Serial.printf("ln_ESP32_WROOM_32E_MODULE:        %d\n", ln_ESP32_WROOM_32E_MODULE);
-    // Serial.printf("ln_ESP32_WROOM_32E_MODULE_2RELAY: %d\n", ln_ESP32_WROOM_32E_MODULE_2RELAY);
 
     // -----------------------------------
     // --- "pins_Initialization.cpp"
