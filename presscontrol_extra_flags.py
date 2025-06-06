@@ -1,6 +1,6 @@
 #
 # updated by ...: Loreto Notarantonio
-# Date .........: 06-06-2025 11.25.19
+# Date .........: 06-06-2025 11.51.15
 #
 
 
@@ -216,10 +216,10 @@ def main():
 TAB=' '*4
 # if USE_MAIN: # if _*4_name__ == '__main__': NON FUNZIONA
 
-# Import("env")
-# main()
-env = DefaultEnvironment()
+Import("env")
 main()
+# env = DefaultEnvironment()
+# main()
 print(f"{TAB}{C.greenH}Current CLI targets", COMMAND_LINE_TARGETS, C.colorReset)
 keyPrompt(msg="[BEFORE COMPILE]", continue_char=["c"], quit_char=["x", "q"])
 

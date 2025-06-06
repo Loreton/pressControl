@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 06-06-2025 11.35.18
+// Date .........: 06-06-2025 11.50.41
 // ref: https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html
 //
 
@@ -51,7 +51,12 @@ extern ESP32Time     rtc;
 extern struct tm timeinfo; // capire se va bene uno per tutti i moduli oppure mantenerli separati per evitare overwrites
 
 
-
+#pragma message(PRINT_MACRO(ln_RELEASE_TYPE))
+#pragma message(PRINT_MACRO(ln_PRODUCTION))
+#pragma message(PRINT_MACRO(ln_DEVEL))
+#pragma message(PRINT_MACRO(ln_ESP32_BOARD_TYPE))
+#pragma message(PRINT_MACRO(ln_ESP32_WROOM_32E_MODULE))
+#pragma message(PRINT_MACRO(ln_ESP32_WROOM_32E_MODULE_2RELAY))
 
 // #####################################
 // --- definizioni timer da tenere sotto controllo
