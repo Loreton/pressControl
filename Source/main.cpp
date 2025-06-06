@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-05-2025 14.27.45
+// Date .........: 06-06-2025 11.35.18
 // ref: https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html
 //
 
@@ -10,15 +10,14 @@
 
 extern fauxmoESP fauxmo;
 
-#define ESP32_WROOM_32E_2RELAY_MODULE   1
-#define ESP32_WROOM_32_MODULE           2
-#define PRODUCTION                      1
-#define DEVEL                           2
+
+// #define PRODUCTION                      1
+// #define DEVEL                           2
 
 
-#define ESP32_BOARD_TYPE                ESP32_WROOM_32E_2RELAY_MODULE
-#define RELEASE_TYPE                    PRODUCTION
-
+// #define ESP32_BOARD_TYPE                ESP32_WROOM_32_MODULE
+// #define RELEASE_TYPE                    DEVEL
+// #warning ESP32_BOARD_TYPE
 
 #define __I_AM_MAIN_CPP__
 // ---------------------------------
@@ -77,6 +76,13 @@ void setup() {
     // Serial.begin(115200);
     lnSERIAL.begin(115200);
      delay(2000);
+
+    Serial.printf("ln_RELEASE_TYPE:                  %d\n", ln_RELEASE_TYPE);
+    Serial.printf("ln_PRODUCTION:                    %d\n", ln_PRODUCTION);
+    Serial.printf("ln_DEVEL:                         %d\n", ln_DEVEL);
+    Serial.printf("ln_ESP32_BOARD_TYPE:              %d\n", ln_ESP32_BOARD_TYPE);
+    Serial.printf("ln_ESP32_WROOM_32E_MODULE:        %d\n", ln_ESP32_WROOM_32E_MODULE);
+    Serial.printf("ln_ESP32_WROOM_32E_MODULE_2RELAY: %d\n", ln_ESP32_WROOM_32E_MODULE_2RELAY);
 
     // -----------------------------------
     // --- "pins_Initialization.cpp"

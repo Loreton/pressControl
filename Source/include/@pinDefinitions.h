@@ -1,16 +1,14 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 27-05-2025 18.05.26
+// Date .........: 06-06-2025 11.49.46
 //
 
 #include <Arduino.h>
 
-// #include "pins_Initialization.h"
-
+// ;  //this line ALSO solves everything!
 
 #ifndef __PINS_DEFINITIONS_H__
     #define __PINS_DEFINITIONS_H__
-
 
 
 
@@ -21,14 +19,6 @@
     Moreover, these secondary pins often serve communication purposes, such as I2C and SPI or as ADC channels.
 */
 
-/*
-    per il debugger JTAG:
-    ref: https://www.instructables.com/How-to-Use-a-Debugger-on-an-ESP32/
-    debugger_image: /media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/esp32LnLibrary/lnLibrary/JTAG-debugger/JTAG-debugger.webp
-    debugger_pins:  /media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/esp32LnLibrary/lnLibrary/JTAG-debugger/JTAG-pin-connection.webp
-    platformio-guide: https://docs.platformio.org/en/latest/plus/debug-tools/esp-prog.html#drivers
-
-*/
 
 
 //           GPIO                      description                                   Input       Output   Notes
@@ -73,7 +63,8 @@
 
     // #define PROTOTYPE
 
-    #if ESP32_BOARD_TYPE == ESP32_WROOM_32E_2RELAY_MODULE
+    #if ln_ESP32_BOARD_TYPE == ln_ESP32_WROOM_32E_MODULE_2RELAY
+        #define SPECIAL_LEVEL               1
         #define passiveBuzzer_pin           GPIO_22  // OUTPUT
         #define activeBuzzer_pin            GPIO_23  // OUTPUT
         #define pressControlLED_pin         GPIO_25  // OUTPUT
@@ -86,9 +77,12 @@
         #define pressControlState_pin       GPIO_18  // INPUT
         #define pumpState_pin               GPIO_19  // INPUT
         #define startButton_pin             GPIO_21  // INPUT
+        #ifdef _I_AM_PIN_INITIALIZATION_CPP_
+            #pragma message("using board: ln_ESP32_WROOM_32E_MODULE_2RELAY")
+        #endif
 
-    #elif ESP32_BOARD_TYPE == ESP32_WROOM_32_MODULE
-        #error "BOARD sbagliata"
+    #elif ln_ESP32_BOARD_TYPE == ln_ESP32_WROOM_32E_MODULE
+        #define SPECIAL_LEVEL               0
         #define passiveBuzzer_pin           GPIO_22  // OUTPUT
         #define activeBuzzer_pin            GPIO_23  // OUTPUT
         #define pressControlLED_pin         GPIO_25  // OUTPUT
@@ -106,9 +100,12 @@
         #define pressControlState_pin       GPIO_18  // INPUT
         #define pumpState_pin               GPIO_19  // INPUT
         #define startButton_pin             GPIO_21  // INPUT
+        #ifdef _I_AM_PIN_INITIALIZATION_CPP_
+            #pragma message("using board: ln_ESP32_WROOM_32E_MODULE")
+        #endif
 
-        // #define led_internal_pin            GPIO_23  // OUTPUT
-
+    #else
+        #error "BOARD non specificata"
     #endif
 
 

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 19-04-2025 15.01.40
+// Date .........: 06-06-2025 11.36.06
 //
 
 #include <Arduino.h>
@@ -8,6 +8,15 @@
 #ifndef __PROJECT_STRUCTURES_H__
     #define __PROJECT_STRUCTURES_H__
     #include "@mainStructures.h"
+
+    #define ln_ESP32_WROOM_32E_MODULE         10
+    #define ln_ESP32_WROOM_32E_MODULE_2RELAY  20
+    #define ln_DEVEL                          30
+    #define ln_PRODUCTION                     40
+
+    #define ln_RELEASE_TYPE                   ln_DEVEL
+    #define ln_ESP32_BOARD_TYPE               ln_ESP32_WROOM_32E_MODULE
+
 
 
     enum ErrorCode   : uint8_t { ERROR_01 = 1, ERROR_10 = 10 };

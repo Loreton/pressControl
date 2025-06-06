@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-05-2025 14.27.10
+// Date .........: 06-06-2025 11.49.04
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -23,19 +23,22 @@
 
 
 #define END_OF_ARRAY -1 // --- thresholds value (terminated by -1 as last element)
-#if RELEASE_TYPE == PRODUCTION
-    // -                                                              bounce      1 min        3 min      3 min       4 min        5 min     alarm
+
+#if ln_RELEASE_TYPE == ln_DEVEL
+    #pragma message("Simao in DEVEL mode")
+    const int32_t PROGMEM pumpState_thresholds_level_values[]   = {0, 100,        10*1000,   20*1000,     30*1000,     40*1000,     50*1000,  END_OF_ARRAY};
+    const char *alexaName="test_auto_clave";
+#elif ln_RELEASE_TYPE == ln_PRODUCTION
+    #pragma message("Simao in PRODUCTION mode")
     const int32_t PROGMEM pumpState_thresholds_level_values[]   = {0, 100,       1*60*1000,  2*60*1000,  3*60*1000,  4*60*1000,  5*60*1000,  END_OF_ARRAY};
     const char *alexaName="autoclave";
 #else
-    // -                                                              bounce       10 sec    20 sec       30 sec       40 sec       50 sec    alarm
-    const int32_t PROGMEM pumpState_thresholds_level_values[]   = {0, 100,        10*1000,   20*1000,     30*1000,     40*1000,     50*1000,  END_OF_ARRAY};
-    const char *alexaName="test_auto_clave";
+    #error "Wrong ln_RELEASE_TYPE"
 #endif
 
     // -                                                              bounce    msecs
 const int32_t PROGMEM base_thresholds_level_values[]            = {0, 100,      1000, END_OF_ARRAY};
-const int32_t PROGMEM startButton_thresholds_level_values[]     = {0, 1000,     2000, END_OF_ARRAY};
+const int32_t PROGMEM startButton_thresholds_level_values[]     = {0, 300,      2000, END_OF_ARRAY};
 
 
 
@@ -154,14 +157,10 @@ void pinsInitialization(void) {
     //= set output pins
     //====================================================
     // ------  name,                 pin_nr                 , pin_struct       , mode (inp/out), active_level);
-    // outputPinInit("autoclave"         , pressControlRelay_pin , pressControlRelay  , OUTPUT , LOW);
-    #if ESP32_BOARD_TYPE == ESP32_WROOM_32E_2RELAY_MODULE
-        outputPinInit(alexaName           , pressControlRelay_pin , pressControlRelay  , OUTPUT , HIGH);
-        outputPinInit("pumpHornAlarm"     , pumpHornAlarm_pin     , pumpHornAlarmRelay , OUTPUT , HIGH);
-    #else
-        outputPinInit(alexaName           , pressControlRelay_pin , pressControlRelay  , OUTPUT , LOW);
-        outputPinInit("pumpHornAlarm"     , pumpHornAlarm_pin     , pumpHornAlarmRelay , OUTPUT , LOW);
-    #endif
+    uint8_t specialOutputLevel;
+
+    outputPinInit(alexaName           , pressControlRelay_pin , pressControlRelay  , OUTPUT , SPECIAL_LEVEL);
+    outputPinInit("pumpHornAlarm"     , pumpHornAlarm_pin     , pumpHornAlarmRelay , OUTPUT , SPECIAL_LEVEL);
 
     outputPinInit("activeBuzzer"      , activeBuzzer_pin      , activeBuzzer       , OUTPUT , HIGH);
     outputPinInit("passiveBuzzer"     , passiveBuzzer_pin     , passiveBuzzer      , OUTPUT , HIGH);
@@ -169,7 +168,6 @@ void pinsInitialization(void) {
     outputPinInit("pressControlLED"   , pressControlLED_pin   , pressControlLED    , OUTPUT , HIGH);
 
     pressControlRelay->pulsetime.msecs_default=30*60*1000;  // seconds default pulsetime per PressControl = 30 minuti
-    // pumpHornAlarmRelay->pulsetime.msecs_default=5*60*1000; // seconds default pulsetime per loadSuperiore = 5 minuti
 }
 
 
