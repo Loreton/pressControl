@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 26-05-2025 17.39.58
+// Date .........: 06-06-2025 16.24.48
 // ref: https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html
 //
 
@@ -29,6 +29,7 @@
 
 
 
+extern    const int8_t PUMPSTATE_OVERFLOWED_LEVEL;
 
 
 // extern io_input_pin_struct_t   *pumpState;
@@ -70,7 +71,7 @@ bool pumpStateForAlarm(void) {
 
 
         // printf1_NFN("[%-15s.%02d]: pressed level: %d/%d\n", pumpState->name, pumpState->pin, pumpState->pressedLevel, pumpState->n_thresholds-2);
-        printf1_NFN("%s pressed level: %d/%d\n", pumpState->pinID, pumpState->pressedLevel, pumpState->n_thresholds-2);
+        printf1_NFN("%s pressed level: %d/%d\n", pumpState->pinID, pumpState->pressedLevel, pumpState->n_thresholds-1);
         switch (pumpState->pressedLevel) {
 
             case PRESSED_TIME_01:

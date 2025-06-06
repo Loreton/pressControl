@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 06-06-2025 13.24.00
+// Date .........: 06-06-2025 16.24.10
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -25,16 +25,21 @@
 #define END_OF_ARRAY -1 // --- thresholds value (terminated by -1 as last element)
 
 #if ln_RELEASE_TYPE == ln_DEVEL
-    #pragma message("Simao in DEVEL mode")
-    const int32_t PROGMEM pumpState_thresholds_level_values[]   = {0, 100, 10*1000,   20*1000,     30*1000,     40*1000,     50*1000,  END_OF_ARRAY};
+    #pragma message("Siamo in DEVEL mode")
+    // const int32_t PROGMEM pumpState_thresholds_level_values[]   = {0, 100, 10*1000,   20*1000,     30*1000,     40*1000,     50*1000,  END_OF_ARRAY};
+    const int32_t PROGMEM pumpState_thresholds_level_values[]   = {0, 100, 10*1000,   20*1000,  END_OF_ARRAY};
     const char *alexaName="test_auto_clave";
+    const int8_t PUMPSTATE_OVERFLOWED_LEVEL=3;
+
 #elif ln_RELEASE_TYPE == ln_PRODUCTION
-    #pragma message("Simao in PRODUCTION mode")
+    #pragma message("Siamo in PRODUCTION mode")
     // const int32_t PROGMEM pumpState_thresholds_level_values[]   = {0, 100, 1*60*1000,  2*60*1000,  3*60*1000,  4*60*1000,  5*60*1000,  END_OF_ARRAY};
     const int32_t PROGMEM pumpState_thresholds_level_values[]   = {0, 100, 60*1000,  2*57*1000,  3*54*1000,  4*51*1000,  5*48*1000,  6*45*1000,  END_OF_ARRAY};
     const char *alexaName="autoclave";
+
 #else
     #error "Wrong ln_RELEASE_TYPE"
+
 #endif
 
     // -                                                              bounce    msecs
