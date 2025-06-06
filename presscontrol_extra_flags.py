@@ -1,6 +1,6 @@
 #
 # updated by ...: Loreto Notarantonio
-# Date .........: 06-06-2025 11.51.15
+# Date .........: 06-06-2025 11.53.14
 #
 
 
@@ -218,8 +218,8 @@ TAB=' '*4
 
 Import("env")
 main()
-# env = DefaultEnvironment()
-# main()
+env = DefaultEnvironment()
+main()
 print(f"{TAB}{C.greenH}Current CLI targets", COMMAND_LINE_TARGETS, C.colorReset)
 keyPrompt(msg="[BEFORE COMPILE]", continue_char=["c"], quit_char=["x", "q"])
 
