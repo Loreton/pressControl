@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 06-06-2025 15.44.50
+// Date .........: 10-06-2025 07.41.47
 //
 
 #include <Arduino.h>
@@ -43,7 +43,7 @@
 
                 // si modificano ad ogni cambio di stato
                 bool             changedState        = false;
-                bool             ph_state            = HIGH;
+                bool             phys_state            = HIGH;
 
                 bool             lastState           = HIGH;
                 bool             isPressed           = false;
@@ -76,7 +76,7 @@
                 // si modificano ad ogni cambio di stato
                 bool             changedState = false;
                 bool             lastState    = HIGH;
-                bool             ph_state     = HIGH;
+                bool             phys_state     = HIGH;
                 bool             is_acted      = HIGH;
                 bool             is_ON        = false;
                 bool             is_OFF       = false;

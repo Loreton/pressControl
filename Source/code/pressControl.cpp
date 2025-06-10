@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 27-05-2025 18.22.41
+// Date .........: 10-06-2025 08.26.13
 // ref: https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html
 //
 
@@ -9,7 +9,7 @@
 // ---------------------------------
 // - lnLibrary headers files
 // ---------------------------------
-#define LOG_LEVEL_1
+#define LOG_LEVEL_0
 #include "@logMacros.h"
 #include "@pinOperations.h"
 #include "@lnString.h"
@@ -40,8 +40,6 @@ void pressControlToTelegram(uint8_t caller) {
     if (caller == NO_TELEGRAM ) {return; }
 
     readOutputPin(pressControlRelay);
-    readInputPin(pressControlState);
-    readInputPin(pumpState);
 
     if (caller == PUMP_FORCED_OFF   ) {
         tgMsg->len = sprintf(tgMsg->data, "<b>Pump forced off due to long time</b>\n");
@@ -75,14 +73,17 @@ void pressControlToTelegram(uint8_t caller) {
     }
 
 
-     // printf1_NFN("sono qui\n");
+    // dobbiamo leggere lo status dei dispositivi
+    delay(500);
+    readInputPin(pressControlState);
+    readInputPin(pumpState);
     tgMsg->len += sprintf(tgMsg->data + tgMsg->len, "PC status: %s\n", str_OffOn[pressControlState->is_ON]);
     tgMsg->len += sprintf(tgMsg->data + tgMsg->len, "PUMP status: %s\n", str_OffOn[pumpState->is_ON]);
 
     if (tgMsg->len != 0 && caller != CALLED_BY_TELEGRAM) { // l'invio a telegram viene fatto da ln_telegram.cpp
         sendToTelegram();
     }
-     // printf1_NFN("sono qui\n");
+     // printf0_NFN("sono qui\n");
 }
 
 
@@ -97,7 +98,7 @@ void pressControlToTelegram(uint8_t caller) {
 
 
 void pressControlRelayON(uint8_t caller, int32_t mseconds) {
-    printf1_NFN("[%s:%d] to ON\n", pressControlRelay->name, pressControlRelay->pin);
+    printf0_NFN("[%s:%d] to ON\n", pressControlRelay->name, pressControlRelay->pin);
     pinPulseON(pressControlRelay, mseconds, false);
     pinOFF(pumpLED);
     pinOFF(pressControlLED);
@@ -105,7 +106,7 @@ void pressControlRelayON(uint8_t caller, int32_t mseconds) {
 }
 
 void pressControlRelayOFF(uint8_t caller) {
-    printf1_NFN("[%s:%d] to OFF\n", pressControlRelay->name, pressControlRelay->pin);
+    printf0_NFN("[%s:%d] to OFF\n", pressControlRelay->name, pressControlRelay->pin);
     pinOFF(pressControlRelay);
     pinOFF(pumpLED);
     pinOFF(pressControlLED);
@@ -149,7 +150,7 @@ void pressControlRelayStatus(uint8_t caller) {
 extern const PROGMEM char *splittedResult[];
 
 void pressControlProcessTelegramMessage(char *msgText) {
-    printf1_NFN("processing telegram message: %s\n", msgText);
+    printf0_NFN("processing telegram message: %s\n", msgText);
     uint8_t words = splitString(msgText, " ");
 
 

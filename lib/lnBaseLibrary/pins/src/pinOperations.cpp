@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 06-06-2025 15.44.33
+// Date .........: 10-06-2025 07.42.31
 */
 
 
@@ -33,10 +33,9 @@ uint8_t readInputPin(io_input_pin_struct_t *p) {
     p->is_OFF        = ! p->is_ON;
 
     if (p->changedState) {
-        // printf0_NFN("Caller name: %pS\n", __builtin_return_address(1)); //https://gcc.gnu.org/onlinedocs/gcc/Return-Address.html
-        printf0_NFN("%s ph_state %d - isPressed: %d [%s]\n", p->pinID, p->ph_state, p->isPressed, str_OffOn[p->isPressed]);
-        p->lastState    = p->ph_state;
-        p->ph_state     = cur_state;
+        printf0_NFN("%s phys_state %d - isPressed: %d [%s]\n", p->pinID, p->phys_state, p->isPressed, str_OffOn[p->isPressed]);
+        p->lastState    = p->phys_state;
+        p->phys_state   = cur_state;
     }
 
     return p->is_ON;
@@ -65,8 +64,8 @@ uint8_t readOutputPin(io_output_pin_struct_t *p) {
     p->is_OFF = !p->is_acted;
 
     if (p->changedState) {
-        p->lastState    = p->ph_state;
-        p->ph_state     = cur_state;
+        p->lastState    = p->phys_state;
+        p->phys_state     = cur_state;
         printf1_NFN("%s changed state to %s\n", p->pinID, str_OffOn[p->is_acted]);
     }
     return p->is_acted;

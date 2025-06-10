@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 06-06-2025 08.29.32
+// Date .........: 10-06-2025 08.03.10
 */
 
 #include <Arduino.h>
@@ -9,21 +9,14 @@
     #define __LOG_MACROS_H__
 
 
-    /* Some test definition here */
-    // #define DEFINED_BUT_NO_VALUE
-    // #define DEFINED_INT 3
-    // #define DEFINED_STR "ABC"
-
-
     // ref: https://stackoverflow.com/questions/1562074/how-do-i-show-the-value-of-a-define-at-compile-time
-    // #define LORETO
-    // #define LORETO2 5
+
     /* definition to expand macro then apply to pragma message */
     #define VALUE_TO_STRING(x) #x
     #define VALUE(x) VALUE_TO_STRING(x)
     #define VAR_NAME_VALUE(var) #var "="  VALUE(var)
-    #define PRINT_MACRO(var) #var "="  VALUE(var)
-    // #define PRINT_MACRO(var) #var "='" VALUE(var) "'"
+    // #define PRINT_MACRO(var) #var "="  VALUE(var)
+    #define PRINT_MACRO(var) #var "='" VALUE(var) "'"
 
     /* Some example here */
     // #pragma message(VAR_NAME_VALUE(NOT_DEFINED))

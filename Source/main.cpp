@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 06-06-2025 18.51.38
+// Date .........: 10-06-2025 08.18.11
 // ref: https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html
 //
 
@@ -8,16 +8,9 @@
 #include <Preferences.h>
 #include <fauxmoESP.h>
 
-extern fauxmoESP fauxmo;
+// extern fauxmoESP fauxmo;
 
 
-// #define PRODUCTION                      1
-// #define DEVEL                           2
-
-
-// #define ESP32_BOARD_TYPE                ESP32_WROOM_32_MODULE
-// #define RELEASE_TYPE                    DEVEL
-// #warning ESP32_BOARD_TYPE
 
 #define __I_AM_MAIN_CPP__
 // ---------------------------------
@@ -35,7 +28,6 @@ extern fauxmoESP fauxmo;
 #include "@ln_time.h"
 #include "@ln_wifi.h"
 
-
 // ---------------------------------
 // - project headers files
 // ---------------------------------
@@ -45,7 +37,6 @@ extern fauxmoESP fauxmo;
 #include "@pump.h"
 #include "@ln_telegram.h"
 #include "@ln_Alexa.h"
-
 
 extern ESP32Time     rtc;
 extern struct tm timeinfo; // capire se va bene uno per tutti i moduli oppure mantenerli separati per evitare overwrites
@@ -59,9 +50,10 @@ extern struct tm timeinfo; // capire se va bene uno per tutti i moduli oppure ma
     #pragma message(PRINT_MACRO(ln_ESP32_WROOM_32E_MODULE_2RELAY))
 */
 
-// #####################################
-// --- definizioni timer da tenere sotto controllo
 
+
+
+// #####################################
 extern io_input_pin_struct_t *startButton;
 
 
@@ -78,11 +70,16 @@ char *nowTimeDummy() {
 }
 
 
+#define VERSION_LENGTH 40
+char pressControlVersion[VERSION_LENGTH+1];
 void setup() {
+    snprintf(pressControlVersion, VERSION_LENGTH, "Version_2025-06 - rel_type: %d", ln_RELEASE_TYPE);
+
     // Serial.begin(115200);
     lnSERIAL.begin(115200);
-     delay(2000);
+    delay(2000);
 
+    printf0_NFN("%s\n", pressControlVersion);
 
     // -----------------------------------
     // --- "pins_Initialization.cpp"
@@ -116,7 +113,7 @@ void setup() {
     // -----------------------------------
     pinToggle(pressControlLED);
     NTPInit();
-    // digitalWrite(pressControlLED->pin, !digitalRead(pressControlLED->pin));
+
     delay(1000);
     printf0_NFN("ntp client has been started\n");
     pinOFF(pressControlLED);
@@ -137,15 +134,11 @@ void setup() {
     setupTelegram();
     sendTelegramGroup((char *)"press /h for help\n");
 }
-/*
-Smart life the user you are inviting are located in different data centers. Devices sharing is not allowed due to data protection policies.
-*/
 
-
-
+// #if 0
 #define LN_RESCAN_WIFI
 
-uint8_t blink_secs=5;
+// uint8_t blink_secs=5;
 
 uint32_t wifi_diconnection_elapsed = 0;
 
@@ -264,8 +257,8 @@ void loop() {
         chackAlexa();
         ptr = pressControlRelay;
         if (ptr->alexa_request) {
-            pressControlRelaySet(ptr->alexa_status, ALEXA_REQ);
             ptr->alexa_request = false;
+            pressControlRelaySet(ptr->alexa_status, ALEXA_REQ);
         }
 
 
@@ -308,29 +301,6 @@ void loop() {
             // pingHost("api.telegram.com");
         }
 
-        #if 0
-        if (! wifi_isConnected()) {
-            printf0_NFN("connection lost\n");
-            if (millis() - wifi_diconnection_elapsed > 2*60*1000) {
-                wifi_reconnect();
-            }
-        }
-        else {
-            wifi_diconnection_elapsed = millis();
-            printf0_NFN("WiFi status:\n");
-            printConnection();
-            pingHost("www.google.com");
-            if (! pingHost("api.telegram.com")) {
-                // setupTelegram();
-                // sendTelegramGroup((char *)"press /h for help\n");
-            }
-        }
-        #endif
-
-
-
-
-
 
 
         #ifdef LN_RESCAN_WIFI
@@ -365,6 +335,7 @@ void loop() {
     // ---------------------------------
     if (isQuarterOClock()) {
         printf1_NFN("it's a quarter of hour routine\n");
+        printf0_NFN("%s\n", pressControlVersion);
         wifi_asyncScan();
         asyncWifiScan_started=1;
     }
@@ -375,3 +346,4 @@ void loop() {
 }
 
 
+// #endif
