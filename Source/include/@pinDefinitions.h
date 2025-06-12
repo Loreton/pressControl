@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 06-06-2025 11.53.50
+// Date .........: 12-06-2025 10.42.58
 //
 
 #include <Arduino.h>
@@ -9,6 +9,7 @@
 
 #ifndef __PINS_DEFINITIONS_H__
     #define __PINS_DEFINITIONS_H__
+    #include "@a_decisionalVariables.h"
 
 
 
@@ -64,7 +65,7 @@
     // #define PROTOTYPE
 
     #if ln_ESP32_BOARD_TYPE == ln_ESP32_WROOM_32E_MODULE_2RELAY
-        #define SPECIAL_LEVEL               1
+        #define SPECIAL_ON_OFF_LEVEL               1 // cambia in base alla board utilizzata
         #define passiveBuzzer_pin           GPIO_22  // OUTPUT
         #define activeBuzzer_pin            GPIO_23  // OUTPUT
         #define pressControlLED_pin         GPIO_25  // OUTPUT
@@ -78,11 +79,11 @@
         #define pumpState_pin               GPIO_19  // INPUT
         #define startButton_pin             GPIO_21  // INPUT
         #ifdef _I_AM_PIN_INITIALIZATION_CPP_
-            #pragma message("using board: ln_ESP32_WROOM_32E_MODULE_2RELAY")
+            #pragma message("using board:\n- ESP32_WROOM_32E_MODULE_2RELAY\n- ESP32_WROOM_32E_MODULE_2RELAY\n- ESP32_WROOM_32E_MODULE_2RELAY")
         #endif
 
     #elif ln_ESP32_BOARD_TYPE == ln_ESP32_WROOM_32E_MODULE
-        #define SPECIAL_LEVEL               0
+        #define SPECIAL_ON_OFF_LEVEL               0
         #define passiveBuzzer_pin           GPIO_22  // OUTPUT
         #define activeBuzzer_pin            GPIO_23  // OUTPUT
         #define pressControlLED_pin         GPIO_25  // OUTPUT
@@ -101,7 +102,7 @@
         #define pumpState_pin               GPIO_19  // INPUT
         #define startButton_pin             GPIO_21  // INPUT
         #ifdef _I_AM_PIN_INITIALIZATION_CPP_
-            #pragma message("using board: ln_ESP32_WROOM_32E_MODULE")
+            #pragma message("using board:\n- ln_ESP32_WROOM_32E_MODULE\n- ln_ESP32_WROOM_32E_MODULE\n- ln_ESP32_WROOM_32E_MODULE")
         #endif
 
     #else

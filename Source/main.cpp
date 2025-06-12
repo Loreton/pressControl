@@ -59,9 +59,8 @@ extern io_input_pin_struct_t *startButton;
 
 
 // #########################################
-// # se non c'è ln_time.cpp mi seerver una dummy_Now()
+// # se non c'è ln_time.cpp mi serve una dummy_Now()
 // #########################################
-// #define DUMMY_TIME_BUFFER_LENGTH 10
 const int8_t DUMMY_TIME_BUFFER_LENGTH = 20;
 char  PROGMEM temp_buffer_time[DUMMY_TIME_BUFFER_LENGTH];
 char *nowTimeDummy() {

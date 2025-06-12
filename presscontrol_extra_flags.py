@@ -1,6 +1,6 @@
 #
 # updated by ...: Loreto Notarantonio
-# Date .........: 06-06-2025 11.56.55
+# Date .........: 10-06-2025 19.52.16
 #
 
 
@@ -190,6 +190,8 @@ def main():
     for item in ENVAR:
         # print(item.name)
         checkEnvar(item.name, item.value)
+        value = os.getenv(item.name)
+        print(f"var: {item.name}: {value}")
 
     if rel_level.lower() == 'prod':
         setCCPDEFINES("ln_RELEASE_TYPE", ENVAR.ln_PRODUCTION.value)
@@ -216,8 +218,7 @@ USE_MAIN=False
 
 if USE_MAIN: # if _*4_name__ == '__main__': NON FUNZIONA
     TAB=' '*4
-    Import("env")
-    main()
+    # Import("env")
     env = DefaultEnvironment()
     main()
     print(f"{TAB}{C.greenH}Current CLI targets", COMMAND_LINE_TARGETS, C.colorReset)

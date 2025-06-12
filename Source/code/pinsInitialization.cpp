@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-06-2025 07.48.05
+// Date .........: 12-06-2025 10.44.25
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -19,6 +19,8 @@
 #define _I_AM_PIN_INITIALIZATION_CPP_
 #include "@a_mainProject.h"
 #include "@pinDefinitions.h"
+#include "@a_decisionalVariables.h"
+
 
 
 
@@ -29,12 +31,21 @@ const int32_t PROGMEM base_thresholds_level_values[]            = {0, 100,      
 const int32_t PROGMEM startButton_thresholds_level_values[]     = {0, 300,      2000, END_OF_ARRAY};
 
 #if ln_RELEASE_TYPE == ln_DEVEL
-    #pragma message("Siamo in DEVEL mode")
-    const int32_t PROGMEM pumpState_thresholds_level_values[]   = {0, 100, 10*1000,   20*1000,     30*1000,     40*1000,     50*1000,  END_OF_ARRAY};
+    // #pragma message("Siamo in DEVEL mode")
+    #pragma message ("\n - DEVEL\n - DEVEL\n - DEVEL")
+    const int32_t PROGMEM pumpState_thresholds_level_values[]   = {0,\
+                                                                    100,\
+                                                                    10*1000,\
+                                                                    20*1000,\
+                                                                    30*1000,\
+                                                                    40*1000,\
+                                                                    50*1000,\
+                                                                    END_OF_ARRAY};
     const char *alexaName="test_auto_clave";
 
 #elif ln_RELEASE_TYPE == ln_PRODUCTION
-    #pragma message("Siamo in PRODUCTION mode")
+    // #pragma message("Siamo in PRODUCTION mode")
+    #pragma message("\n - PRODUCTION\n - PRODUCTION\n - PRODUCTION")
     // const int32_t PROGMEM pumpState_thresholds_level_values[]   = {0, 100, 1*60*1000,  2*60*1000,  3*60*1000,  4*60*1000,  5*60*1000,  END_OF_ARRAY};
     const int32_t PROGMEM pumpState_thresholds_level_values[]   = {0, 100, 60*1000,  2*57*1000,  3*54*1000,  4*51*1000,  5*48*1000,  6*45*1000,  END_OF_ARRAY};
     const char *alexaName="autoclave";
@@ -164,8 +175,8 @@ void pinsInitialization(void) {
     // ------  name,                 pin_nr                 , pin_struct       , mode (inp/out), active_level);
     uint8_t specialOutputLevel;
 
-    outputPinInit(alexaName           , pressControlRelay_pin , pressControlRelay  , OUTPUT , SPECIAL_LEVEL);
-    outputPinInit("pumpHornAlarm"     , pumpHornAlarm_pin     , pumpHornAlarmRelay , OUTPUT , SPECIAL_LEVEL);
+    outputPinInit(alexaName           , pressControlRelay_pin , pressControlRelay  , OUTPUT , SPECIAL_ON_OFF_LEVEL);
+    outputPinInit("pumpHornAlarm"     , pumpHornAlarm_pin     , pumpHornAlarmRelay , OUTPUT , SPECIAL_ON_OFF_LEVEL);
 
     outputPinInit("activeBuzzer"      , activeBuzzer_pin      , activeBuzzer       , OUTPUT , HIGH);
     outputPinInit("passiveBuzzer"     , passiveBuzzer_pin     , passiveBuzzer      , OUTPUT , HIGH);
