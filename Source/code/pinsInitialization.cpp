@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-06-2025 10.44.25
+// Date .........: 13-06-2025 08.58.43
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -47,7 +47,14 @@ const int32_t PROGMEM startButton_thresholds_level_values[]     = {0, 300,      
     // #pragma message("Siamo in PRODUCTION mode")
     #pragma message("\n - PRODUCTION\n - PRODUCTION\n - PRODUCTION")
     // const int32_t PROGMEM pumpState_thresholds_level_values[]   = {0, 100, 1*60*1000,  2*60*1000,  3*60*1000,  4*60*1000,  5*60*1000,  END_OF_ARRAY};
-    const int32_t PROGMEM pumpState_thresholds_level_values[]   = {0, 100, 60*1000,  2*57*1000,  3*54*1000,  4*51*1000,  5*48*1000,  6*45*1000,  END_OF_ARRAY};
+    const int32_t PROGMEM pumpState_thresholds_level_values[]   = {0, \
+                                                                    100,\
+                                                                    60*1000,\
+                                                                    2*57*1000,\
+                                                                    3*54*1000,\
+                                                                    4*51*1000,\
+                                                                    5*48*1000,\
+                                                                    END_OF_ARRAY};
     const char *alexaName="autoclave";
 
 #else
