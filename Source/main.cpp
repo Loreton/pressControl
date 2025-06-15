@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-06-2025 08.18.11
+// Date .........: 15-06-2025 18.40.45
 // ref: https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html
 //
 
@@ -8,7 +8,7 @@
 #include <Preferences.h>
 #include <fauxmoESP.h>
 
-// extern fauxmoESP fauxmo;
+
 
 
 

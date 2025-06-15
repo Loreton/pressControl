@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 13-06-2025 08.58.43
+// Date .........: 15-06-2025 18.36.04
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -41,7 +41,7 @@ const int32_t PROGMEM startButton_thresholds_level_values[]     = {0, 300,      
                                                                     40*1000,\
                                                                     50*1000,\
                                                                     END_OF_ARRAY};
-    const char *alexaName="test_auto_clave";
+    const char *alexaName="autoclave.test";
 
 #elif ln_RELEASE_TYPE == ln_PRODUCTION
     // #pragma message("Siamo in PRODUCTION mode")
