@@ -1,4 +1,0 @@
-#!/usr/bin/bash
-
-ln -sf ../../../../esp32LnLibrary/extraLibraries
-ln -sf ../../../../esp32LnLibrary/lnLibrary

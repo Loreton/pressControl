@@ -1,22 +1,19 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-06-2025 08.03.10
+// Date .........: 16-06-2025 14.48.12
 */
 
 #include <Arduino.h>
 
 #ifndef __LOG_MACROS_H__
     #define __LOG_MACROS_H__
-
-
-    // ref: https://stackoverflow.com/questions/1562074/how-do-i-show-the-value-of-a-define-at-compile-time
+    #include "@a_decisionalVariables.h"
 
     /* definition to expand macro then apply to pragma message */
     #define VALUE_TO_STRING(x) #x
     #define VALUE(x) VALUE_TO_STRING(x)
     #define VAR_NAME_VALUE(var) #var "="  VALUE(var)
-    // #define PRINT_MACRO(var) #var "="  VALUE(var)
-    #define PRINT_MACRO(var) #var "='" VALUE(var) "'"
+    #define PRINT_MACRO(var) #var "="  VALUE(var)
 
     /* Some example here */
     // #pragma message(VAR_NAME_VALUE(NOT_DEFINED))
@@ -33,15 +30,22 @@
         //#define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
     #endif
 
-
+//
+    #ifdef __USE_DUMMY_NOW_TIME__
+        char * nowTimeDummy(void);
+        // #define m_NOW                                           lnSERIAL.printf((PGM_P) "[%s]: ", nowTimeDymmy())
+        #define m_NOW                                           lnSERIAL.printf((PGM_P) "[00:00:00]: ")
+    #else
+        char * nowTime(void);
+        #define m_NOW                                           lnSERIAL.printf((PGM_P) "[%s]: ", nowTime())
+    #endif
     // -------------------------------------------------
-    char * nowTime(void);
-    char * nowTimeDummy(void);
-    char *extractFileName(char *source, char *dest);
 
-    #define m_FNAME1                     Serial.printf(PSTR("[%-20s:%04d] "), __FILENAME__, __LINE__)
+    // char *extractFileName(char *source, char *dest);
+
+    // #define m_FNAME1                     Serial.printf(PSTR("[%-20s:%04d] "), __FILENAME__, __LINE__)
     // - insert one of these if defined otherwise BLANK...,
-    #define m_NOW1                       Serial.printf("[%s]: ", nowTime())
+    // #define m_NOW1                       Serial.printf("[%s]: ", nowTimeDummy())
     // -------------------------------------------------
 
 
@@ -58,7 +62,7 @@
 
 
             // #define m_FULLNAME                                      lnSERIAL.printf((PGM_P) "[%s]: ", extractFileName((char*)__FILE__, __appo__))
-            #define m_NOW                                           lnSERIAL.printf((PGM_P) "[%s]: ", nowTime())
+            // #define m_NOW                                           lnSERIAL.printf((PGM_P) "[%s]: ", nowTime())
             #define lnPrint(...)                                    lnSERIAL.print(__VA_ARGS__)
             #define lnPrintLN(...)                                  lnSERIAL.println(__VA_ARGS__)
             #define lnPrintF(fmt, ...)       {                      lnSERIAL.printf_P((PGM_P) PSTR(fmt), ## __VA_ARGS__); }
