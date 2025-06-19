@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 17-06-2025 10.09.55
+// Date .........: 19-06-2025 19.49.41
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -8,9 +8,11 @@
 // ---------------------------------
 // - project headers files
 // ---------------------------------
-#define _I_AM_PIN_INITIALIZATION_CPP_
 #define LOG_LEVEL_0x
 #include "@logMacros.h"
+#include "@debouncedButton.h"
+
+#define _I_AM_PIN_INITIALIZATION_CPP_
 #include "@a_mainProject.h"
 #include "@pin_Definitions.h"
 #include "@pin_Prototypes.h"
@@ -20,7 +22,7 @@
 
 
 
-
+deBouncedButton_t startButton; // creazione instanza
 
 /* #########################################
 ref: /home/loreto/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-gpio.h

@@ -1,14 +1,14 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-06-2025 10.42.58
+// Date .........: 19-06-2025 19.50.48
 //
 
+#pragma once
 #include <Arduino.h>
 
 // ;  //this line ALSO solves everything!
 
-#ifndef __PINS_DEFINITIONS_H__
-    #define __PINS_DEFINITIONS_H__
+
     #include "@a_decisionalVariables.h"
 
 
@@ -110,12 +110,3 @@
     #endif
 
 
-
-
-    void pinsInitialization(void);
-
-
-
-
-
-#endif

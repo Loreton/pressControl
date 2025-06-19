@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 16-06-2025 14.48.12
+// Date .........: 19-06-2025 19.49.04
 */
 
 #include <Arduino.h>
@@ -31,18 +31,13 @@
     #endif
 
 //
-    #ifdef __USE_DUMMY_NOW_TIME__
-        char * nowTimeDummy(void);
-        // #define m_NOW                                           lnSERIAL.printf((PGM_P) "[%s]: ", nowTimeDymmy())
-        #define m_NOW                                           lnSERIAL.printf((PGM_P) "[00:00:00]: ")
-    #else
-        char * nowTime(void);
-        #define m_NOW                                           lnSERIAL.printf((PGM_P) "[%s]: ", nowTime())
-    #endif
+    #define lnSERIAL Serial
+
+    char * nowTime(void); // se è definita in time o ntptime commentare quella presente nin main.cpp
+    #define m_NOW                                           lnSERIAL.printf((PGM_P) "[%s]: ", nowTime())
+
     // -------------------------------------------------
-
     // char *extractFileName(char *source, char *dest);
-
     // #define m_FNAME1                     Serial.printf(PSTR("[%-20s:%04d] "), __FILENAME__, __LINE__)
     // - insert one of these if defined otherwise BLANK...,
     // #define m_NOW1                       Serial.printf("[%s]: ", nowTimeDummy())
@@ -51,7 +46,7 @@
 
 
 
-    #define lnSERIAL Serial
+
 
     #ifdef lnSERIAL
         #if defined(ARDUINO_ARCH_ESP32)
@@ -94,6 +89,7 @@
         #define printf0             lnPrintF
         #define printf0_FN          lnPrintF_FN
         #define printf0_NFN         lnPrintF_NowFN
+        // #define printf0_NFN         lnPrintF_FN
     #else
         #define printf0
         #define printf0_FN

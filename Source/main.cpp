@@ -1,12 +1,9 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 17-06-2025 10.10.32
-// ref: https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html
+// Date .........: 19-06-2025 19.47.58
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
-// #include <Preferences.h>
-// #include <fauxmoESP.h>
 
 
 
@@ -21,9 +18,23 @@
 #define LOG_LEVEL_3x
 #define LOG_LEVEL_4x
 #include "@logMacros.h"
+#include "@debouncedButton.h"
+
 #include "@a_mainProject.h"
 #include "@pin_Definitions.h"
 #include "@pin_Prototypes.h"
+
+
+// #########################################
+// # se non c'è ln_time.cpp mi serve una dummy_Now()
+// #########################################
+const int8_t DUMMY_TIME_BUFFER_LENGTH = 20;
+char  PROGMEM temp_buffer_time[DUMMY_TIME_BUFFER_LENGTH];
+char *nowTime() {
+    snprintf(temp_buffer_time, DUMMY_TIME_BUFFER_LENGTH, "%s", "01:02:03");
+    return temp_buffer_time;
+}
+
 
 
 #define VERSION_LENGTH 40
@@ -36,20 +47,13 @@ void setup() {
     delay(1000);
 
 
-    printf0_NFN("%s\n", pressControlVersion);
+    printf0_FN("%s\n", pressControlVersion);
 
     // -----------------------------------
     // --- "pins_Initialization.cpp"
     // -----------------------------------
     pinsInitialization();
-    printf0_NFN("%s: %d\n", startButton.name, startButton.pin);
-
-    // deBouncedButton_t startButton2; // Dichiarazione della struttura per il nostro pulsante.
-    // deBouncedButton_t startButton3; // Dichiarazione della struttura per il nostro pulsante.
-    // setup_deBouncedButton(startButton2,  15, "startButton2", LOW);
-    // setup_deBouncedButton(&startButton3,  18, "startButton3", LOW);
-    // printf0_NFN("%s: %d\n", startButton2.name, startButton2.pin);
-    // printf0_NFN("%s: %d\n", startButton3.name, startButton3.pin);
+    printf0_FN("%s: %d\n", startButton.name, startButton.pin);
 
 
     // -----------------------------------
@@ -67,10 +71,6 @@ void loop() {
     if (first_run) {
         first_run=false;
         printf0_NFN("processing started....\n");
-        // alignToMinute(); // allineamento al minuto ... non so se mi serve
-        // digitalWrite(pressControlLED->pin, pressControlLED->OFF);
-        // pinOFF(pressControlLED);
-        // pinOFF(pumpLED);
     }
 
     // Leggi il pulsante. La funzione restituirà `true` solo al momento del rilascio (dopo debounce).
@@ -86,4 +86,3 @@ void loop() {
 }
 
 
-// #endif

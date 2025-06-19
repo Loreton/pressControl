@@ -1,10 +1,11 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 18-06-2025 11.34.25
+// Date .........: 19-06-2025 18.33.34
 */
+#pragma once
 
-#ifndef __PIN_STRUCTURES_H__
-    #define __PIN_STRUCTURES_H__
+// #ifndef __PIN_STRUCTURES_H__
+//     #define __PIN_STRUCTURES_H__
 
 /**
     | ---------------------------------------- | -------------------- | --------------------------
@@ -20,14 +21,14 @@
     // Struttura per mantenere lo stato di ogni pulsante.
     // mi permette di usare la doppia modalità: "named" e "alias"
     // ------------------------------------------------------
-    typedef struct deBouncedButton_t {
-        int                 pin;               // Il pin GPIO a cui è collegato il pulsante.
-        const char*         name;              // Nome del pulsante per identificazione (opzionale, utile per debugging).
-        int                 pressedLogicLevel; // Livello logico che indica il pulsante premuto (LOW o HIGH).
-        bool                lastButtonState;   // Ultima lettura RAW del pin.
-        unsigned long       lastDebounceTime;  // Ultimo momento in cui il pin ha cambiato stato RAW.
-        bool                buttonPressed;     // Stato debounced: true se premuto, false se rilasciato.
-    } deBouncedButton_t;
+    // typedef struct deBouncedButton_t {
+    //     int                 pin;               // Il pin GPIO a cui è collegato il pulsante.
+    //     const char*         name;              // Nome del pulsante per identificazione (opzionale, utile per debugging).
+    //     int                 pressedLogicLevel; // Livello logico che indica il pulsante premuto (LOW o HIGH).
+    //     bool                lastButtonState;   // Ultima lettura RAW del pin.
+    //     unsigned long       lastDebounceTime;  // Ultimo momento in cui il pin ha cambiato stato RAW.
+    //     bool                buttonPressed;     // Stato debounced: true se premuto, false se rilasciato.
+    // } deBouncedButton_t;
 
 
 
@@ -47,11 +48,11 @@
     **/
 
 
-    #ifdef _I_AM_PIN_INITIALIZATION_CPP_
-        deBouncedButton_t startButton; // creazione instanza
-    #else
-        extern deBouncedButton_t startButton; // Dichiarazione della struttura per il nostro pulsante.
-    #endif
+    // #ifdef _I_AM_PIN_INITIALIZATION_CPP_
+    //     deBouncedButton_t startButton; // creazione instanza
+    // #else
+    //     extern deBouncedButton_t startButton; // Dichiarazione della struttura per il nostro pulsante.
+    // #endif
 
 
-#endif
+// #endif
