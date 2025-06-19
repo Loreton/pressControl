@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 16-06-2025 18.43.52
+// Date .........: 17-06-2025 15.12.09
 //
 
 #include <Arduino.h>
@@ -10,13 +10,20 @@
 #ifndef __PIN_PROTOTYPES_H__
     #define __PIN_PROTOTYPES_H__
 
+    // --- pinsInitialization.cpp
     void pinsInitialization(void);
 
+    // --- debouncedButton.cpp deBouncedButton_t *pippo (userà ->)
     void setup_deBouncedButton(deBouncedButton_t *btn, int pin, const char* name, int pressedLogicLevel);
-    // void setup_deBouncedButton2(deBouncedButton_s &btn, int pin, const char* name, int pressedLogicLevel);
 
-    bool read_deBouncedButton(deBouncedButton_t *btn, unsigned long debounceDelay);
+    // --- debouncedButton.cpp deBouncedButton_t pippo (userà .)
+    void setup_deBouncedButton(deBouncedButton_t &btn, int pin, const char* name, int pressedLogicLevel);
 
+    bool read_deBouncedButton(deBouncedButton_t *btn, unsigned long debounceDelay=300);
+
+
+    // --- actionProcess.cpp
+    void startButton_action(void);
 
 
 #endif

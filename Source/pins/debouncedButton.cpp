@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 16-06-2025 18.43.19
+// Date .........: 19-06-2025 17.18.53
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -14,7 +14,7 @@
 // #include "@pin_Structures.h"
 
 
-/**
+/** con Alias struct_type
  * @brief Inizializza un pulsante configurando il pin e lo stato iniziale.
  *
  * @param btn Riferimento alla struttura ButtonState del pulsante.
@@ -35,7 +35,6 @@ void setup_deBouncedButton(deBouncedButton_t *btn, int pin, const char* name, in
     } else {
         pinMode(btn->pin, INPUT);        // Se premuto porta a HIGH, non usa pull-up interno (richiede pull-down esterno se flottante).
     }
-    // pinMode(btn->pin, INPUT_PULLUP); // Se premuto porta a LOW, usa pull-up interno.
 
     btn->lastButtonState = digitalRead(btn->pin); // Legge lo stato iniziale.
     btn->lastDebounceTime = 0;
@@ -43,33 +42,11 @@ void setup_deBouncedButton(deBouncedButton_t *btn, int pin, const char* name, in
 }
 
 
-// ------------------------------------
-// deBouncedButton_s startButton;
-// deBouncedButton_s startButton2;
-// ------------------------------------
-#ifdef __XXXXXXXXXX
-void setup_deBouncedButton2(deBouncedButton_s &btn, int pin, const char* name, int pressedLogicLevel) {
-    btn.pin = pin;
-    btn.name = name;
-    btn.pressedLogicLevel = pressedLogicLevel;
-
-    // Configura il pin in base al pressedLogicLevel.
-    if (pressedLogicLevel == LOW) {
-        pinMode(btn.pin, INPUT_PULLUP); // Se premuto porta a LOW, usa pull-up interno.
-    } else {
-        pinMode(btn.pin, INPUT);        // Se premuto porta a HIGH, non usa pull-up interno (richiede pull-down esterno se flottante).
-    }
-    // pinMode(btn.pin, INPUT_PULLUP); // Se premuto porta a LOW, usa pull-up interno.
-
-    btn.lastButtonState = digitalRead(btn.pin); // Legge lo stato iniziale.
-    btn.lastDebounceTime = 0;
-    btn.buttonPressed = false; // Stato iniziale debounced.
+/** con named struct_type
+*/
+void setup_deBouncedButton(deBouncedButton_t &btn, int pin, const char* name, int pressedLogicLevel) {
+    return setup_deBouncedButton(&btn, pin, name, pressedLogicLevel);
 }
-
-#endif
-
-
-
 
 
 
@@ -108,5 +85,4 @@ bool read_deBouncedButton(deBouncedButton_t *btn, unsigned long debounceDelay) {
     btn->lastButtonState = reading;
     return false; // Il pulsante non è stato rilasciato in questo ciclo.
 }
-
 

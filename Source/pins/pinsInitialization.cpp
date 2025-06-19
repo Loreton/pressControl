@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 16-06-2025 18.42.27
+// Date .........: 17-06-2025 10.09.55
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -39,6 +39,7 @@ ref: /home/loreto/.platformio/packages/framework-arduinoespressif32/cores/esp32/
    #define ANALOG            0xC0
 ######################################### */
 void pinsInitialization(void) {
+   pinMode(pressControlRelay_pin, OUTPUT);
     //====================================================
     //= set input pins
     //====================================================
@@ -49,8 +50,10 @@ void pinsInitialization(void) {
    // setup_deBouncedButton(startButton3      ,18       , "startButton3"       , LOW);
    // setup_deBouncedButton2(startButton       ,15       , "startButton"       , LOW);
    // setup_deBouncedButton2(startButton2      ,16       , "startButton2"       , LOW);
-   setup_deBouncedButton(startButton3       ,18       , "startButton3"       , LOW);
-   setup_deBouncedButton(startButton4       ,20       , "startButton4"       , LOW);
+   setup_deBouncedButton(&startButton,  startButton_pin, "startButton", LOW);
+
+
+
 
     //====================================================
     //= set output pins

@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # updated by ...: Loreto Notarantonio
-# Date .........: 19-04-2025 08.06.48
+# Date .........: 19-06-2025 17.31.03
 #
 # Updates:
 # #########################################################
@@ -35,16 +35,19 @@ function zip_logical_links() {
     root_dir="$PWD"
 
     # candidate_dirs="lnLib Source Source/Main Source/lnLib"
-    candidate_dirs="lib"
+    candidate_dirs="lib /home/loreto/GIT-REPO/ESP32/esp32LnLibrary/lnLibrary"
 
-    zipName="${PWD}/lib/lnLibary.zip"
+    zipName="${PWD}/Source/lnLibary.zip"
 
 
     for _dir in $candidate_dirs; do
         if [ -d "$_dir" ]; then
             cd "$_dir"
+            echo "$PWD"
             for name in *; do
-                [ -L "$name" ] && zip -x '*.git*' -x '*.pio*' -ur --latest-time  $zipName $name
+                echo $name
+                # [ -L "$name" ] && zip -x '*.git*' -x '*.pio*' -ur --latest-time  $zipName $name
+                zip -x '*.git*' -x '*.pio*' -ur --latest-time  $zipName $name
             done
         fi
         cd "$root_dir" # ritorna alla root dir
