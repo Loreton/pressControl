@@ -1,16 +1,16 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 21-06-2025 18.11.46
+// Date .........: 21-06-2025 16.26.41
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
 
 
+
+
 #define __I_AM_MAIN_CPP__
-
-
 // ---------------------------------
-// --- lnLibrary headers files
+// - project headers files
 // ---------------------------------
 #define LOG_LEVEL_0
 #define LOG_LEVEL_1
@@ -18,15 +18,11 @@
 #define LOG_LEVEL_3x
 #define LOG_LEVEL_4x
 #include "@logMacros.h"
-#include "@debouncedButton_sClass.h"
+#include "@debouncedButton.h"
 
-// deBouncedButton_func_inside startButton; // Dichiarazione della struttura function inside.
-
-
-// ---------------------------------
-// - project headers files
-// ---------------------------------
 #include "@a_mainProject.h"
+#include "@pin_Definitions.h"
+#include "@pin_Prototypes.h"
 
 
 // #########################################
@@ -57,7 +53,7 @@ void setup() {
     // --- "pins_Initialization.cpp"
     // -----------------------------------
     pinsInitialization();
-    printf0_FN("%s: %d\n", startButton._name, startButton._pin);
+    printf0_FN("%s: %d\n", startButton.name, startButton.pin);
 
 
     // -----------------------------------
@@ -78,8 +74,8 @@ void loop() {
     }
 
     // Leggi il pulsante. La funzione restituirà `true` solo al momento del rilascio (dopo debounce).
-    if (startButton.read(300)) {
-        Serial.printf("[%s] Rilasciato!\n", startButton._name);
+    if (read_deBouncedButton(&startButton, 300)) {
+        Serial.printf("[%s] Rilasciato!\n", startButton.name);
         startButton_action();
     }
 

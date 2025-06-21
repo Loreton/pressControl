@@ -1,28 +1,21 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 19-06-2025 19.48.07
+// Date .........: 21-06-2025 18.05.14
 // ref: https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
-// #include <Preferences.h>
-// #include <fauxmoESP.h>
 
+// ---------------------------------
+// --- lnLibrary headers files
+// ---------------------------------
+#define LOG_LEVEL_99
+#include "@logMacros.h"
+// #include "@debouncedButton_sClass.h"
 
-
-
-#define __I_AM_MAIN_CPP__
 // ---------------------------------
 // - project headers files
 // ---------------------------------
-#define LOG_LEVEL_0
-#define LOG_LEVEL_1
-#define LOG_LEVEL_2x
-#define LOG_LEVEL_3x
-#define LOG_LEVEL_4x
-#include "@logMacros.h"
-#include "@debouncedButton.h"
-
 #include "@a_mainProject.h"
 
 
@@ -35,9 +28,9 @@ void startButton_action(void) {
     relayState = !relayState;
     if (relayState) {
         digitalWrite(pressControlRelay_pin, LOW); // Accendi il relè (adatta a HIGH se il tuo relè è "attivo alto").
-        Serial.println("  --> Relè ACCESO!");
+        printf99_FN("  --> Relè ACCESO!\n");
     } else {
         digitalWrite(pressControlRelay_pin, HIGH); // Spegni il relè (adatta a LOW se il tuo relè è "attivo alto").
-        Serial.println("  --> Relè SPENTO!");
+        printf99_FN("  --> Relè SPENTO!\n");
     }
 }

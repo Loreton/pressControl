@@ -1,28 +1,27 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 19-06-2025 19.49.41
+// Date .........: 21-06-2025 18.07.42
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
 
 // ---------------------------------
-// - project headers files
+// --- lnLibrary headers files
 // ---------------------------------
 #define LOG_LEVEL_0x
+#define LOG_LEVEL_1x
 #include "@logMacros.h"
-#include "@debouncedButton.h"
+#include "@debouncedButton_sClass.h"
 
-#define _I_AM_PIN_INITIALIZATION_CPP_
+extern deBouncedButton_func_inside startButton; // Dichiarazione della struttura function inside.
+// ---------------------------------
+// - project headers files
+// ---------------------------------
+// #define _I_AM_PIN_INITIALIZATION_CPP_
 #include "@a_mainProject.h"
-#include "@pin_Definitions.h"
-#include "@pin_Prototypes.h"
 
 
 
-
-
-
-deBouncedButton_t startButton; // creazione instanza
 
 /* #########################################
 ref: /home/loreto/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-gpio.h
@@ -52,7 +51,8 @@ void pinsInitialization(void) {
    // setup_deBouncedButton(startButton3      ,18       , "startButton3"       , LOW);
    // setup_deBouncedButton2(startButton       ,15       , "startButton"       , LOW);
    // setup_deBouncedButton2(startButton2      ,16       , "startButton2"       , LOW);
-   setup_deBouncedButton(&startButton,  startButton_pin, "startButton", LOW);
+   // setup_deBouncedButton(&startButton,  startButton_pin, "startButton", LOW);
+   startButton.setup(startButton_pin, "startButton", LOW);
 
 
 
