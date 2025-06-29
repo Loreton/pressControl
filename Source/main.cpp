@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 29-06-2025 17.00.27
+// Date .........: 29-06-2025 17.51.34
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -16,19 +16,20 @@
 #define     LOG_LEVEL_1
 #include    "@globalVars.h"
 #include    "@debouncedButton_Class.h"
-
-
-// Creazione di istanze della classe DebouncedButton_Class.
-// L'inizializzazione avviene tramite il costruttore.
-// DebouncedButton_Class startButton;
-
+#include    "@ln_time.h"
 
 // ---------------------------------
 // - project headers files
 // ---------------------------------
 #include "@a_mainProject.h"
 
-#ifndef __INCLUDE_LN_TIME__
+
+
+
+#ifdef __LN_TIME_INCLUDED__   // definito in ln_time.h
+    extern struct tm timeinfo;  // capire se va bene uno per tutti i moduli oppure mantenerli separati per evitare overwrites
+
+#else
     // #########################################
     // # se non c'è ln_time.cpp mi serve una dummy_Now()
     // #########################################
@@ -49,9 +50,13 @@ void setup() {
     // Serial.begin(115200);
     lnSERIAL.begin(115200);
     delay(1000);
-
-
     printf0_FN("%s\n", pressControlVersion);
+
+
+    // -----------------------------------
+    // ------ set Time
+    // -----------------------------------
+    time_setup();
 
     // -----------------------------------
     // --- "pins_Initialization.cpp"
@@ -60,9 +65,6 @@ void setup() {
     startButton.init("startButton", startButton_pin, LOW);
     Serial.printf("%s\n", startButton.pinID());
 
-    // -----------------------------------
-    // ------ set Time
-    // -----------------------------------
 }
 
 
