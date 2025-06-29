@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 21-06-2025 18.07.42
+// Date .........: 29-06-2025 17.01.56
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -11,9 +11,9 @@
 #define LOG_LEVEL_0x
 #define LOG_LEVEL_1x
 #include "@logMacros.h"
-#include "@debouncedButton_sClass.h"
+#include "@debouncedButton_Class.h"
 
-extern deBouncedButton_func_inside startButton; // Dichiarazione della struttura function inside.
+// extern DebouncedButton_Class startButton; // Dichiarazione della struttura function inside.
 // ---------------------------------
 // - project headers files
 // ---------------------------------
@@ -45,14 +45,7 @@ void pinsInitialization(void) {
     //= set input pins
     //====================================================
     // ------  name,                 pin_nr                 , pin_struct       , mode (inp/out), active_level);
-   // setup_deBouncedButton(startButton       ,startButton_pin       , "startButton"       , LOW);
-   // setup_deBouncedButton2(startButton       ,15       , "startButton"       , LOW);
-   // setup_deBouncedButton2(startButton2      ,16       , "startButton2"       , LOW);
-   // setup_deBouncedButton(startButton3      ,18       , "startButton3"       , LOW);
-   // setup_deBouncedButton2(startButton       ,15       , "startButton"       , LOW);
-   // setup_deBouncedButton2(startButton2      ,16       , "startButton2"       , LOW);
-   // setup_deBouncedButton(&startButton,  startButton_pin, "startButton", LOW);
-   startButton.setup(startButton_pin, "startButton", LOW);
+   // startButton.init(startButton_pin, "startButton", LOW);
 
 
 

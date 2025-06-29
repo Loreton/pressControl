@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 21-06-2025 18.11.46
+// Date .........: 29-06-2025 17.00.27
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -12,15 +12,15 @@
 // ---------------------------------
 // --- lnLibrary headers files
 // ---------------------------------
-#define LOG_LEVEL_0
-#define LOG_LEVEL_1
-#define LOG_LEVEL_2x
-#define LOG_LEVEL_3x
-#define LOG_LEVEL_4x
-#include "@logMacros.h"
-#include "@debouncedButton_sClass.h"
+#define     LOG_LEVEL_0
+#define     LOG_LEVEL_1
+#include    "@globalVars.h"
+#include    "@debouncedButton_Class.h"
 
-// deBouncedButton_func_inside startButton; // Dichiarazione della struttura function inside.
+
+// Creazione di istanze della classe DebouncedButton_Class.
+// L'inizializzazione avviene tramite il costruttore.
+// DebouncedButton_Class startButton;
 
 
 // ---------------------------------
@@ -28,17 +28,17 @@
 // ---------------------------------
 #include "@a_mainProject.h"
 
-
-// #########################################
-// # se non c'è ln_time.cpp mi serve una dummy_Now()
-// #########################################
-const int8_t DUMMY_TIME_BUFFER_LENGTH = 20;
-char  PROGMEM temp_buffer_time[DUMMY_TIME_BUFFER_LENGTH];
-char *nowTime() {
-    snprintf(temp_buffer_time, DUMMY_TIME_BUFFER_LENGTH, "%s", "01:02:03");
-    return temp_buffer_time;
-}
-
+#ifndef __INCLUDE_LN_TIME__
+    // #########################################
+    // # se non c'è ln_time.cpp mi serve una dummy_Now()
+    // #########################################
+    const int8_t DUMMY_TIME_BUFFER_LENGTH = 20;
+    char  PROGMEM temp_buffer_time[DUMMY_TIME_BUFFER_LENGTH];
+    char *nowTime() {
+        snprintf(temp_buffer_time, DUMMY_TIME_BUFFER_LENGTH, "%s", "01:02:03");
+        return temp_buffer_time;
+    }
+#endif
 
 
 #define VERSION_LENGTH 40
@@ -56,9 +56,9 @@ void setup() {
     // -----------------------------------
     // --- "pins_Initialization.cpp"
     // -----------------------------------
-    pinsInitialization();
-    printf0_FN("%s: %d\n", startButton._name, startButton._pin);
-
+    // pinsInitialization();
+    startButton.init("startButton", startButton_pin, LOW);
+    Serial.printf("%s\n", startButton.pinID());
 
     // -----------------------------------
     // ------ set Time
@@ -79,7 +79,7 @@ void loop() {
 
     // Leggi il pulsante. La funzione restituirà `true` solo al momento del rilascio (dopo debounce).
     if (startButton.read(300)) {
-        Serial.printf("[%s] Rilasciato!\n", startButton._name);
+        Serial.printf("[%s] Rilasciato!\n", startButton.pinID());
         startButton_action();
     }
 

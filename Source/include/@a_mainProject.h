@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 21-06-2025 18.11.29
+// Date .........: 29-06-2025 17.02.47
 //
 
 
@@ -17,9 +17,10 @@
 
 
     #ifdef __I_AM_MAIN_CPP__
-        deBouncedButton_func_inside startButton; // Dichiarazione della struttura function inside.
+        // L'inizializzazione avviene tramite il costruttore.
+        DebouncedButton_Class startButton; // Dichiarazione della struttura function inside.
     #else
-    //     extern deBouncedButton_func_inside startButton;
+        // extern DebouncedButton_Class startButton; // Dichiarazione della struttura function inside.
     #endif
 
 

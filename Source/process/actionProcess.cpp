@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 21-06-2025 18.05.14
+// Date .........: 29-06-2025 17.02.17
 // ref: https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html
 //
 
@@ -10,7 +10,7 @@
 // --- lnLibrary headers files
 // ---------------------------------
 #define LOG_LEVEL_99
-#include "@logMacros.h"
+#include "@globalVars.h"
 // #include "@debouncedButton_sClass.h"
 
 // ---------------------------------
