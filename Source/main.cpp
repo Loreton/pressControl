@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 29-06-2025 17.51.34
+// Date .........: 30-06-2025 16.04.02
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -15,13 +15,12 @@
 #define     LOG_LEVEL_0
 #define     LOG_LEVEL_1
 #include    "@globalVars.h"
-#include    "@debouncedButton_Class.h"
 #include    "@ln_time.h"
 
 // ---------------------------------
 // - project headers files
 // ---------------------------------
-#include "@a_mainProject.h"
+#include "main.h"
 
 
 
@@ -61,8 +60,7 @@ void setup() {
     // -----------------------------------
     // --- "pins_Initialization.cpp"
     // -----------------------------------
-    // pinsInitialization();
-    startButton.init("startButton", startButton_pin, LOW);
+    pinsInitialization();
     Serial.printf("%s\n", startButton.pinID());
 
 }

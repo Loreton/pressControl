@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 29-06-2025 17.01.56
+// Date .........: 30-06-2025 16.24.45
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -11,14 +11,14 @@
 #define LOG_LEVEL_0x
 #define LOG_LEVEL_1x
 #include "@logMacros.h"
-#include "@debouncedButton_Class.h"
+// #include "@buttonDebounced_Class.h"
 
 // extern DebouncedButton_Class startButton; // Dichiarazione della struttura function inside.
 // ---------------------------------
 // - project headers files
 // ---------------------------------
 // #define _I_AM_PIN_INITIALIZATION_CPP_
-#include "@a_mainProject.h"
+#include "main.h"
 
 
 
@@ -45,7 +45,10 @@ void pinsInitialization(void) {
     //= set input pins
     //====================================================
     // ------  name,                 pin_nr                 , pin_struct       , mode (inp/out), active_level);
-   // startButton.init(startButton_pin, "startButton", LOW);
+   startButton.init("startButton", startButton_pin, LOW);
+   activeBuzzer.init("Buzzer", activeBuzzer_pin, HIGH);
+   pressControlLED.init("pressControlLED", pressControlLED_pin, HIGH);
+   pumpLED.init("pumpLED", pumpLED_pin, HIGH);
 
 
 
