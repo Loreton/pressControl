@@ -1,7 +1,42 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 30-06-2025 16.04.02
+// Date .........: 01-07-2025 08.08.24
 //
+/**
+ESP32 - devo controllare una pompa provvista di un press-control.
+    Ho un relè per comandare il press-control.
+
+    un pin per monitorare status del press-control
+    un pin per monitorare status della pompa
+
+    un led per mostrare status del press-control
+    un pin per monitorare status della pompa
+
+    un buzzer passivo per segnalare con suoni
+    un buzzer attivo per inviare beep
+
+    un pulsante per accendere e spegnere il press-control
+
+    Una volta che viene rilevata l'acennsione della pompa emettere un suono di 4 frequenze a salire sul buzzer passivo ed a scalare nel caso la pompa si spegne.
+
+    Se la pompa continua a rimanere accesa allora emettere un beep dopo 60 secondi, un beep dopo altri 55 secondi, un beep dopo altri 50 secondi e così via per 6 step.
+
+    Dopo l'ultimo step:
+    1. spegnere il press-control
+    2. se il press-control o la pompa dovessero essere ancora accesi emettere un beep ogni 5 sec.
+
+    Comunque il press-control impostare un timer per spegnerlo dopo 30 minuti
+
+    Lo stato del press-control, della pompa  e del tempo rimasto del timer devono essere inviati a telegram
+
+
+
+
+    Esp32 ho un relè che comanda una pompa ed un pin che controlla il suo stato.  Una volta accesa emettere in beep dopo  60 secondi,
+    un beep dopo altri 55 secondi, un beep dopo altri 50 secondi e così via per 6 step. Dopo l'ultimo step emettere un beep ogni 5 sec.
+*/
+
+
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
 
@@ -25,6 +60,7 @@
 
 
 
+
 #ifdef __LN_TIME_INCLUDED__   // definito in ln_time.h
     extern struct tm timeinfo;  // capire se va bene uno per tutti i moduli oppure mantenerli separati per evitare overwrites
 
@@ -44,6 +80,7 @@
 #define VERSION_LENGTH 40
 char pressControlVersion[VERSION_LENGTH+1];
 void setup() {
+    size_t before = ESP.getFreeHeap();
     snprintf(pressControlVersion, VERSION_LENGTH, "Version_2025-06 - rel_type: %d", ln_RELEASE_TYPE);
 
     // Serial.begin(115200);
@@ -51,7 +88,13 @@ void setup() {
     delay(1000);
     printf0_FN("%s\n", pressControlVersion);
 
-
+    /*
+        // calcolo memoria
+        ButtonDebounced_Class* obj = new ButtonDebounced_Class();
+        size_t before = ESP.getFreeHeap();
+        size_t after = ESP.getFreeHeap();
+        Serial.println(before - after); // Stima RAM allocata
+    */
     // -----------------------------------
     // ------ set Time
     // -----------------------------------
@@ -63,19 +106,26 @@ void setup() {
     pinsInitialization();
     Serial.printf("%s\n", startButton.pinID());
 
+    size_t after = ESP.getFreeHeap();
+    Serial.println(before - after); // Stima RAM allocata
 }
 
 
 bool first_run=true;
-void loop() {
 
-    // -----------------------------------
-    // ------ 1st run
-    // -----------------------------------
+
+
+void loop() {
     if (first_run) {
         first_run=false;
         printf0_NFN("processing started....\n");
     }
+
+
+    // -----------------------------------
+    // ------ refresh dei pin
+    // -----------------------------------
+
 
     // Leggi il pulsante. La funzione restituirà `true` solo al momento del rilascio (dopo debounce).
     if (startButton.read(300)) {
