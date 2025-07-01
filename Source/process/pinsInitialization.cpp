@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 30-06-2025 19.59.51
+// Date .........: 01-07-2025 18.17.23
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -38,14 +38,32 @@ ref: /home/loreto/.platformio/packages/framework-arduinoespressif32/cores/esp32/
    #define OUTPUT_OPEN_DRAIN 0x13
    #define ANALOG            0xC0
 ######################################### */
+
+const uint32_t START_BUTTON_THRESHOLDS[] = {
+    200,
+    800,
+    2000,
+    5000,
+};
+
+const uint32_t PUMP_STATE_THRESHOLDS[] = {
+    200,
+    5000,
+    15000,
+    20000,
+    25000,
+};
+const uint8_t NUM_START_BUTTON_THRESHOLDS = sizeof(START_BUTTON_THRESHOLDS) / sizeof(START_BUTTON_THRESHOLDS[0]);
+const uint8_t NUM_PUMP_STATE_THRESHOLDS = sizeof(PUMP_STATE_THRESHOLDS) / sizeof(PUMP_STATE_THRESHOLDS[0]);
+
+
 void pinsInitialization(void) {
-    pinMode(pressControlRelay_pin, OUTPUT);
     //====================================================
     //= set input pins
     //====================================================
-    // ------  name,                 pin_nr                 , pin_struct       , mode (inp/out), active_level);
-    startButton.init("startButton", startButton_pin, LOW);
-
+    // ------  name,                 pin_nr          active_level   );
+    startButton.init("startButton", startButton_pin, LOW,           START_BUTTON_THRESHOLDS, NUM_START_BUTTON_THRESHOLDS); // Now an object, not a struct
+    pumpState.init("pumpState",     pumpState_pin,   LOW,           PUMP_STATE_THRESHOLDS,   NUM_PUMP_STATE_THRESHOLDS);   // Now an object, not a struct
 
 
 

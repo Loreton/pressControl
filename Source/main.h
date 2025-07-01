@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 30-06-2025 16.26.02
+// Date .........: 01-07-2025 18.17.37
 //
 
 
@@ -15,28 +15,29 @@
 
 
     #include "@ledController_Class.h"
-    #include "@buttonDebounced_Class.h"
+    // #include "@buttonDebounced_Class.h"
+    #include "@buttonLongPress_Class.h"
 
 
 
     #ifdef __I_AM_MAIN_CPP__
         // L'inizializzazione avviene tramite il costruttore.
-        ButtonDebounced_Class startButton;
+        ButtonLongPress_Class startButton;
+        ButtonLongPress_Class pumpState;
         LedController_Class   activeBuzzer;
         LedController_Class   pressControlLED;
         LedController_Class   pumpLED;
 
-        // ButtonLongPress_Class startButton;
-        // ButtonLongPress_Class pressControlState;
-        // ButtonLongPress_Class pumpState;
-        // RelayManager_Class    pressControlRelay;
-        // PassiveBuzzer_Class   passiveBuzzer;
+
 
     #else
-        extern ButtonDebounced_Class startButton;
+        // extern ButtonDebounced_Class startButton;
+        extern ButtonLongPress_Class startButton;
+        extern ButtonLongPress_Class pumpState;
         extern LedController_Class   activeBuzzer;
         extern LedController_Class   pressControlLED;
         extern LedController_Class   pumpLED;
+
     #endif
 
 

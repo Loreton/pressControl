@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 01-07-2025 08.08.24
+// Date .........: 01-07-2025 18.20.41
 //
 /**
 ESP32 - devo controllare una pompa provvista di un press-control.
@@ -58,6 +58,12 @@ ESP32 - devo controllare una pompa provvista di un press-control.
 #include "main.h"
 
 
+size_t initialMemory;
+size_t finalMemory;
+
+// --- creazione oggetti
+// ButtonDebounced_Class startButton;
+
 
 
 
@@ -80,7 +86,7 @@ ESP32 - devo controllare una pompa provvista di un press-control.
 #define VERSION_LENGTH 40
 char pressControlVersion[VERSION_LENGTH+1];
 void setup() {
-    size_t before = ESP.getFreeHeap();
+    initialMemory = ESP.getFreeHeap();
     snprintf(pressControlVersion, VERSION_LENGTH, "Version_2025-06 - rel_type: %d", ln_RELEASE_TYPE);
 
     // Serial.begin(115200);
@@ -104,10 +110,25 @@ void setup() {
     // --- "pins_Initialization.cpp"
     // -----------------------------------
     pinsInitialization();
+    // startButton.init("startButton", startButton_pin, LOW,           START_BUTTON_THRESHOLDS, NUM_START_BUTTON_THRESHOLDS); // Now an object, not a struct
+    // pumpState.init("pumpState",     pumpState_pin,   LOW,           PUMP_STATE_THRESHOLDS,   NUM_PUMP_STATE_THRESHOLDS);   // Now an object, not a struct
+
+
+
+
+    //====================================================
+    //= set output pins
+    //====================================================
+    // activeBuzzer.init("Buzzer", activeBuzzer_pin, HIGH);
+    // pressControlLED.init("pressControlLED", pressControlLED_pin, HIGH);
+    // pumpLED.init("pumpLED", pumpLED_pin, HIGH);
+
     Serial.printf("%s\n", startButton.pinID());
 
-    size_t after = ESP.getFreeHeap();
-    Serial.println(before - after); // Stima RAM allocata
+    finalMemory = ESP.getFreeHeap();
+    printf0_FN("initial Memory:     %ld bytes\n", initialMemory); // Stima RAM allocata
+    printf0_FN("final   Memory:     %ld bytes\n", finalMemory); // Stima RAM allocata
+    printf0_FN("memoria occupata:   %ld bytes\n", finalMemory - initialMemory); // Stima RAM allocata
 }
 
 
@@ -121,16 +142,26 @@ void loop() {
         printf0_NFN("processing started....\n");
     }
 
-
     // -----------------------------------
     // ------ refresh dei pin
     // -----------------------------------
+    activeBuzzer.updateStatus();
+    pressControlLED.updateStatus();
+    pumpLED.updateStatus();
+    startButton.notifyCurrentLevel(&activeBuzzer);
+    pumpState.notifyCurrentLevel(&activeBuzzer);
 
 
     // Leggi il pulsante. La funzione restituirà `true` solo al momento del rilascio (dopo debounce).
-    if (startButton.read(300)) {
+    if (startButton.read()) {
         Serial.printf("[%s] Rilasciato!\n", startButton.pinID());
         startButton_action();
+    }
+
+    // Leggi lo stato della pompa. La funzione restituirà `true` solo al momento del rilascio (dopo debounce).
+    if (pumpState.read()) {
+        Serial.printf("[%s] Rilasciato!\n", pumpState.pinID());
+        // startButton_action();
     }
 
     // Piccolo ritardo per evitare busy-waiting e liberare la CPU per altre attività.
