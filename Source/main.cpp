@@ -1,40 +1,8 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 01-07-2025 18.20.41
+// Date .........: 07-07-2025 16.54.56
 //
-/**
-ESP32 - devo controllare una pompa provvista di un press-control.
-    Ho un relè per comandare il press-control.
 
-    un pin per monitorare status del press-control
-    un pin per monitorare status della pompa
-
-    un led per mostrare status del press-control
-    un pin per monitorare status della pompa
-
-    un buzzer passivo per segnalare con suoni
-    un buzzer attivo per inviare beep
-
-    un pulsante per accendere e spegnere il press-control
-
-    Una volta che viene rilevata l'acennsione della pompa emettere un suono di 4 frequenze a salire sul buzzer passivo ed a scalare nel caso la pompa si spegne.
-
-    Se la pompa continua a rimanere accesa allora emettere un beep dopo 60 secondi, un beep dopo altri 55 secondi, un beep dopo altri 50 secondi e così via per 6 step.
-
-    Dopo l'ultimo step:
-    1. spegnere il press-control
-    2. se il press-control o la pompa dovessero essere ancora accesi emettere un beep ogni 5 sec.
-
-    Comunque il press-control impostare un timer per spegnerlo dopo 30 minuti
-
-    Lo stato del press-control, della pompa  e del tempo rimasto del timer devono essere inviati a telegram
-
-
-
-
-    Esp32 ho un relè che comanda una pompa ed un pin che controlla il suo stato.  Una volta accesa emettere in beep dopo  60 secondi,
-    un beep dopo altri 55 secondi, un beep dopo altri 50 secondi e così via per 6 step. Dopo l'ultimo step emettere un beep ogni 5 sec.
-*/
 
 
 
@@ -47,52 +15,40 @@ ESP32 - devo controllare una pompa provvista di un press-control.
 // ---------------------------------
 // --- lnLibrary headers files
 // ---------------------------------
-#define     LOG_LEVEL_0
-#define     LOG_LEVEL_1
-#include    "@globalVars.h"
-#include    "@ln_time.h"
+#include    "lnLogger.h"
+#include    "lnTime.h"
+#include    "callBackPrototypes.h"
+#include    "ButtonLongPress_Struct.h"
 
 // ---------------------------------
 // - project headers files
 // ---------------------------------
 #include "main.h"
 
+extern "C" void lwip_hook_ip6_input() {
+    // Funzione hook vuota per risolvere il problema di linking
+    // undefined reference to lwip_hook_ip6_input'
+}
+
 
 size_t initialMemory;
 size_t finalMemory;
 
 // --- creazione oggetti
-// ButtonDebounced_Class startButton;
+// ButtonLongPress_Struct startButton;
 
 
-
-
-#ifdef __LN_TIME_INCLUDED__   // definito in ln_time.h
-    extern struct tm timeinfo;  // capire se va bene uno per tutti i moduli oppure mantenerli separati per evitare overwrites
-
-#else
-    // #########################################
-    // # se non c'è ln_time.cpp mi serve una dummy_Now()
-    // #########################################
-    const int8_t DUMMY_TIME_BUFFER_LENGTH = 20;
-    char  PROGMEM temp_buffer_time[DUMMY_TIME_BUFFER_LENGTH];
-    char *nowTime() {
-        snprintf(temp_buffer_time, DUMMY_TIME_BUFFER_LENGTH, "%s", "01:02:03");
-        return temp_buffer_time;
-    }
-#endif
 
 
 #define VERSION_LENGTH 40
 char pressControlVersion[VERSION_LENGTH+1];
 void setup() {
-    initialMemory = ESP.getFreeHeap();
     snprintf(pressControlVersion, VERSION_LENGTH, "Version_2025-06 - rel_type: %d", ln_RELEASE_TYPE);
 
-    // Serial.begin(115200);
-    lnSERIAL.begin(115200);
+    Serial.begin(115200);
     delay(1000);
-    printf0_FN("%s\n", pressControlVersion);
+    initialMemory = ESP.getFreeHeap();
+    LOG_INFO("%s", pressControlVersion);
 
     /*
         // calcolo memoria
@@ -110,36 +66,24 @@ void setup() {
     // --- "pins_Initialization.cpp"
     // -----------------------------------
     pinsInitialization();
-    // startButton.init("startButton", startButton_pin, LOW,           START_BUTTON_THRESHOLDS, NUM_START_BUTTON_THRESHOLDS); // Now an object, not a struct
-    // pumpState.init("pumpState",     pumpState_pin,   LOW,           PUMP_STATE_THRESHOLDS,   NUM_PUMP_STATE_THRESHOLDS);   // Now an object, not a struct
 
-
-
-
-    //====================================================
-    //= set output pins
-    //====================================================
-    // activeBuzzer.init("Buzzer", activeBuzzer_pin, HIGH);
-    // pressControlLED.init("pressControlLED", pressControlLED_pin, HIGH);
-    // pumpLED.init("pumpLED", pumpLED_pin, HIGH);
-
-    Serial.printf("%s\n", startButton.pinID());
+    LOG_NOTIFY("%s", startButton.pinID());
 
     finalMemory = ESP.getFreeHeap();
-    printf0_FN("initial Memory:     %ld bytes\n", initialMemory); // Stima RAM allocata
-    printf0_FN("final   Memory:     %ld bytes\n", finalMemory); // Stima RAM allocata
-    printf0_FN("memoria occupata:   %ld bytes\n", finalMemory - initialMemory); // Stima RAM allocata
+    LOG_DEBUG("initial Memory:     %ld bytes", initialMemory); // Stima RAM allocata
+    LOG_DEBUG("final   Memory:     %ld bytes", finalMemory); // Stima RAM allocata
+    LOG_DEBUG("memoria occupata:   %ld bytes", finalMemory - initialMemory); // Stima RAM allocata
 }
 
 
+
+
+
 bool first_run=true;
-
-
-
 void loop() {
     if (first_run) {
         first_run=false;
-        printf0_NFN("processing started....\n");
+        LOG_INFO("processing started....");
     }
 
     // -----------------------------------
@@ -148,24 +92,34 @@ void loop() {
     activeBuzzer.updateStatus();
     pressControlLED.updateStatus();
     pumpLED.updateStatus();
-    startButton.notifyCurrentLevel(&activeBuzzer);
-    pumpState.notifyCurrentLevel(&activeBuzzer);
+    startButton.notifyCurrentButtonLevel(beepNotification);
+    pumpState.notifyCurrentButtonLevel(beepNotification);
 
 
-    // Leggi il pulsante. La funzione restituirà `true` solo al momento del rilascio (dopo debounce).
-    if (startButton.read()) {
-        Serial.printf("[%s] Rilasciato!\n", startButton.pinID());
-        startButton_action();
-    }
 
-    // Leggi lo stato della pompa. La funzione restituirà `true` solo al momento del rilascio (dopo debounce).
-    if (pumpState.read()) {
-        Serial.printf("[%s] Rilasciato!\n", pumpState.pinID());
-        // startButton_action();
-    }
+    #ifdef USE_ACTION_CALL_BACK
+        startButton.read(startButtonHandlerCB);
+        pumpState.read(pumpStateHandlerCB);
+    #else
+        // Leggi il pulsante. La funzione restituirà `true` solo al momento del rilascio (dopo debounce).
+        if (startButton.read()) {
+            // LOG_NOTIFY("[%s] Rilasciato!", startButton.pinID());
+            startButtonHandlerCB(&startButton);
+            // startButton_action();
+        }
+
+        // Leggi lo stato della pompa. La funzione restituirà `true` solo al momento del rilascio (dopo debounce).
+        if (pumpState.read()) {
+            // LOG_NOTIFY("[%s] Rilasciato!", pumpState.pinID());
+            pumpStateHandlerCB(&pumpState);
+            // startButton_action();
+        }
+    #endif
 
     // Piccolo ritardo per evitare busy-waiting e liberare la CPU per altre attività.
-    delay(10);
+    // delay(10);
+
+
 
 
 }

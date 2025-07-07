@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 01-07-2025 18.17.23
+// Date .........: 07-07-2025 10.02.41
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -8,16 +8,14 @@
 // ---------------------------------
 // --- lnLibrary headers files
 // ---------------------------------
-#define LOG_LEVEL_0x
-#define LOG_LEVEL_1x
-#include "@logMacros.h"
+#include "lnLogger.h"
 
 
 // ---------------------------------
 // - project headers files
 // ---------------------------------
 #include "main.h"
-
+#include "ButtonLongPress_Struct.h"
 
 
 
@@ -39,31 +37,37 @@ ref: /home/loreto/.platformio/packages/framework-arduinoespressif32/cores/esp32/
    #define ANALOG            0xC0
 ######################################### */
 
-const uint32_t START_BUTTON_THRESHOLDS[] = {
-    200,
-    800,
-    2000,
-    5000,
-};
-
-const uint32_t PUMP_STATE_THRESHOLDS[] = {
-    200,
-    5000,
-    15000,
-    20000,
-    25000,
-};
-const uint8_t NUM_START_BUTTON_THRESHOLDS = sizeof(START_BUTTON_THRESHOLDS) / sizeof(START_BUTTON_THRESHOLDS[0]);
-const uint8_t NUM_PUMP_STATE_THRESHOLDS = sizeof(PUMP_STATE_THRESHOLDS) / sizeof(PUMP_STATE_THRESHOLDS[0]);
-
 
 void pinsInitialization(void) {
+    const uint32_t START_BUTTON_THRESHOLDS[] = {
+        200,
+        800,
+        2000,
+        5000,
+    };
+
+    const uint32_t PUMP_STATE_THRESHOLDS[] = {
+        200,
+        5000,
+        15000,
+        20000,
+        25000,
+    };
+    const uint8_t NUM_START_BUTTON_THRESHOLDS = sizeof(START_BUTTON_THRESHOLDS) / sizeof(START_BUTTON_THRESHOLDS[0]);
+    const uint8_t NUM_PUMP_STATE_THRESHOLDS = sizeof(PUMP_STATE_THRESHOLDS) / sizeof(PUMP_STATE_THRESHOLDS[0]);
+
     //====================================================
     //= set input pins
     //====================================================
     // ------  name,                 pin_nr          active_level   );
     startButton.init("startButton", startButton_pin, LOW,           START_BUTTON_THRESHOLDS, NUM_START_BUTTON_THRESHOLDS); // Now an object, not a struct
     pumpState.init("pumpState",     pumpState_pin,   LOW,           PUMP_STATE_THRESHOLDS,   NUM_PUMP_STATE_THRESHOLDS);   // Now an object, not a struct
+    startButton.showStatus();
+    pumpState.showStatus();
+
+
+
+
 
 
 
