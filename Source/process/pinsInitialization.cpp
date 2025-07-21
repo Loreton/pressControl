@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 07-07-2025 10.02.41
+// Date .........: 21-07-2025 14.51.43
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -9,7 +9,7 @@
 // --- lnLibrary headers files
 // ---------------------------------
 #include "lnLogger.h"
-
+    // #include "pin_Definitions.h"
 
 // ---------------------------------
 // - project headers files
@@ -38,36 +38,39 @@ ref: /home/loreto/.platformio/packages/framework-arduinoespressif32/cores/esp32/
 ######################################### */
 
 
-void pinsInitialization(void) {
-    const uint32_t START_BUTTON_THRESHOLDS[] = {
-        200,
-        800,
-        2000,
-        5000,
-    };
 
-    const uint32_t PUMP_STATE_THRESHOLDS[] = {
-        200,
-        5000,
-        15000,
-        20000,
-        25000,
-    };
+
+
+// extern ButtonLongPress_Struct startButton;
+// extern ButtonLongPress_Struct pumpState;
+
+// queste definizioni devo essere esterne alla funzione altrimenti le perdiamo durante il run
+// queste definizioni devo essere esterne alla funzione altrimenti le perdiamo durante il run
+const PROGMEM uint32_t START_BUTTON_THRESHOLDS[] = {400, 800,   2000, 5000 };
+const PROGMEM uint32_t PUMP_STATE_THRESHOLDS[]   = {400, 5000, 15000, 20000, 25000 };
+const PROGMEM uint32_t PRESS_CONTROL_STATE_THRESHOLDS[]   = {400, 30*60*1000 }; // 30 minuti
+// queste definizioni devo essere esterne alla funzione altrimenti le perdiamo durante il run
+// queste definizioni devo essere esterne alla funzione altrimenti le perdiamo durante il run
+
+
+
+
+void pinsInitialization(void) {
     const uint8_t NUM_START_BUTTON_THRESHOLDS = sizeof(START_BUTTON_THRESHOLDS) / sizeof(START_BUTTON_THRESHOLDS[0]);
-    const uint8_t NUM_PUMP_STATE_THRESHOLDS = sizeof(PUMP_STATE_THRESHOLDS) / sizeof(PUMP_STATE_THRESHOLDS[0]);
+    const uint8_t NUM_PUMP_STATE_THRESHOLDS   = sizeof(PUMP_STATE_THRESHOLDS)   / sizeof(PUMP_STATE_THRESHOLDS[0]);
+    const uint8_t NUM_PRESS_CONTROL_STATE_THRESHOLDS   = sizeof(PRESS_CONTROL_STATE_THRESHOLDS)   / sizeof(PRESS_CONTROL_STATE_THRESHOLDS[0]);
 
     //====================================================
     //= set input pins
     //====================================================
     // ------  name,                 pin_nr          active_level   );
-    startButton.init("startButton", startButton_pin, LOW,           START_BUTTON_THRESHOLDS, NUM_START_BUTTON_THRESHOLDS); // Now an object, not a struct
-    pumpState.init("pumpState",     pumpState_pin,   LOW,           PUMP_STATE_THRESHOLDS,   NUM_PUMP_STATE_THRESHOLDS);   // Now an object, not a struct
+    startButton.init("startButton",              startButton_pin,        LOW, START_BUTTON_THRESHOLDS,        NUM_START_BUTTON_THRESHOLDS); // Now an object, not a struct
+    pumpState.init("pumpState",                  pumpState_pin,          LOW, PUMP_STATE_THRESHOLDS,          NUM_PUMP_STATE_THRESHOLDS);   // Now an object, not a struct
+    pressControlState.init("pressControlState",  pressControlState_pin,  LOW, PRESS_CONTROL_STATE_THRESHOLDS, NUM_PRESS_CONTROL_STATE_THRESHOLDS);   // Now an object, not a struct
+
     startButton.showStatus();
     pumpState.showStatus();
-
-
-
-
+    pressControlState.showStatus();
 
 
 
@@ -77,6 +80,11 @@ void pinsInitialization(void) {
     activeBuzzer.init("Buzzer", activeBuzzer_pin, HIGH);
     pressControlLED.init("pressControlLED", pressControlLED_pin, HIGH);
     pumpLED.init("pumpLED", pumpLED_pin, HIGH);
+    passiveBuzzer.init("passiveBuzzer", passiveBuzzer_pin, HIGH, 0, 10);
+
+    pressControlRelay.init("pressControlRelay", pressControlRelay_pin, LOW);
+    magnetoTermicoRelay.init("magnetoTermicoRelay", magnetoTermicoRelay_pin, LOW);
+
 
 }
 

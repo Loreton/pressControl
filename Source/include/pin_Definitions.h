@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 30-06-2025 16.03.09
+// Date .........: 18-07-2025 10.03.26
 //
 
 #pragma once
@@ -96,7 +96,7 @@
 
 
         #define pressControlRelay_pin       GPIO_16  // OUTPUT
-        #define pumpHornAlarm_pin           GPIO_17  // OUTPUT
+        #define magnetoTermicoRelay_pin     GPIO_17  // OUTPUT
 
         #define pressControlState_pin       GPIO_18  // INPUT
         #define pumpState_pin               GPIO_19  // INPUT

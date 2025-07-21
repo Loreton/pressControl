@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 07-07-2025 09.41.37
+// Date .........: 21-07-2025 11.52.56
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -9,22 +9,26 @@
 #include "lnLogger.h"
 
 
-#include "ButtonLongPress_Struct.h"
-#include "PinController_Struct.h" // per l'active buzzer per inviare un beep durante la pressione del tasto
+// #include "ButtonLongPress_Struct.h"
+// #include "LedController_Struct.h" // per l'active buzzer per inviare un beep durante la pressione del tasto
 #include "callBackPrototypes.h" // per functions protoype
+// #include "RelayManager_Struct.h" // per functions protoype
+#include "main.h" // per functions protoype
 
 
 
 
 
-extern PinController_Struct activeBuzzer;
-PinController_Struct *buzzer1 = &activeBuzzer;
+extern LedController_Struct activeBuzzer;
+LedController_Struct *buzzer1 = &activeBuzzer;
 
 
 
 #define ALARM_BEEP_INTERVAL 2000
 
-
+//###########################################################################
+//# richiamata quando il pulsante è premuto
+//###########################################################################
 void pumpStateNotificationHandlerCB(ButtonLongPress_Struct* p) {
     uint16_t beep_duration=200;
     static uint32_t lastBeepTime;
@@ -73,7 +77,7 @@ void pumpStateNotificationHandlerCB(ButtonLongPress_Struct* p) {
 
 
 //###########################################################################
-//#
+//# richiamata quando il pulsante viene rilasciato
 //###########################################################################
 void pumpStateHandlerCB(ButtonLongPress_Struct *p) {
     static bool relayState = false;
@@ -88,14 +92,15 @@ void pumpStateHandlerCB(ButtonLongPress_Struct *p) {
 
         case PRESSED_LEVEL_3:
             LOG_DEBUG("PRESSED_LEVEL_3");
-            relayState = !relayState;
-            if (relayState) {
-                // digitalWrite(pressControlRelay_pin, LOW);
-                LOG_INFO("  --> Relè ACCESO!");
-            } else {
-                // digitalWrite(pressControlRelay_pin, HIGH);
-                LOG_INFO("  --> Relè SPENTO!");
-            }
+            // pressControlRelay.toggle();
+            // relayState = !relayState;
+            // if (relayState) {
+            //     // digitalWrite(pressControlRelay_pin, LOW);
+            //     LOG_INFO("  --> Relè ACCESO!");
+            // } else {
+            //     // digitalWrite(pressControlRelay_pin, HIGH);
+            //     LOG_INFO("  --> Relè SPENTO!");
+            // }
             break;
 
         case PRESSED_LEVEL_4:

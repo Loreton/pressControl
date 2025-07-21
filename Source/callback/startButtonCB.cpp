@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 07-07-2025 09.41.51
+// Date .........: 21-07-2025 12.44.19
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -11,82 +11,53 @@
 
 
 
-#include "ButtonLongPress_Struct.h"
-#include "PinController_Struct.h" // per l'active buzzer per inviare un beep durante la pressione del tasto
+// #include "ButtonLongPress_Struct.h"
+// #include "LedController_Struct.h" // per l'active buzzer per inviare un beep durante la pressione del tasto
 #include "callBackPrototypes.h" // per functions protoype
+// #include "RelayManager_Struct.h" // per functions protoype
+#include "main.h" // per functions protoype
 
 
 
 
 
-extern PinController_Struct activeBuzzer;
-PinController_Struct *buzzer = &activeBuzzer;
+extern LedController_Struct activeBuzzer;
+LedController_Struct *buzzer2 = &activeBuzzer;
 
 
 
 
-
+//###########################################################################
+//# richiamata quando il pulsante è premuto
+//###########################################################################
 #define ALARM_BEEP_INTERVAL 2000
 void startButtonNotificationHandlerCB(ButtonLongPress_Struct* p) {
     uint16_t beep_duration=200;
     static uint32_t lastBeepTime;
+    uint32_t next_interval;
+    uint32_t elapsed;
+    uint16_t phase_beep_duration;
 
     if (p->m_currentPressLevel != p->m_lastPressedLevel) {
-        LOG_INFO("[%s] Pressione in corso (ms:%06ld)", p->m_pinID, (millis() - p->m_pressStartTime));
+        elapsed = millis() - p->m_pressStartTime;
+        next_interval = p->m_gapThresholds[p->m_currentPressLevel];
+        LOG_INFO("[%s] Pressione in corso (ms:%06ld)", p->m_pinID, elapsed);
+
+        LOG_INFO("[%s] PRESSED_LEVEL_%d/%d - elapsed ms:%6lu", p->m_pinID, p->m_currentPressLevel, p->m_numThresholds, elapsed);
+
+        phase_beep_duration = next_interval / 5; // arbitrario.... facciamo un beep che è u1/5 del next_threshold time
+        LOG_INFO("[%s] next_interval: %lu - beep_duration: %lu", p->m_pinID, next_interval, phase_beep_duration);
         switch (p->m_currentPressLevel) {
             case PRESSED_LEVEL_1:
-                LOG_DEBUG("notify PRESSED_LEVEL: %d", p->m_currentPressLevel);
-                buzzer->pulse(beep_duration);
-                // notifyBuzzer(buzzer);
-                break;
-
-
             case PRESSED_LEVEL_2:
-                LOG_DEBUG("notify PRESSED_LEVEL: %d", p->m_currentPressLevel);
-                buzzer->pulse(beep_duration);
-                // notifyBuzzer(buzzer);
-                break;
-
             case PRESSED_LEVEL_3:
-                LOG_DEBUG("notify PRESSED_LEVEL: %d", p->m_currentPressLevel);
-                buzzer->pulse(beep_duration);
-                // notifyBuzzer(buzzer);
-                break;
-
             case PRESSED_LEVEL_4:
-                LOG_DEBUG("notify PRESSED_LEVEL: %d", p->m_currentPressLevel);
-                buzzer->pulse(beep_duration);
-                // notifyBuzzer(buzzer);
-                break;
-
             case PRESSED_LEVEL_5:
-                LOG_DEBUG("notify PRESSED_LEVEL: %d", p->m_currentPressLevel);
-                buzzer->pulse(beep_duration);
-                // notifyBuzzer(buzzer);
-                break;
-
             case PRESSED_LEVEL_6:
-                LOG_DEBUG("notify PRESSED_LEVEL: %d", p->m_currentPressLevel);
-                buzzer->pulse(beep_duration);
-                // notifyBuzzer(buzzer);
-                break;
-
             case PRESSED_LEVEL_7:
-                LOG_DEBUG("notify PRESSED_LEVEL: %d", p->m_currentPressLevel);
-                buzzer->pulse(beep_duration);
-                // notifyBuzzer(buzzer);
-                break;
-
             case PRESSED_LEVEL_8:
-                LOG_DEBUG("notify PRESSED_LEVEL: %d", p->m_currentPressLevel);
-                buzzer->pulse(beep_duration);
-                // notifyBuzzer(buzzer);
-                break;
-
             case PRESSED_LEVEL_9:
-                LOG_DEBUG("notify PRESSED_LEVEL: %d", p->m_currentPressLevel);
-                buzzer->pulse(beep_duration);
-                // notifyBuzzer(buzzer);
+                buzzer2->pulse(beep_duration);
                 break;
 
             default:
@@ -98,7 +69,7 @@ void startButtonNotificationHandlerCB(ButtonLongPress_Struct* p) {
     // --- LOGICA DEL BEEP OGNI 5 SECONDI quando si raggiunge il MAX-LEVEL---
     if (p->m_maxLevelReachedAndNotified ) {
         if (millis() - lastBeepTime >= ALARM_BEEP_INTERVAL) {
-            buzzer->pulse(1000);
+            buzzer2->pulse(1000);
             lastBeepTime = millis();
         }
     }
@@ -106,38 +77,33 @@ void startButtonNotificationHandlerCB(ButtonLongPress_Struct* p) {
 }
 
 
+
 //###########################################################################
-//#
+//# richiamata quando il pulsante viene rilasciato
 //###########################################################################
-void startButtonHandlerCB(ButtonLongPress_Struct *p) {
+void startButtonHandler(ButtonLongPress_Struct *p) {
     static bool relayState = false;
     switch (p->m_currentPressLevel) {
         case PRESSED_LEVEL_1:
-            LOG_DEBUG("PRESSED_LEVEL_1");
+            LOG_DEBUG("PRESSED_LEVEL: 1");
             break;
 
         case PRESSED_LEVEL_2:
-            LOG_DEBUG("PRESSED_LEVEL_2");
-            relayState = !relayState;
-            if (relayState) {
-                // digitalWrite(pressControlRelay_pin, LOW);
-                LOG_INFO("  --> Relè ACCESO!");
-            } else {
-                // digitalWrite(pressControlRelay_pin, HIGH);
-                LOG_INFO("  --> Relè SPENTO!");
-            }
+            LOG_DEBUG("PRESSED_LEVEL: 2");
+            pressControlRelay.toggle();
+
             break;
 
         case PRESSED_LEVEL_3:
-            LOG_DEBUG("PRESSED_LEVEL_3");
+            LOG_DEBUG("PRESSED_LEVEL: 3");
             break;
 
         case PRESSED_LEVEL_4:
-            LOG_DEBUG("PRESSED_LEVEL_4");
+            LOG_DEBUG("PRESSED_LEVEL: 4");
             break;
 
         default:
-            LOG_DEBUG("Sconosciuto/Non Qualificato");
+            LOG_DEBUG("PRESSED_LEVEL Non Qualificato");
             break;
     }
 
