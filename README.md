@@ -29,6 +29,13 @@ ESP32 - devo controllare una pompa provvista di un press-control.
 
 
 
+    pressControState:
+        pressed:
+            se il relay non è acceso allora vuol dire che è stato attivato il relè magnetotermico.
+            Siccome, al momento, non ha l'inching, attiviamo anche il relay interno con uno puilsetime si 30 minuti
+
+        released:
+
 
     Esp32 ho un relè che comanda una pompa ed un pin che controlla il suo stato.  Una volta accesa emettere in beep dopo  60 secondi,
     un beep dopo altri 55 secondi, un beep dopo altri 50 secondi e così via per 6 step. Dopo l'ultimo step emettere un beep ogni 5 sec.

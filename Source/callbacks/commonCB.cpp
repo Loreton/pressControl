@@ -1,12 +1,10 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 21-07-2025 13.58.39
+// Date .........: 23-07-2025 07.49.53
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
 
-#define LOG_LEVEL_0
-#define LOG_LEVEL_99
 #include "lnLogger.h" // printf:XFN()
 #include "lnGlobalVars.h" //
 
@@ -21,8 +19,8 @@ extern LedController_Struct activeBuzzer;
 // LedController_Struct *buzzer2 = &activeBuzzer;
 
 
-void beepNotification(ButtonLongPress_Struct *p, uint16_t beep_duration) {
-    LOG_TRACE("[%s] beeping", p->m_pinID);
+void beepNotification(ButtonLongPress_Struct *p, uint32_t beep_duration) {
+    LOG_NOTIFY("%s beeping. duration: %lu ms", p->m_pinID,  beep_duration);
     activeBuzzer.pulse(beep_duration);
 }
 

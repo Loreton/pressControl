@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 21-07-2025 14.47.17
+// Date .........: 24-07-2025 17.54.17
 //
 
 
@@ -10,6 +10,9 @@
     #include "ButtonLongPress_Struct.h"
     #include "PassiveBuzzer_Struct.h"
     #include "RelayManager_Struct.h"
+
+    #include "callBackPrototypes.h" // per functions protoype
+    #include "processPrototypes.h" // per functions protoype
 
 
 
@@ -58,6 +61,7 @@
 // -------------------------------------------
     // --- pinsInitialization.cpp
     void pinsInitialization(void);
+    void startAlarmActions(void) ;
 
 
     // --- actionProcess.cpp

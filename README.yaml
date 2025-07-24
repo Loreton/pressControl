@@ -1,0 +1,64 @@
+# pressControl
+ESP32:
+    Gestione pompa ed allarme in caso di lunga apertura
+    devo controllare una pompa provvista di un pressControl.
+
+hardware:
+    passiveBuzzer_pin           GPIO_22:
+        - per segnalare con suoni
+
+    activeBuzzer_pin            GPIO_23:
+        - per inviare beep
+
+    pressControlLED_pin         GPIO_25:
+        - show status del pressControl
+
+    pumpLED_pin                 GPIO_26:
+        - show  status della pompa
+
+    pressControlRelay_pin       GPIO_16:
+        - accendre/spegnere il pressControl.
+
+    magnetoTermicoRelay_pin     GPIO_17:
+        - normalemnte spento, porta fase al magnetotermico. in caso di allarme lo accendiamo per 2 o tre secondi
+          per togliere corrente al magnetotermico e spegnerlo. Poi lo si riattiva.
+
+    pressControlState_pin       GPIO_18:
+        - status del pressControl
+
+    pumpState_pin               GPIO_19:
+        - status della pompa
+
+    startButton_pin             GPIO_21:
+        - pulsante per accendere/spegnere il pressControl
+
+
+
+
+
+Azioni:
+    startButton:
+        PRESSED:
+            1: accende il pressControlRelay_pin
+            2: verifica che il pressControlState_pin sia attivo
+            3: se non attivo allora ALARM
+
+
+
+    Una volta che viene rilevata l'accensione della pompa emettere un suono di 4 frequenze crescenti sul buzzer passivo e decrescenti nel caso la pompa si spegne.
+
+    Se la pompa continua a rimanere accesa allora emette un beep dopo 60 secondi, un beep dopo altri 55 secondi, un beep dopo altri 50 secondi e così via per 6 step.
+
+    Dopo l'ultimo step:
+    1. spegnere il pressControl
+    2. se il pressControl o la pompa dovessero essere ancora accesi emettere un beep ogni 5 sec.
+
+    Comunque dall'accensione del pressControl impostare un timer per spegnerlo dopo 30 minuti
+
+    Lo stato del pressControl, della pompa  e del tempo rimasto del timer devono essere inviati a telegram
+
+
+
+
+    Esp32 ho un relè che comanda una pompa ed un pin che controlla il suo stato.  Una volta accesa emettere in beep dopo  60 secondi,
+    un beep dopo altri 55 secondi, un beep dopo altri 50 secondi e così via per 6 step. Dopo l'ultimo step emettere un beep ogni 5 sec.

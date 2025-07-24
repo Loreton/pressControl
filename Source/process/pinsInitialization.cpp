@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 21-07-2025 14.51.43
+// Date .........: 24-07-2025 20.10.05
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -46,9 +46,9 @@ ref: /home/loreto/.platformio/packages/framework-arduinoespressif32/cores/esp32/
 
 // queste definizioni devo essere esterne alla funzione altrimenti le perdiamo durante il run
 // queste definizioni devo essere esterne alla funzione altrimenti le perdiamo durante il run
-const PROGMEM uint32_t START_BUTTON_THRESHOLDS[] = {400, 800,   2000, 5000 };
-const PROGMEM uint32_t PUMP_STATE_THRESHOLDS[]   = {400, 5000, 15000, 20000, 25000 };
-const PROGMEM uint32_t PRESS_CONTROL_STATE_THRESHOLDS[]   = {400, 30*60*1000 }; // 30 minuti
+const PROGMEM uint32_t START_BUTTON_THRESHOLDS[]         = {400, 2000};
+const PROGMEM uint32_t PUMP_STATE_THRESHOLDS[]           = {400, 5000, 15000, 20000, 25000 };
+const PROGMEM uint32_t PRESS_CONTROL_STATE_THRESHOLDS[]  = {400, 3*60*1000 }; // 30 minuti
 // queste definizioni devo essere esterne alla funzione altrimenti le perdiamo durante il run
 // queste definizioni devo essere esterne alla funzione altrimenti le perdiamo durante il run
 
@@ -56,9 +56,9 @@ const PROGMEM uint32_t PRESS_CONTROL_STATE_THRESHOLDS[]   = {400, 30*60*1000 }; 
 
 
 void pinsInitialization(void) {
-    const uint8_t NUM_START_BUTTON_THRESHOLDS = sizeof(START_BUTTON_THRESHOLDS) / sizeof(START_BUTTON_THRESHOLDS[0]);
-    const uint8_t NUM_PUMP_STATE_THRESHOLDS   = sizeof(PUMP_STATE_THRESHOLDS)   / sizeof(PUMP_STATE_THRESHOLDS[0]);
-    const uint8_t NUM_PRESS_CONTROL_STATE_THRESHOLDS   = sizeof(PRESS_CONTROL_STATE_THRESHOLDS)   / sizeof(PRESS_CONTROL_STATE_THRESHOLDS[0]);
+    const uint8_t NUM_START_BUTTON_THRESHOLDS           = sizeof(START_BUTTON_THRESHOLDS) / sizeof(START_BUTTON_THRESHOLDS[0]);
+    const uint8_t NUM_PUMP_STATE_THRESHOLDS             = sizeof(PUMP_STATE_THRESHOLDS)   / sizeof(PUMP_STATE_THRESHOLDS[0]);
+    const uint8_t NUM_PRESS_CONTROL_STATE_THRESHOLDS    = sizeof(PRESS_CONTROL_STATE_THRESHOLDS)   / sizeof(PRESS_CONTROL_STATE_THRESHOLDS[0]);
 
     //====================================================
     //= set input pins
@@ -68,9 +68,9 @@ void pinsInitialization(void) {
     pumpState.init("pumpState",                  pumpState_pin,          LOW, PUMP_STATE_THRESHOLDS,          NUM_PUMP_STATE_THRESHOLDS);   // Now an object, not a struct
     pressControlState.init("pressControlState",  pressControlState_pin,  LOW, PRESS_CONTROL_STATE_THRESHOLDS, NUM_PRESS_CONTROL_STATE_THRESHOLDS);   // Now an object, not a struct
 
-    startButton.showStatus();
-    pumpState.showStatus();
-    pressControlState.showStatus();
+    // startButton.showStatus();
+    // pumpState.showStatus();
+    // pressControlState.showStatus();
 
 
 

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 21-07-2025 20.28.43
+// Date .........: 24-07-2025 20.16.34
 //
 
 
@@ -19,9 +19,6 @@
 #include    "lnSerialRead.h"
 #include    "lnLogger.h"
 #include    "lnTime.h"
-#include    "callBackPrototypes.h"
-#include    "ButtonLongPress_Struct.h"
-#include    "PassiveBuzzer_Struct.h"
 
 // ---------------------------------
 // - project headers files
@@ -79,82 +76,175 @@ void setup() {
 
 
 
+// -----------------------------------
+// ------ calcolo parametri
+// -----------------------------------
+/***
+    tabella decisionale
+    ; situazione in cui l'accenzione è comandata dal magnetotermico direttamente
 
+    relay=4    pressControl=2    pump=1 |  value  action
+        0           0               0   |    0       normal - pumpLED & pressControlLED lighting
+        0           0               1   |    1       abnormal - Allarme continuo
+        0           1               0   |    2       pressControlLED ON, pumpLED OFF
+        0           1               1   |    3       pressControlLED ON, pumpLED ON
+                                                        qui si calcola il tempo in cui la pompa rimane accesa
+                                                        sono diverse fasi. per ogni fase viene emesso un beeep e dopo
+                                                        l'ultima fase il beep è continuo e si prevede di spegnere forzatamente la pompa
+
+                                                        - azione sul rele2
+                                                        accendendo (per un paio di secondi) il secondo relè, che dà tensione al magnetotermico,
+                                                        si toglie alimentazione al magnetotermico e il presscontrol/pompa dovrebbero spegnersi.
+                                                        e si dovrebbe tornare alla posizione 0.
+
+    ; situazione in cui l'accenzione è comandata dal relè interno
+    relay=4    pressControl=2    pump=1 |  value  action
+        1           0               0   |    4       normal - pumpLED & pressControlLED lighting
+        1           0               1   |    5       abnormal - Allarme continuo
+        1           1               0   |    6       pressControlLED ON, pumpLED OFF
+        1           1               1   |    7       pressControlLED ON, pumpLED ON
+                                                        qui si calcola il tempo in cui la pompa rimane accesa
+                                                        sono diverse fasi. per ogni fase viene emesso un beeep e dopo
+                                                        l'ultima fase il beep è continuo e si prevede di spegnere forzatamente la pompa
+                                                        Spegnere il relay1, se non si spegne il presscontrol
+                                                        attivare il protocollo 'azione sul rele2'
+
+***/
+// const PROGMEM char *alarmState[] = {
+//                             "RELAY OFF - PC OFF - PUMP OFF  - [OK]",
+//                             "RELAY OFF - PC OFF - PUMP ON   - [ERROR]",
+//                             "RELAY OFF - PC ON  - PUMP OFF  - [OK - ext relay]",
+//                             "RELAY OFF - PC ON  - PUMP ON   - [OK - ext relay]",
+//                             "RELAY ON  - PC OFF - PUMP OFF  - [ERROR]",
+//                             "RELAY ON  - PC OFF - PUMP ON   - [ERROR]",
+//                             "RELAY ON  - PC ON  - PUMP OFF  - [OK]",
+//                             "RELAY ON  - PC ON  - PUMP ON   - [OK]",
+//                                 };
+
+// Definisce i possibili tipi di pressione del pulsante.
+enum ActionState : uint8_t {
+    // relay interno spento, quindi si presume che sia attivo quello esterno
+    // è comunque una situazione temporanea perché non appena si accente il pressContro, attiviamo anche il relayInterno
+    ALL_IS_DOWN = 0,      // tutto spento.
+    ALARM_PC_OFF_PUMP_ON, // solo la pompa è acessa. Anomalo. Non dovrebbe mai accadere
+    OK_PC_ON_PUMP_OFF,    // rele esterno - PressControl ON (con il rele esterno)
+    OK_PC_ON_PUMP_ON,     // rele esterno - Pressione lunga.
+
+    // relay interno acceso
+    ALARM_RELAY_ON_PC_OFF,         // acceso ma non è partito il pressControl . should not occur
+    ALARM_RELAY_ON_PC_OFF_PUMP_ON, // solo la pompa è acessa. Anomalo. Non dovrebbe mai accadere
+    OK_RELAY_ON_PC_ON_PUMP_OFF,    // PressControl ON e Pump OFF
+    OK_RELAY_ON_PC_ON_PUMP_ON,     // Pressione lunga.
+} ;
+
+
+// const PROGMEM char *alarmState[] = {"[EXT_RELAY] ALL_OFF", "[EXT_RELAY] ABNORMAL_PUMP_ON", "[EXT_RELAY] PC_ON", "[EXT_RELAY] PC+PUMP ON", "[INT_RELAY] ALL_OFF", "[INT_RELAY] ABNORMAL_PUMP_ON", "[INT_RELAY] PC_ON", "[INT_RELAY] PC+PUMP ON", };
 
 bool first_run=true;
+uint8_t actionState=0;
+uint8_t lastActionState=1;
+
 void loop() {
     if (first_run) {
         first_run=false;
         LOG_INFO("processing started....");
     }
 
+
     // -----------------------------------
     // ------ lettura/refresh dei pin
     // -----------------------------------
     activeBuzzer.update();
+    passiveBuzzer.update();
     pressControlLED.update();
     pumpLED.update();
 
     pressControlRelay.update();
     magnetoTermicoRelay.update();
 
-    startButton.notifyPressingLevel(beepNotification);
-    pumpState.notifyPressingLevel(beepNotification);
-    pressControlState.notifyPressingLevel(beepNotification);
+    startButton.pressingLevelNotification(startButtonNotificationCB);
+    pumpState.pressingLevelNotification(pumpPressedNotificationCB);
+    pressControlState.pressingLevelNotification(pressControlNotificationCB);
 
-    /***
-        tabella decisionale
-        ; situazione in cui l'accenzione è comandata dal magnetotermico direttamente
 
-        relay=4    pressControl=2    pump=1 |  value  action
-            0           0               0   |    0       normal - pumpLED & pressControlLED lighting
-            0           0               1   |    1       abnormal - Allarme continuo
-            0           1               0   |    2       pressControlLED ON, pumpLED OFF
-            0           1               1   |    3       pressControlLED ON, pumpLED ON
-                                                            qui si calcola il tempo in cui la pompa rimane accesa
-                                                            sono diverse fasi. per ogni fase viene emesso un beeep e dopo
-                                                            l'ultima fase il beep è continuo e si prevede di spegnere forzatamente la pompa
 
-                                                            - azione sul rele2
-                                                            accendendo (per un paio di secondi) il secondo relè, che dà tensione al magnetotermico,
-                                                            si toglie alimentazione al magnetotermico e il presscontrol/pompa dovrebbero spegnersi.
-                                                            e si dovrebbe tornare alla posizione 0.
 
-        ; situazione in cui l'accenzione è comandata dal relè interno
-        relay=4    pressControl=2    pump=1 |  value  action
-            1           0               0   |    4       normal - pumpLED & pressControlLED lighting
-            1           0               1   |    5       abnormal - Allarme continuo
-            1           1               0   |    6       pressControlLED ON, pumpLED OFF
-            1           1               1   |    7       pressControlLED ON, pumpLED ON
-                                                            qui si calcola il tempo in cui la pompa rimane accesa
-                                                            sono diverse fasi. per ogni fase viene emesso un beeep e dopo
-                                                            l'ultima fase il beep è continuo e si prevede di spegnere forzatamente la pompa
-                                                            Spegnere il relay1, se non si spegne il presscontrol
-                                                            attivare il protocollo 'azione sul rele2'
+    // -----------------------------------
+    // ------ Action
+    // -----------------------------------
+    uint8_t relayStatus = pressControlRelay.isActive();
+    uint8_t pcStatus    = pressControlState.isPressed();
+    uint8_t pumpStatus  = pumpState.isPressed();
 
-    ***/
+    // actionState = (pressControlRelay.isActive() * 4) + (pressControlState.isPressed()*2) + (pumpState.isPressed()*1);
+    actionState = (relayStatus * 4) + (pcStatus*2) + (pumpStatus*1);
 
-    uint8_t state = (pressControlRelay.isActive() * 4) + (pressControlState.isPressed()*2) + (pumpState.isPressed()*1);
-    LOG_INFO("current state value: %d", state);
+    if (actionState != lastActionState) {
+        lastActionState=actionState;
 
-    switch (state) {
-        case 0:
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-        case 6:
-        case 7:
-            break;
+        LOG_INFO("actionState [%02d]: %7s %16s %5s", actionState, "RELAY", "PRESS-CONTROL", "PUMP");
+        LOG_INFO("actionState [%02d]: %7s %16s %5s", actionState, str_OnOff[relayStatus], str_OnOff[pcStatus], str_OnOff[pumpStatus]);
 
-        default:
-            break;
+        switch (actionState) {
+            case ALL_IS_DOWN:
+                pumpLED.blinking(1000, 3000);
+                pressControlLED.blinking(1000, 3000);
+                activeBuzzer.reset();
+                passiveBuzzer.noTone();
+                break;
+
+            case ALARM_PC_OFF_PUMP_ON:
+                startAlarmActions();
+                break;
+
+            case OK_PC_ON_PUMP_OFF:
+                if (! relayStatus) {
+                    pressControlRelay.startPulse(30*60);       // accendiamo anche il relay interno in modo da far partire il pulseTime
+                }
+                pressControlLED.on();         // accendiamo fisso il LED
+                pumpLED.blinking(2000, 1000); // facciamoòp lampeggiare
+                break;
+
+            case OK_PC_ON_PUMP_ON:
+                if (! relayStatus) {
+                    pressControlRelay.startPulse(30*60);       // accendiamo anche il relay interno in modo da far partire il pulseTime
+                }
+                pressControlLED.on();
+                pumpLED.on();
+
+            case ALARM_RELAY_ON_PC_OFF:
+                startAlarmActions();
+                break;
+
+            case ALARM_RELAY_ON_PC_OFF_PUMP_ON:
+                startAlarmActions();
+                break;
+
+            case OK_RELAY_ON_PC_ON_PUMP_OFF:
+                pressControlLED.on();
+                pumpLED.off();
+                break;
+
+            case OK_RELAY_ON_PC_ON_PUMP_ON:
+                pressControlLED.on();
+                pumpLED.on();
+                if (pumpState.isMaxLevelReached()) {
+
+                }
+                break;
+
+            default:
+                break;
+        }
+
     }
+
+
 
     // Leggi il pulsante. La funzione restituirà `true` solo al momento del rilascio (dopo debounce).
     if (startButton.read()) {
-        startButtonHandler(&startButton);
+        startButtonHandler(startButton.pressedLevel());
+        startButton.reset();
     }
 
 
@@ -162,6 +252,16 @@ void loop() {
     // Leggi lo stato della pompa. La funzione restituirà `true` solo al momento del rilascio (dopo debounce).
     if (pumpState.read()) {
         pumpStateHandlerCB(&pumpState);
+        pumpState.reset();
+    }
+
+
+    /**
+     * Leggi lo stato del pressControl
+     * Se è stato rilasciato
+    */
+    if (pressControlState.read()) {
+        pressControlState.reset();
     }
 
     // Piccolo ritardo per evitare busy-waiting e liberare la CPU per altre attività.
@@ -170,3 +270,20 @@ void loop() {
 }
 
 
+
+void startAlarmActions() {
+    pressControlRelay.off();       // accendiamo anche il relay interno in modo da far partire il pulseTime
+    magnetoTermicoRelay.startPulse(5000); // non abbiamo armi. proviamo a chiidere il relay esterno togliendo alimentazione
+    pumpLED.blinking(500, 500);
+    pressControlLED.blinking(500, 500);
+    activeBuzzer.blinking(500, 500);
+}
+
+
+// void resetAlarmActions() {
+//     pressControlRelay.off();       // accendiamo anche il relay interno in modo da far partire il pulseTime
+//     magnetoTermicoRelay.startPulse(5000); // non abbiamo armi. proviamo a chiidere il relay esterno togliendo alimentazione
+//     pumpLED.blinking(500, 500);
+//     pressControlLED.blinking(500, 500);
+//     activeBuzzer.blinking(500, 500);
+// }
