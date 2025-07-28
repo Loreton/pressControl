@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-07-2025 20.16.34
+// Date .........: 28-07-2025 15.54.36
 //
 
 
@@ -16,9 +16,8 @@
 // --- lnLibrary headers files
 // ---------------------------------
 #include    "lnGlobalVars.h"
+
 #include    "lnSerialRead.h"
-#include    "lnLogger.h"
-#include    "lnTime.h"
 
 // ---------------------------------
 // - project headers files
@@ -44,7 +43,7 @@ void setup() {
 
     Serial.begin(115200);
     delay(1000);
-    myLog.begin();
+    lnLog.init();
     initialMemory = ESP.getFreeHeap();
     // LOG_INFO("%s", pressControlVersion);
 
@@ -61,7 +60,7 @@ void setup() {
     // -----------------------------------
     // ------ set Time
     // -----------------------------------
-    time_setup();
+    // lnTime();
 
     // -----------------------------------
     // --- "pins_Initialization.cpp"
@@ -110,35 +109,31 @@ void setup() {
                                                         attivare il protocollo 'azione sul rele2'
 
 ***/
-// const PROGMEM char *alarmState[] = {
-//                             "RELAY OFF - PC OFF - PUMP OFF  - [OK]",
-//                             "RELAY OFF - PC OFF - PUMP ON   - [ERROR]",
-//                             "RELAY OFF - PC ON  - PUMP OFF  - [OK - ext relay]",
-//                             "RELAY OFF - PC ON  - PUMP ON   - [OK - ext relay]",
-//                             "RELAY ON  - PC OFF - PUMP OFF  - [ERROR]",
-//                             "RELAY ON  - PC OFF - PUMP ON   - [ERROR]",
-//                             "RELAY ON  - PC ON  - PUMP OFF  - [OK]",
-//                             "RELAY ON  - PC ON  - PUMP ON   - [OK]",
-//                                 };
 
-// Definisce i possibili tipi di pressione del pulsante.
+
+// Definisce i possibili tipi di condizioni
 enum ActionState : uint8_t {
-    // relay interno spento, quindi si presume che sia attivo quello esterno
-    // è comunque una situazione temporanea perché non appena si accente il pressContro, attiviamo anche il relayInterno
-    ALL_IS_DOWN = 0,      // tutto spento.
-    ALARM_PC_OFF_PUMP_ON, // solo la pompa è acessa. Anomalo. Non dovrebbe mai accadere
-    OK_PC_ON_PUMP_OFF,    // rele esterno - PressControl ON (con il rele esterno)
-    OK_PC_ON_PUMP_ON,     // rele esterno - Pressione lunga.
+    /**
+        * relay interno spento, quindi si presume che sia attivo quello esterno
+        * è comunque una situazione temporanea perché non appena si accente il pressContro, attiviamo anche il relayInterno
+    **/
 
-    // relay interno acceso
-    ALARM_RELAY_ON_PC_OFF,         // acceso ma non è partito il pressControl . should not occur
-    ALARM_RELAY_ON_PC_OFF_PUMP_ON, // solo la pompa è acessa. Anomalo. Non dovrebbe mai accadere
-    OK_RELAY_ON_PC_ON_PUMP_OFF,    // PressControl ON e Pump OFF
-    OK_RELAY_ON_PC_ON_PUMP_ON,     // Pressione lunga.
+    a00_ALL_IS_DOWN = 0,      // tutto spento.
+    a01_relayOFF_pcOFF_pumpON_ALARM, // solo la pompa è acessa. Anomalo. Non dovrebbe mai accadere
+    a02_relayOFF_pcON_pumpOFF_OK,    // rele esterno - PressControl ON (con il rele esterno)
+    a03_relayOFF_pnON_pumpON_OK,     // rele esterno - Pressione lunga.
+
+    /**
+        * relay interno acceso
+    */
+    a04_relayON_pcOFF_ALARM,         // acceso ma non è partito il pressControl . should not occur
+    a05_relayON_pcOFF_pumpON_ALARM, // solo la pompa è acessa. Anomalo. Non dovrebbe mai accadere
+    a06_relayON_pcON_pumpOFF_OK,    // PressControl ON e Pump OFF
+    a07_relayON_pcON_pumpON_OK,     // Pressione lunga.
 } ;
 
 
-// const PROGMEM char *alarmState[] = {"[EXT_RELAY] ALL_OFF", "[EXT_RELAY] ABNORMAL_PUMP_ON", "[EXT_RELAY] PC_ON", "[EXT_RELAY] PC+PUMP ON", "[INT_RELAY] ALL_OFF", "[INT_RELAY] ABNORMAL_PUMP_ON", "[INT_RELAY] PC_ON", "[INT_RELAY] PC+PUMP ON", };
+// const PROGMEM char *alarmState[] = {"[EXT_RELAY] ALL_OFF", "[EXT_RELAY] ABNORMAL_pumpON", "[EXT_RELAY] pcON", "[EXT_RELAY] PC+PUMP ON", "[INT_RELAY] ALL_OFF", "[INT_RELAY] ABNORMAL_pumpON", "[INT_RELAY] pcON", "[INT_RELAY] PC+PUMP ON", };
 
 bool first_run=true;
 uint8_t actionState=0;
@@ -152,7 +147,7 @@ void loop() {
 
 
     // -----------------------------------
-    // ------ lettura/refresh dei pin
+    // ------ lettura/refresh dei pin di output
     // -----------------------------------
     activeBuzzer.update();
     passiveBuzzer.update();
@@ -162,12 +157,43 @@ void loop() {
     pressControlRelay.update();
     magnetoTermicoRelay.update();
 
+
+
+    // Leggi il pulsante. La funzione restituirà `true` solo al momento del rilascio (dopo debounce).
     startButton.pressingLevelNotification(startButtonNotificationCB);
+    if (startButton.released()) {
+        startButtonHandler(startButton.pressedLevel());
+        startButton.reset();
+    }
+
+
+
+
+    // Leggi lo stato della pompa. La funzione restituirà `true` solo al momento del rilascio (dopo debounce).
     pumpState.pressingLevelNotification(pumpPressedNotificationCB);
+    if (pumpState.released()) {
+        pumpStateHandlerCB(&pumpState);
+        pumpState.reset();
+    }
+
+
+    /**
+     * Leggi lo stato del pressControl
+     * Se è stato rilasciato
+    */
     pressControlState.pressingLevelNotification(pressControlNotificationCB);
+    if (pressControlState.released()) {
+        pressControlState.reset();
+    }
 
 
 
+
+
+
+
+
+    return;
 
     // -----------------------------------
     // ------ Action
@@ -186,46 +212,47 @@ void loop() {
         LOG_INFO("actionState [%02d]: %7s %16s %5s", actionState, str_OnOff[relayStatus], str_OnOff[pcStatus], str_OnOff[pumpStatus]);
 
         switch (actionState) {
-            case ALL_IS_DOWN:
+            case a00_ALL_IS_DOWN:
                 pumpLED.blinking(1000, 3000);
                 pressControlLED.blinking(1000, 3000);
                 activeBuzzer.reset();
                 passiveBuzzer.noTone();
                 break;
 
-            case ALARM_PC_OFF_PUMP_ON:
+            case a01_relayOFF_pcOFF_pumpON_ALARM:
                 startAlarmActions();
                 break;
 
-            case OK_PC_ON_PUMP_OFF:
+            case a02_relayOFF_pcON_pumpOFF_OK:
                 if (! relayStatus) {
                     pressControlRelay.startPulse(30*60);       // accendiamo anche il relay interno in modo da far partire il pulseTime
+                    LOG_NOTIFY("accendo il relay");
                 }
                 pressControlLED.on();         // accendiamo fisso il LED
                 pumpLED.blinking(2000, 1000); // facciamoòp lampeggiare
                 break;
-
-            case OK_PC_ON_PUMP_ON:
+            case a03_relayOFF_pnON_pumpON_OK:
                 if (! relayStatus) {
                     pressControlRelay.startPulse(30*60);       // accendiamo anche il relay interno in modo da far partire il pulseTime
                 }
                 pressControlLED.on();
                 pumpLED.on();
 
-            case ALARM_RELAY_ON_PC_OFF:
+            case a04_relayON_pcOFF_ALARM:
                 startAlarmActions();
                 break;
 
-            case ALARM_RELAY_ON_PC_OFF_PUMP_ON:
+            case a05_relayON_pcOFF_pumpON_ALARM:
                 startAlarmActions();
                 break;
 
-            case OK_RELAY_ON_PC_ON_PUMP_OFF:
+            case a06_relayON_pcON_pumpOFF_OK:
                 pressControlLED.on();
                 pumpLED.off();
+            // waitForEnter();
                 break;
 
-            case OK_RELAY_ON_PC_ON_PUMP_ON:
+            case a07_relayON_pcON_pumpON_OK:
                 pressControlLED.on();
                 pumpLED.on();
                 if (pumpState.isMaxLevelReached()) {
@@ -236,33 +263,12 @@ void loop() {
             default:
                 break;
         }
-
+        // waitForEnter();
+            #if 0
+            #endif
     }
 
 
-
-    // Leggi il pulsante. La funzione restituirà `true` solo al momento del rilascio (dopo debounce).
-    if (startButton.read()) {
-        startButtonHandler(startButton.pressedLevel());
-        startButton.reset();
-    }
-
-
-
-    // Leggi lo stato della pompa. La funzione restituirà `true` solo al momento del rilascio (dopo debounce).
-    if (pumpState.read()) {
-        pumpStateHandlerCB(&pumpState);
-        pumpState.reset();
-    }
-
-
-    /**
-     * Leggi lo stato del pressControl
-     * Se è stato rilasciato
-    */
-    if (pressControlState.read()) {
-        pressControlState.reset();
-    }
 
     // Piccolo ritardo per evitare busy-waiting e liberare la CPU per altre attività.
     delay(100);

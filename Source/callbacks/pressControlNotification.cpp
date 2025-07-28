@@ -1,18 +1,18 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 23-07-2025 19.15.47
+// Date .........: 28-07-2025 17.09.02
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
 
 
-#include "lnLogger.h"
+// #include "lnLogger_Struct.h"
 
 
-#include "callBackPrototypes.h" // per functions protoype
+// #include "callBackPrototypes.h" // per functions protoype
 #include "main.h" // per functions protoype
 
-extern LedController_Struct activeBuzzer;
+extern outPinController_Class activeBuzzer;
 
 
 
@@ -29,12 +29,11 @@ void pressControlNotificationCB(ButtonLongPress_Struct *p) {
         // elapsed = millis() - p->m_pressStartTime;
         phase_beep_duration = 1000 * p->m_currentPressLevel; // arbitrario....
 
-        LOG_NOTIFY("[%s] PRESSED_LEVEL %d/%d - elapsed ms:%6lu - next_interval: %lu",
+        LOG_NOTIFY("[%s] PRESSED_LEVEL %d/%d - elapsed ms:%6lu",
                         p->m_pinID,
                         p->m_currentPressLevel,
                         p->m_numThresholds,
-                        p->m_elapsed,
-                        next_interval);
+                        p->m_elapsed );
 
         switch (p->m_currentPressLevel) {
             case PRESSED_LEVEL_1:
@@ -46,7 +45,7 @@ void pressControlNotificationCB(ButtonLongPress_Struct *p) {
             case PRESSED_LEVEL_7:
             case PRESSED_LEVEL_8:
             case PRESSED_LEVEL_9:
-                LOG_NOTIFY("%s beeping. duration: %lu ms", p->m_pinID,  phase_beep_duration);
+                // LOG_NOTIFY("%s duration: %lu ms", p->m_pinID,  phase_beep_duration);
                 activeBuzzer.pulse(phase_beep_duration);
                 break;
 
@@ -64,12 +63,14 @@ void pressControlNotificationCB(ButtonLongPress_Struct *p) {
             activeBuzzer.pulse(1000);
             LOG_WARNING("[%s] ALARM! max pressed level %d reached", p->m_pinID, p->m_currentPressLevel);
             lastBeepTime = millis();
+
             if (pressControlRelay.isActive()) {
                 pressControlRelay.off(); // forziamo il relè
             }
             else {
-                magnetoTermicoRelay.startPulse(1000); // significa che togliamo corrente al magnetotermico esterno per 1 secondo
+                magnetoTermicoRelay.startPulse(5000); // significa che togliamo corrente al magnetotermico esterno per 5 secondo
             }
+
         }
     }
 

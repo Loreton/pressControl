@@ -1,18 +1,18 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 23-07-2025 17.01.32
+// Date .........: 28-07-2025 17.09.15
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
 
 
-#include "lnLogger.h"
+// #include "lnLogger_Struct.h"
 
 
-#include "callBackPrototypes.h" // per functions protoype
+// #include "callBackPrototypes.h" // per functions protoype
 #include "main.h" // per functions protoype
 
-extern LedController_Struct activeBuzzer;
+extern outPinController_Class activeBuzzer;
 
 
 

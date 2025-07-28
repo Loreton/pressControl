@@ -1,12 +1,12 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 23-07-2025 16.31.00
+// Date .........: 28-07-2025 14.07.26
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
 
 
-#include "lnLogger.h"
+// #include "lnLogger_Struct.h"
 #include "main.h" // per functions protoype
 
 
@@ -20,20 +20,19 @@
 //# richiamata quando il pulsante viene rilasciato
 //###########################################################################
 void startButtonHandler(uint8_t pressedLevel) {
-    static bool relayState = false;
+    LOG_NOTIFY("PRESSED_LEVEL: %d", pressedLevel);
     switch (pressedLevel) {
         case PRESSED_LEVEL_1:
-            LOG_DEBUG("PRESSED_LEVEL: 1");
             pressControlRelay.toggle();
             break;
 
         // case PRESSED_LEVEL_2:
-        //     LOG_DEBUG("PRESSED_LEVEL: 2");
+        //     pressControlRelay.off();
         //     break;
 
 
         default:
-            LOG_DEBUG("PRESSED_LEVEL Non Qualificato");
+            LOG_WARNING("PRESSED_LEVEL Non Qualificato");
             break;
     }
 

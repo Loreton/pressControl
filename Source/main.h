@@ -1,18 +1,20 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-07-2025 17.54.17
+// Date .........: 28-07-2025 17.08.25
 //
 
 
 #pragma once
     #include "pin_Definitions.h"
-    #include "LedController_Struct.h"
+    // #include "outPinController_Class.h"
+    #include "outPinController_Class.h"
     #include "ButtonLongPress_Struct.h"
-    #include "PassiveBuzzer_Struct.h"
-    #include "RelayManager_Struct.h"
+    #include "passiveBuzzer_Class.h"
+    #include "relayManager_Class.h"
 
     #include "callBackPrototypes.h" // per functions protoype
     #include "processPrototypes.h" // per functions protoype
+    #include "lnLogger_Class.h" // per functions protoype
 
 
 
@@ -26,14 +28,14 @@
         ButtonLongPress_Struct pumpState;   // pin per controllare lo stato della pompa
         ButtonLongPress_Struct pressControlState; // pin per controllare lo stato del pressContro
 
-        LedController_Struct   activeBuzzer;
-        LedController_Struct   pressControlLED;
-        LedController_Struct   pumpLED;
+        outPinController_Class   activeBuzzer;
+        outPinController_Class   pressControlLED;
+        outPinController_Class   pumpLED;
 
-        PassiveBuzzer_Struct   passiveBuzzer;
+        PassiveBuzzer_Class   passiveBuzzer;
 
-        RelayManager_Struct    pressControlRelay;
-        RelayManager_Struct    magnetoTermicoRelay;
+        RelayManager_Class    pressControlRelay;
+        RelayManager_Class    magnetoTermicoRelay;
 
 
     #else
@@ -42,14 +44,14 @@
         extern ButtonLongPress_Struct pumpState;
         extern ButtonLongPress_Struct pressControlState;
 
-        extern LedController_Struct   activeBuzzer;
-        extern LedController_Struct   pressControlLED;
-        extern LedController_Struct   pumpLED;
+        extern outPinController_Class   activeBuzzer;
+        extern outPinController_Class   pressControlLED;
+        extern outPinController_Class   pumpLED;
 
-        extern PassiveBuzzer_Struct   passiveBuzzer;
+        extern PassiveBuzzer_Class   passiveBuzzer;
 
-        extern RelayManager_Struct    pressControlRelay;
-        extern RelayManager_Struct    magnetoTermicoRelay;
+        extern RelayManager_Class    pressControlRelay;
+        extern RelayManager_Class    magnetoTermicoRelay;
 
     #endif
 
