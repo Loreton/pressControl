@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-07-2025 15.54.36
+// Date .........: 28-07-2025 19.17.31
 //
 
 
@@ -16,7 +16,6 @@
 // --- lnLibrary headers files
 // ---------------------------------
 #include    "lnGlobalVars.h"
-
 #include    "lnSerialRead.h"
 
 // ---------------------------------
@@ -159,10 +158,10 @@ void loop() {
 
 
 
-    // Leggi il pulsante. La funzione restituirà `true` solo al momento del rilascio (dopo debounce).
     startButton.pressingLevelNotification(startButtonNotificationCB);
+    // Leggi il pulsante. La funzione restituirà `true` solo al momento del rilascio (dopo debounce).
     if (startButton.released()) {
-        startButtonHandler(startButton.pressedLevel());
+        startButtonHandler(startButton.currentPressLevel());
         startButton.reset();
     }
 
@@ -255,7 +254,7 @@ void loop() {
             case a07_relayON_pcON_pumpON_OK:
                 pressControlLED.on();
                 pumpLED.on();
-                if (pumpState.isMaxLevelReached()) {
+                if (pumpState.maxLevelReached()) {
 
                 }
                 break;

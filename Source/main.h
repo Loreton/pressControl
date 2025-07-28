@@ -1,14 +1,14 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-07-2025 17.08.25
+// Date .........: 28-07-2025 19.48.37
 //
 
 
 #pragma once
+#define __BUTTONLONGPRESS_CLASS__XXXX
     #include "pin_Definitions.h"
     // #include "outPinController_Class.h"
     #include "outPinController_Class.h"
-    #include "ButtonLongPress_Struct.h"
     #include "passiveBuzzer_Class.h"
     #include "relayManager_Class.h"
 
@@ -24,9 +24,17 @@
 
     #ifdef __I_AM_MAIN_CPP__
         // L'inizializzazione avviene tramite il costruttore.
-        ButtonLongPress_Struct startButton; // pulsante per accendre il pressControl tramite Relay del ESP32
-        ButtonLongPress_Struct pumpState;   // pin per controllare lo stato della pompa
-        ButtonLongPress_Struct pressControlState; // pin per controllare lo stato del pressContro
+        #ifdef __BUTTONLONGPRESS_CLASS__
+            #include "ButtonLongPress_Class.h"
+                ButtonLongPress_Class startButton; // pulsante per accendre il pressControl tramite Relay del ESP32
+                ButtonLongPress_Class pumpState;   // pin per controllare lo stato della pompa
+                ButtonLongPress_Class pressControlState; // pin per controllare lo stato del pressContro
+                #else
+            #include "ButtonLongPress_Struct.h"
+                ButtonLongPress_Struct startButton; // pulsante per accendre il pressControl tramite Relay del ESP32
+                ButtonLongPress_Struct pumpState;   // pin per controllare lo stato della pompa
+                ButtonLongPress_Struct pressControlState; // pin per controllare lo stato del pressContro
+        #endif
 
         outPinController_Class   activeBuzzer;
         outPinController_Class   pressControlLED;
@@ -40,9 +48,17 @@
 
     #else
         // extern ButtonDebounced_Class startButton;
-        extern ButtonLongPress_Struct startButton;
-        extern ButtonLongPress_Struct pumpState;
-        extern ButtonLongPress_Struct pressControlState;
+        #ifdef __BUTTONLONGPRESS_CLASS__
+            #include "ButtonLongPress_Class.h"
+                extern ButtonLongPress_Class startButton; // pulsante per accendre il pressControl tramite Relay del ESP32
+                extern ButtonLongPress_Class pumpState;   // pin per controllare lo stato della pompa
+                extern ButtonLongPress_Class pressControlState; // pin per controllare lo stato del pressContro
+                #else
+            #include "ButtonLongPress_Struct.h"
+                extern ButtonLongPress_Struct startButton; // pulsante per accendre il pressControl tramite Relay del ESP32
+                extern ButtonLongPress_Struct pumpState;   // pin per controllare lo stato della pompa
+                extern ButtonLongPress_Struct pressControlState; // pin per controllare lo stato del pressContro
+        #endif
 
         extern outPinController_Class   activeBuzzer;
         extern outPinController_Class   pressControlLED;

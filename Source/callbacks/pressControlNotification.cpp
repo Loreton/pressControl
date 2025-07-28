@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-07-2025 17.09.02
+// Date .........: 28-07-2025 19.44.48
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -14,7 +14,73 @@
 
 extern outPinController_Class activeBuzzer;
 
+        #ifdef __BUTTONLONGPRESS_CLASS__
 
+
+void pressControlNotificationCB(ButtonLongPress_Class *p) {
+    static uint32_t lastBeepTime;
+    uint32_t phase_beep_duration;
+
+    if (p->pressedLevelChanged()) {
+        switch (p->currentPressLevel()) {
+            case PRESSED_LEVEL_1:
+            case PRESSED_LEVEL_2:
+            case PRESSED_LEVEL_3:
+            case PRESSED_LEVEL_4:
+            case PRESSED_LEVEL_5:
+            case PRESSED_LEVEL_6:
+            case PRESSED_LEVEL_7:
+            case PRESSED_LEVEL_8:
+            case PRESSED_LEVEL_9:
+                LOG_NOTIFY("%s beeping. duration: %lu ms", p->pinID(),  phase_beep_duration);
+                activeBuzzer.pulse(phase_beep_duration);
+                break;
+
+            default:
+                LOG_INFO("[%s] sono nel default", p->pinID());
+                break;
+        }
+    }
+
+
+    // --- un BEEP OGNI 2 SECONDI quando si raggiunge il MAX-LEVEL---
+    #define ALARM_BEEP_INTERVAL 2000
+    if (p->maxLevelReached() ) {
+        if (millis() - lastBeepTime >= ALARM_BEEP_INTERVAL) {
+            activeBuzzer.pulse(1000);
+            LOG_WARNING("[%s] ALARM! max pressed level %d reached", p->pinID(), p->currentPressLevel());
+            lastBeepTime = millis();
+
+            if (pressControlRelay.isActive()) {
+                pressControlRelay.off(); // forziamo il relè
+            }
+            else {
+                magnetoTermicoRelay.startPulse(5000); // significa che togliamo corrente al magnetotermico esterno per 5 secondo
+            }
+
+        }
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#else
 
 void pressControlNotificationCB(ButtonLongPress_Struct *p) {
     static uint32_t lastBeepTime;
@@ -75,3 +141,4 @@ void pressControlNotificationCB(ButtonLongPress_Struct *p) {
     }
 
 }
+#endif
