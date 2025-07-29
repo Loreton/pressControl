@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-07-2025 14.07.21
+// Date .........: 29-07-2025 14.05.35
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -65,8 +65,13 @@ void pinsInitialization(void) {
     //====================================================
     // ------  name,                 pin_nr          active_level   );
     startButton.init("startButton",              startButton_pin,        LOW, START_BUTTON_THRESHOLDS,        NUM_START_BUTTON_THRESHOLDS); // Now an object, not a struct
+    LOG_NOTIFY("\t[%s] initialized", startButton.pinID());
+
     pumpState.init("pumpState",                  pumpState_pin,          LOW, PUMP_STATE_THRESHOLDS,          NUM_PUMP_STATE_THRESHOLDS);   // Now an object, not a struct
+    LOG_NOTIFY("\t[%s] initialized", pumpState.pinID());
+
     pressControlState.init("pressControlState",  pressControlState_pin,  LOW, PRESS_CONTROL_STATE_THRESHOLDS, NUM_PRESS_CONTROL_STATE_THRESHOLDS);   // Now an object, not a struct
+    LOG_NOTIFY("\t[%s] initialized", pressControlState.pinID());
 
     // startButton.showStatus();
     // pumpState.showStatus();
@@ -78,12 +83,22 @@ void pinsInitialization(void) {
     //= set output pins
     //====================================================
     activeBuzzer.init("Buzzer", activeBuzzer_pin, HIGH);
+    LOG_NOTIFY("\t[%s] initialized", activeBuzzer.pinID());
+
     pressControlLED.init("pressControlLED", pressControlLED_pin, HIGH);
+    LOG_NOTIFY("\t[%s] initialized", pressControlLED.pinID());
+
     pumpLED.init("pumpLED", pumpLED_pin, HIGH);
+    LOG_NOTIFY("\t[%s] initialized", pumpLED.pinID());
+
     passiveBuzzer.init("passiveBuzzer", passiveBuzzer_pin, HIGH, 0, 10);
+    LOG_NOTIFY("\t[%s] initialized", passiveBuzzer.pinID());
 
     pressControlRelay.init("pressControlRelay", pressControlRelay_pin, LOW);
+    LOG_NOTIFY("\t[%s] initialized", pressControlRelay.pinID());
+
     magnetoTermicoRelay.init("magnetoTermicoRelay", magnetoTermicoRelay_pin, LOW);
+    LOG_NOTIFY("\t[%s] initialized", magnetoTermicoRelay.pinID());
 
 
 }

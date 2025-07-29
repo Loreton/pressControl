@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 29-07-2025 08.47.39
+// Date .........: 29-07-2025 14.24.27
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -20,11 +20,13 @@
 //# richiamata quando il pulsante viene rilasciato
 //###########################################################################
 void startButtonHandler(uint8_t pressedLevel) {
-    LOG_NOTIFY("PRESSED_LEVEL: %d", pressedLevel);
+    LOG_NOTIFY("[%s] - PRESSED_LEVEL: %d", startButton.pinID(), pressedLevel);
     switch (pressedLevel) {
         case PRESSED_LEVEL_1:
+            LOG_INFO("[%s] toggle...ing", pressControlRelay.pinID());
             pressControlRelay.toggle();
             break;
+
 
         // case PRESSED_LEVEL_2:
         //     pressControlRelay.off();
@@ -32,7 +34,7 @@ void startButtonHandler(uint8_t pressedLevel) {
 
 
         default:
-            LOG_WARNING("PRESSED_LEVEL Non Qualificato");
+            LOG_WARNING("[%s] - PRESSED_LEVEL Non qualificato", startButton.pinID());
             break;
     }
 
