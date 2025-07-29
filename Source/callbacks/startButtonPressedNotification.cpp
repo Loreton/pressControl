@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-07-2025 20.02.13
+// Date .........: 29-07-2025 07.50.51
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -22,6 +22,7 @@ void startButtonNotificationCB(ButtonLongPress_Class *p) {
     uint32_t phase_beep_duration;
 
     if (p->pressedLevelChanged()) {
+        phase_beep_duration = 300 * p->currentPressLevel(); // arbitrario....
         switch (p->currentPressLevel()) {
             case PRESSED_LEVEL_1:
             case PRESSED_LEVEL_2:
@@ -46,7 +47,7 @@ void startButtonNotificationCB(ButtonLongPress_Class *p) {
     #define ALARM_BEEP_INTERVAL 2000
     if (p->maxLevelReached() ) {
         if (millis() - lastBeepTime >= ALARM_BEEP_INTERVAL) {
-            // activeBuzzer.pulse(1000); // NON serve per questo pulstante
+            activeBuzzer.pulse(1000);
             LOG_WARNING("[%s] ALARM! max pressed level %d reached", p->pinID(), p->currentPressLevel());
             lastBeepTime = millis();
         }

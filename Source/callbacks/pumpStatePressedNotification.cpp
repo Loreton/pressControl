@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-07-2025 19.44.27
+// Date .........: 29-07-2025 08.00.29
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -19,12 +19,12 @@ extern outPinController_Class activeBuzzer;
 
 void pumpPressedNotificationCB(ButtonLongPress_Class *p) {
     static uint32_t lastBeepTime;
-    uint32_t next_interval;
     uint32_t phase_beep_duration;
-    // uint32_t elapsed = millis() - p->m_pressStartTime;
 
 
     if (p->pressedLevelChanged()) {
+        phase_beep_duration = 300 * p->currentPressLevel(); // arbitrario....
+
         switch (p->currentPressLevel()) {
             case PRESSED_LEVEL_1:
             case PRESSED_LEVEL_2:
@@ -35,7 +35,7 @@ void pumpPressedNotificationCB(ButtonLongPress_Class *p) {
             case PRESSED_LEVEL_7:
             case PRESSED_LEVEL_8:
             case PRESSED_LEVEL_9:
-                LOG_NOTIFY("%s beeping. duration: %lu ms", p->pinID(),  phase_beep_duration);
+                LOG_DEBUG("%s beeping. duration: %lu ms", p->pinID(),  phase_beep_duration);
                 activeBuzzer.pulse(phase_beep_duration);
                 break;
 

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-07-2025 19.44.39
+// Date .........: 29-07-2025 07.58.53
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -19,7 +19,6 @@
 //# richiamata quando il pulsante viene rilasciato
 //###########################################################################
 void pumpStateHandlerCB(ButtonLongPress_Class *p) {
-    static bool relayState = false;
     switch (p->currentPressLevel()) {
         case PRESSED_LEVEL_1:
             LOG_DEBUG("PRESSED_LEVEL_1");

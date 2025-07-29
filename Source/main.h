@@ -1,11 +1,11 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-07-2025 19.48.37
+// Date .........: 29-07-2025 07.49.06
 //
 
 
 #pragma once
-#define __BUTTONLONGPRESS_CLASS__XXXX
+#define __BUTTONLONGPRESS_CLASS__
     #include "pin_Definitions.h"
     // #include "outPinController_Class.h"
     #include "outPinController_Class.h"
