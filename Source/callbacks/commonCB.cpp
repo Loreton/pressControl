@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-07-2025 19.45.46
+// Date .........: 29-07-2025 08.25.44
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -17,7 +17,7 @@
 extern outPinController_Class activeBuzzer;
 // outPinController_Class *buzzer2 = &activeBuzzer;
 
-        #ifdef __BUTTONLONGPRESS_CLASS__
+        // #ifdef __BUTTONLONGPRESS_CLASS__
 #include "ButtonLongPress_Class.h"
 
 
@@ -26,15 +26,15 @@ void beepNotification(ButtonLongPress_Class *p, uint32_t beep_duration) {
     activeBuzzer.pulse(beep_duration);
 }
 
-#include "ButtonLongPress_Struct.h"
+// #include "ButtonLongPress_Struct.h"
 
 
-void beepNotification(ButtonLongPress_Struct *p, uint32_t beep_duration) {
-    LOG_NOTIFY("%s beeping. duration: %lu ms", p->m_pinID,  beep_duration);
-    activeBuzzer.pulse(beep_duration);
-}
+// void beepNotification(ButtonLongPress_Struct *p, uint32_t beep_duration) {
+//     LOG_NOTIFY("%s beeping. duration: %lu ms", p->m_pinID,  beep_duration);
+//     activeBuzzer.pulse(beep_duration);
+// }
 
-#endif
+// #endif
 
 
 
