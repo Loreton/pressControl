@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-07-2025 19.17.31
+// Date .........: 29-07-2025 09.41.51
 //
 
 
@@ -16,7 +16,7 @@
 // --- lnLibrary headers files
 // ---------------------------------
 #include    "lnGlobalVars.h"
-#include    "lnSerialRead.h"
+#include    "lnSerialRead.h" // waitFor...
 
 // ---------------------------------
 // - project headers files
@@ -35,41 +35,34 @@ size_t finalMemory;
 
 
 
-// #define VERSION_LENGTH 40
-// char pressControlVersion[VERSION_LENGTH+1];
+#define VERSION_LENGTH 40
+char pressControlVersion[VERSION_LENGTH+1];
 void setup() {
-    // snprintf(pressControlVersion, VERSION_LENGTH, "Version_2025-07 - rel_type: %d", ln_RELEASE_TYPE);
+    initialMemory = ESP.getFreeHeap();
+
+    snprintf(pressControlVersion, VERSION_LENGTH, "Version_2025-07 - rel_type: %d", ln_RELEASE_TYPE);
 
     Serial.begin(115200);
     delay(1000);
     lnLog.init();
-    initialMemory = ESP.getFreeHeap();
-    // LOG_INFO("%s", pressControlVersion);
+    LOG_INFO("%s", pressControlVersion);
 
-
-
-    /*
-        // calcolo memoria
-        ButtonDebounced_Class* obj = new ButtonDebounced_Class();
-        size_t before = ESP.getFreeHeap();
-        size_t after = ESP.getFreeHeap();
-        Serial.println(before - after); // Stima RAM allocata
-    */
 
     // -----------------------------------
     // ------ set Time
     // -----------------------------------
-    // lnTime();
+    lnTime.setup(); // Chiama il metodo setup della tua istanza di LnTime
+
+
 
     // -----------------------------------
     // --- "pins_Initialization.cpp"
     // -----------------------------------
     pinsInitialization();
 
+    // ---------------- calcolo memoria
     finalMemory = ESP.getFreeHeap();
-    LOG_DEBUG("initial Memory:     %ld bytes", initialMemory); // Stima RAM allocata
-    LOG_DEBUG("final   Memory:     %ld bytes", finalMemory); // Stima RAM allocata
-    LOG_DEBUG("memoria occupata:   %ld bytes", finalMemory - initialMemory); // Stima RAM allocata
+    LOG_TRACE("memoria (bytes): initial=%ld - final=%ld - occupied=%ld", initialMemory, finalMemory, (initialMemory - finalMemory)); // Stima RAM allocata
 }
 
 
@@ -112,23 +105,27 @@ void setup() {
 
 // Definisce i possibili tipi di condizioni
 enum ActionState : uint8_t {
+    a00_ALL_IS_DOWN = 0,      // tutto spento.
+    a01_pcOFF_pumpON, // solo la pompa è acessa. Anomalo. Non dovrebbe mai accadere
+    a02_pcON_pumpOFF,    // rele esterno - PressControl ON (con il rele esterno)
+    a03_pnON_pumpON,     // rele esterno - Pressione lunga.
     /**
         * relay interno spento, quindi si presume che sia attivo quello esterno
         * è comunque una situazione temporanea perché non appena si accente il pressContro, attiviamo anche il relayInterno
-    **/
 
     a00_ALL_IS_DOWN = 0,      // tutto spento.
     a01_relayOFF_pcOFF_pumpON_ALARM, // solo la pompa è acessa. Anomalo. Non dovrebbe mai accadere
     a02_relayOFF_pcON_pumpOFF_OK,    // rele esterno - PressControl ON (con il rele esterno)
     a03_relayOFF_pnON_pumpON_OK,     // rele esterno - Pressione lunga.
+    */
 
     /**
         * relay interno acceso
-    */
     a04_relayON_pcOFF_ALARM,         // acceso ma non è partito il pressControl . should not occur
     a05_relayON_pcOFF_pumpON_ALARM, // solo la pompa è acessa. Anomalo. Non dovrebbe mai accadere
     a06_relayON_pcON_pumpOFF_OK,    // PressControl ON e Pump OFF
     a07_relayON_pcON_pumpON_OK,     // Pressione lunga.
+    */
 } ;
 
 
@@ -145,6 +142,14 @@ void loop() {
     }
 
 
+    /*
+    if (lnTime.isMinuteOClock()) {
+        finalMemory = ESP.getFreeHeap();
+        LOG_TRACE("memoria (bytes): initial=%ld - final=%ld - occupied=%ld", initialMemory, finalMemory, (initialMemory - finalMemory)); // Stima RAM allocata
+    } */
+
+
+
     // -----------------------------------
     // ------ lettura/refresh dei pin di output
     // -----------------------------------
@@ -159,7 +164,10 @@ void loop() {
 
 
     startButton.pressingLevelNotification(startButtonNotificationCB);
-    // Leggi il pulsante. La funzione restituirà `true` solo al momento del rilascio (dopo debounce).
+    /**
+     * Leggi lo stato dello startButton
+     * Se è stato rilasciato
+    */
     if (startButton.released()) {
         startButtonHandler(startButton.currentPressLevel());
         startButton.reset();
@@ -168,31 +176,26 @@ void loop() {
 
 
 
-    // Leggi lo stato della pompa. La funzione restituirà `true` solo al momento del rilascio (dopo debounce).
     pumpState.pressingLevelNotification(pumpPressedNotificationCB);
+    /**
+     * Leggi lo stato della pompa
+     * Se è stato rilasciato
+    */
     if (pumpState.released()) {
         pumpStateHandlerCB(&pumpState);
         pumpState.reset();
     }
 
 
+    pressControlState.pressingLevelNotification(pressControlNotificationCB);
     /**
      * Leggi lo stato del pressControl
      * Se è stato rilasciato
     */
-    pressControlState.pressingLevelNotification(pressControlNotificationCB);
     if (pressControlState.released()) {
         pressControlState.reset();
     }
 
-
-
-
-
-
-
-
-    return;
 
     // -----------------------------------
     // ------ Action
@@ -202,7 +205,8 @@ void loop() {
     uint8_t pumpStatus  = pumpState.isPressed();
 
     // actionState = (pressControlRelay.isActive() * 4) + (pressControlState.isPressed()*2) + (pumpState.isPressed()*1);
-    actionState = (relayStatus * 4) + (pcStatus*2) + (pumpStatus*1);
+    // actionState = (relayStatus * 4) + (pcStatus*2) + (pumpStatus*1);
+    actionState = (pcStatus*2) + (pumpStatus*1);
 
     if (actionState != lastActionState) {
         lastActionState=actionState;
@@ -216,62 +220,65 @@ void loop() {
                 pressControlLED.blinking(1000, 3000);
                 activeBuzzer.reset();
                 passiveBuzzer.noTone();
+                pressControlRelay.off();       // spegniamo epr sicurezza il relay interno
                 break;
 
-            case a01_relayOFF_pcOFF_pumpON_ALARM:
+
+            case a01_pcOFF_pumpON:
                 startAlarmActions();
                 break;
 
-            case a02_relayOFF_pcON_pumpOFF_OK:
+            case a02_pcON_pumpOFF:
                 if (! relayStatus) {
                     pressControlRelay.startPulse(30*60);       // accendiamo anche il relay interno in modo da far partire il pulseTime
                     LOG_NOTIFY("accendo il relay");
                 }
                 pressControlLED.on();         // accendiamo fisso il LED
-                pumpLED.blinking(2000, 1000); // facciamoòp lampeggiare
+                pumpLED.off(); // facciamoòp lampeggiare
                 break;
-            case a03_relayOFF_pnON_pumpON_OK:
+
+
+            case a03_pnON_pumpON:
                 if (! relayStatus) {
                     pressControlRelay.startPulse(30*60);       // accendiamo anche il relay interno in modo da far partire il pulseTime
                 }
                 pressControlLED.on();
                 pumpLED.on();
 
-            case a04_relayON_pcOFF_ALARM:
-                startAlarmActions();
-                break;
+            // case a04_relayON_pcOFF_ALARM:
+            //     startAlarmActions();
+            //     break;
 
-            case a05_relayON_pcOFF_pumpON_ALARM:
-                startAlarmActions();
-                break;
+            // case a05_relayON_pcOFF_pumpON_ALARM:
+            //     startAlarmActions();
+            //     break;
 
-            case a06_relayON_pcON_pumpOFF_OK:
-                pressControlLED.on();
-                pumpLED.off();
-            // waitForEnter();
-                break;
+            // case a06_relayON_pcON_pumpOFF_OK:
+            //     pressControlLED.on();
+            //     pumpLED.off();
+            // // waitForEnter();
+            //     break;
 
-            case a07_relayON_pcON_pumpON_OK:
-                pressControlLED.on();
-                pumpLED.on();
-                if (pumpState.maxLevelReached()) {
+            // case a07_relayON_pcON_pumpON_OK:
+            //     pressControlLED.on();
+            //     pumpLED.on();
+            //     if (pumpState.maxLevelReached()) {
 
-                }
-                break;
+            //     }
+            //     break;
 
             default:
                 break;
-        }
+        } // endo of switch
         // waitForEnter();
-            #if 0
-            #endif
-    }
+    } // end if
+
+
 
 
 
     // Piccolo ritardo per evitare busy-waiting e liberare la CPU per altre attività.
-    delay(100);
-
+    delay(10);
 }
 
 

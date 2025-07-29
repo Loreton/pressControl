@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-07-2025 14.07.26
+// Date .........: 29-07-2025 08.47.39
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -38,34 +38,3 @@ void startButtonHandler(uint8_t pressedLevel) {
 
 }
 
-
-// //###########################################################################
-// //# richiamata quando il pulsante viene rilasciato
-// //###########################################################################
-// void startButtonHandler(ButtonLongPress_Struct *p) {
-//     static bool relayState = false;
-//     switch (p->m_currentPressLevel) {
-//         case PRESSED_LEVEL_1:
-//             LOG_DEBUG("PRESSED_LEVEL: 1");
-//             break;
-
-//         case PRESSED_LEVEL_2:
-//             LOG_DEBUG("PRESSED_LEVEL: 2");
-//             pressControlRelay.toggle();
-
-//             break;
-
-//         case PRESSED_LEVEL_3:
-//             LOG_DEBUG("PRESSED_LEVEL: 3");
-//             break;
-
-//         case PRESSED_LEVEL_4:
-//             LOG_DEBUG("PRESSED_LEVEL: 4");
-//             break;
-
-//         default:
-//             LOG_DEBUG("PRESSED_LEVEL Non Qualificato");
-//             break;
-//     }
-
-// }

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 29-07-2025 08.29.42
+// Date .........: 29-07-2025 09.43.13
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -29,7 +29,7 @@ void pressControlNotificationCB(ButtonLongPress_Class *p) {
             case PRESSED_LEVEL_7:
             case PRESSED_LEVEL_8:
             case PRESSED_LEVEL_9:
-                LOG_NOTIFY("%s beeping. duration: %lu ms", p->pinID(),  phase_beep_duration);
+                LOG_DEBUG("%s beeping. duration: %lu ms", p->pinID(),  phase_beep_duration);
                 activeBuzzer.pulse(phase_beep_duration);
                 break;
 
