@@ -1,23 +1,23 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 29-07-2025 08.28.38
+// Date .........: 30-07-2025 16.37.59
 //
 
 
 #pragma once
-    #include "pin_Definitions.h"
+
+    #include "lnLogger_Class.h"
+    #include "functionPrototypes.h" // per functions protoype
+
+    #include "ButtonLongPress_Class.h"
     #include "outPinController_Class.h"
     #include "passiveBuzzer_Class.h"
+    #include "pin_Definitions.h"
     #include "relayManager_Class.h"
 
-    #include "callBackPrototypes.h" // per functions protoype
-    #include "processPrototypes.h" // per functions protoype
-    #include "lnLogger_Class.h" // per functions protoype
-    #include "ButtonLongPress_Class.h"
 
-
-
-
+    #define PRESS_CONTROL_PIN_MAX_TIME     3*60*1000 // minutes
+    #define PRESS_CONTROL_RELAY_MAX_TIME   3*60*1000 // minutes
 
 
 
@@ -35,6 +35,7 @@
 
         RelayManager_Class    pressControlRelay;
         RelayManager_Class    magnetoTermicoRelay;
+        bool                fPressControlTimeExausted = false; // indica che il pressContro ha terminato il tempo massiomo di ON
 
 
     #else
@@ -51,6 +52,7 @@
         extern RelayManager_Class    pressControlRelay;
         extern RelayManager_Class    magnetoTermicoRelay;
 
+        extern bool                fPressControlTimeExausted; // indica che il pressContro ha terminato il tempo massiomo di ON
     #endif
 
 

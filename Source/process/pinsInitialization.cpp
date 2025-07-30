@@ -1,21 +1,15 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 29-07-2025 14.05.35
+// Date .........: 30-07-2025 17.56.37
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
 
-// ---------------------------------
-// --- lnLibrary headers files
-// ---------------------------------
-// #include "lnLogger_Struct.h"
-    // #include "pin_Definitions.h"
 
 // ---------------------------------
 // - project headers files
 // ---------------------------------
 #include "main.h"
-// #include "ButtonLongPress_Struct.h"
 
 
 
@@ -44,13 +38,13 @@ ref: /home/loreto/.platformio/packages/framework-arduinoespressif32/cores/esp32/
 // extern ButtonLongPress_Struct startButton;
 // extern ButtonLongPress_Struct pumpState;
 
-// queste definizioni devo essere esterne alla funzione altrimenti le perdiamo durante il run
-// queste definizioni devo essere esterne alla funzione altrimenti le perdiamo durante il run
-const PROGMEM uint32_t START_BUTTON_THRESHOLDS[]         = {400, 4000};
+// queste definizioni devo essere esterne alla funzione altrimenti le perdiamo wuando si esce dalla funzione
+// queste definizioni devo essere esterne alla funzione altrimenti le perdiamo wuando si esce dalla funzione
+const PROGMEM uint32_t START_BUTTON_THRESHOLDS[]         = {400, 4000, 5000, 6000};
 const PROGMEM uint32_t PUMP_STATE_THRESHOLDS[]           = {400, 5000, 15000, 20000, 25000 };
-const PROGMEM uint32_t PRESS_CONTROL_STATE_THRESHOLDS[]  = {400, 3*60*1000 }; // 30 minuti
-// queste definizioni devo essere esterne alla funzione altrimenti le perdiamo durante il run
-// queste definizioni devo essere esterne alla funzione altrimenti le perdiamo durante il run
+const PROGMEM uint32_t PRESS_CONTROL_STATE_THRESHOLDS[]  = {400, PRESS_CONTROL_PIN_MAX_TIME }; // 30 minuti
+// queste definizioni devo essere esterne alla funzione altrimenti le perdiamo wuando si esce dalla funzione
+// queste definizioni devo essere esterne alla funzione altrimenti le perdiamo wuando si esce dalla funzione
 
 
 
@@ -64,19 +58,20 @@ void pinsInitialization(void) {
     //= set input pins
     //====================================================
     // ------  name,                 pin_nr          active_level   );
-    startButton.init("startButton",              startButton_pin,        LOW, START_BUTTON_THRESHOLDS,        NUM_START_BUTTON_THRESHOLDS); // Now an object, not a struct
+    startButton.init("startButton", startButton_pin, LOW, START_BUTTON_THRESHOLDS, NUM_START_BUTTON_THRESHOLDS); // Now an object, not a struct
     LOG_NOTIFY("\t[%s] initialized", startButton.pinID());
 
-    pumpState.init("pumpState",                  pumpState_pin,          LOW, PUMP_STATE_THRESHOLDS,          NUM_PUMP_STATE_THRESHOLDS);   // Now an object, not a struct
+    pumpState.init("pumpState", pumpState_pin, LOW, PUMP_STATE_THRESHOLDS, NUM_PUMP_STATE_THRESHOLDS);   // Now an object, not a struct
     LOG_NOTIFY("\t[%s] initialized", pumpState.pinID());
 
     pressControlState.init("pressControlState",  pressControlState_pin,  LOW, PRESS_CONTROL_STATE_THRESHOLDS, NUM_PRESS_CONTROL_STATE_THRESHOLDS);   // Now an object, not a struct
     LOG_NOTIFY("\t[%s] initialized", pressControlState.pinID());
 
-    // startButton.showStatus();
-    // pumpState.showStatus();
-    // pressControlState.showStatus();
-
+    #if LOG_LEVEL >= LOG_LEVEL_TRACE
+        startButton.showStatus();
+        pumpState.showStatus();
+        pressControlState.showStatus();
+    #endif
 
 
     //====================================================

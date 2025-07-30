@@ -1,24 +1,51 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 29-07-2025 09.43.13
+// Date .........: 30-07-2025 17.56.15
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
 
 
+// #include "lnLogger_Struct.h"
 #include "main.h" // per functions protoype
 
-extern outPinController_Class activeBuzzer;
 
 
 
-void pressControlNotificationCB(ButtonLongPress_Class *p) {
+//###########################################################################
+//# richiamata quando il pulsante viene rilasciato
+//###########################################################################
+void startButtonHandler(uint8_t pressedLevel) {
+    LOG_NOTIFY("[%s] - PRESSED_LEVEL: %d", startButton.pinID(), pressedLevel);
+    switch (pressedLevel) {
+        case PRESSED_LEVEL_1:
+            LOG_INFO("[%s] toggle...ing", pressControlRelay.pinID());
+            pressControlRelay.toggle();
+            break;
+
+
+        // case PRESSED_LEVEL_2:
+        //     pressControlRelay.off();
+        //     break;
+
+
+        default:
+            LOG_WARNING("[%s] - PRESSED_LEVEL Non qualificato", startButton.pinID());
+            break;
+    }
+
+}
+
+
+
+void startButtonNotificationCB(ButtonLongPress_Class *p) {
     static uint32_t lastBeepTime;
     uint32_t phase_beep_duration;
 
     if (p->pressedLevelChanged()) {
-        phase_beep_duration = 300 * p->currentPressLevel(); // arbitrario....
+        LOG_NOTIFY("%s level has been changed", p->pinID());
 
+        phase_beep_duration = 300 * p->currentPressLevel(); // arbitrario....
         switch (p->currentPressLevel()) {
             case PRESSED_LEVEL_1:
             case PRESSED_LEVEL_2:
@@ -29,7 +56,7 @@ void pressControlNotificationCB(ButtonLongPress_Class *p) {
             case PRESSED_LEVEL_7:
             case PRESSED_LEVEL_8:
             case PRESSED_LEVEL_9:
-                LOG_DEBUG("%s beeping. duration: %lu ms", p->pinID(),  phase_beep_duration);
+                LOG_DEBUG("%s beeping. duration: %lu ms", activeBuzzer->pinID(),  phase_beep_duration);
                 activeBuzzer.pulse(phase_beep_duration);
                 break;
 
@@ -39,7 +66,6 @@ void pressControlNotificationCB(ButtonLongPress_Class *p) {
         }
     }
 
-
     // --- un BEEP OGNI 2 SECONDI quando si raggiunge il MAX-LEVEL---
     #define ALARM_BEEP_INTERVAL 2000
     if (p->maxLevelReached() ) {
@@ -47,16 +73,7 @@ void pressControlNotificationCB(ButtonLongPress_Class *p) {
             activeBuzzer.pulse(1000);
             LOG_WARNING("[%s] ALARM! max pressed level %d reached", p->pinID(), p->currentPressLevel());
             lastBeepTime = millis();
-
-            if (pressControlRelay.isActive()) {
-                pressControlRelay.off(); // forziamo il relè
-            }
-            else {
-                magnetoTermicoRelay.startPulse(5000); // significa che togliamo corrente al magnetotermico esterno per 5 secondo
-            }
-
         }
     }
-
 }
 

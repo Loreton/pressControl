@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 29-07-2025 14.12.32
+// Date .........: 30-07-2025 17.53.13
 //
 
 
@@ -70,22 +70,28 @@ void setup() {
 // Definisce i possibili tipi di condizioni
 enum ActionState : uint8_t {
     a00_ALL_IS_DOWN = 0,      // tutto spento.
-    a01_pcOFF_pumpON, // solo la pompa è acessa. Anomalo. Non dovrebbe mai accadere
+    a01_pcOFF_pumpON,    // solo la pompa è acessa. Anomalo. Non dovrebbe mai accadere
     a02_pcON_pumpOFF,    // rele esterno - PressControl ON (con il rele esterno)
     a03_pnON_pumpON,     // rele esterno - Pressione lunga.
+    a05_relayON_pcOFF_pumpOFF,      // solo relay interno  - ERROR.
+    a06_relayON_pcOFF_pumpON,    // solo la pompa è acessa. Anomalo. Non dovrebbe mai accadere
+    a07_relayON_pcON_pumpOFF,    // rele esterno - PressControl ON (con il rele esterno)
+    a08_relayON_pnON_pumpON,     // rele esterno - Pressione lunga.
 
 } ;
 
 
 // const PROGMEM char *alarmState[] = {"[EXT_RELAY] ALL_OFF", "[EXT_RELAY] ABNORMAL_pumpON", "[EXT_RELAY] pcON", "[EXT_RELAY] PC+PUMP ON", "[INT_RELAY] ALL_OFF", "[INT_RELAY] ABNORMAL_pumpON", "[INT_RELAY] pcON", "[INT_RELAY] PC+PUMP ON", };
 
-bool first_run=true;
+bool    first_run=true;
 uint8_t actionState=0;
 uint8_t lastActionState=1;
+uint32_t lastDisplayTime=0;
 
 void loop() {
     char durationBUFFER[16];
     uint32_t duration;
+    uint32_t now=millis();
     if (first_run) {
         first_run=false;
         LOG_INFO("processing started....");
@@ -126,13 +132,13 @@ void loop() {
 
 
 
-    pumpState.pressingLevelNotification(pumpPressedNotificationCB);
+    pumpState.pressingLevelNotification(pumpNotificationCB);
     /**
      * Leggi lo stato della pompa
      * Se è stato rilasciato
     */
     if (pumpState.released()) {
-        pumpStateHandlerCB(&pumpState);
+        pumpHandler(&pumpState);
         pumpState.reset();
     }
 
@@ -151,20 +157,21 @@ void loop() {
     // ------ Action
     // -----------------------------------
     uint8_t relayStatus = pressControlRelay.isActive();
-    uint8_t pcStatus    = pressControlState.isPressed();
     uint8_t pumpStatus  = pumpState.isPressed();
+    uint8_t pcStatus    = pressControlState.isPressed();
 
     // actionState = (pressControlRelay.isActive() * 4) + (pressControlState.isPressed()*2) + (pumpState.isPressed()*1);
     // actionState = (relayStatus * 4) + (pcStatus*2) + (pumpStatus*1);
     actionState = (pcStatus*2) + (pumpStatus*1);
 
-    if (actionState != lastActionState) {
+    if (actionState != lastActionState || (now - lastDisplayTime) > 15000) { // facciamo comunque il display ogni 15 secondi
         lastActionState=actionState;
+        lastDisplayTime=now;
 
         LOG_INFO("actionState [%02d]: %7s %16s %5s", actionState, "RELAY", "PRESS-CONTROL", "PUMP");
         LOG_INFO("actionState [%02d]: %7s %16s %5s", actionState, str_OnOff[relayStatus], str_OnOff[pcStatus], str_OnOff[pumpStatus]);
 
-        switch (actionState) {
+        switch (actionState) {  // azzeriamo il bit del relay
             case a00_ALL_IS_DOWN:
                 pressControlLED.blinking(1000, 3000);
                 pumpLED.blinking(1000, 3000);
@@ -190,8 +197,8 @@ void loop() {
             */
             case a02_pcON_pumpOFF:
                 if (! relayStatus) {
-                    duration=35*60*1000;
-                    LOG_INFO("Attivazione  %s per la durata di %s",
+                    duration=PRESS_CONTROL_RELAY_MAX_TIME;
+                    LOG_NOTIFY("Attivazione  %s per la durata di %s",
                                                 pressControlRelay.pinID(),
                                                 lnLog.timeStamp(durationBUFFER, sizeof(durationBUFFER), duration, true) );
                     pressControlRelay.startPulse(duration);       // accendiamo anche il relay interno in modo da far partire il pulseTime
@@ -203,38 +210,44 @@ void loop() {
 
             case a03_pnON_pumpON:
                 if (! relayStatus) {
-                    duration=35*60*1000;
-                    LOG_INFO("Attivazione  %s per la durata di %s",
+                    duration=PRESS_CONTROL_RELAY_MAX_TIME;
+                    LOG_NOTIFY("Attivazione  %s per la durata di %s",
                                                 pressControlRelay.pinID(),
                                                 lnLog.timeStamp(durationBUFFER, sizeof(durationBUFFER), duration, true) );
                     pressControlRelay.startPulse(duration);       // accendiamo anche il relay interno in modo da far partire il pulseTime
                 }
 
-                LOG_INFO("Accensione fissa per %s ", pressControlLED.pinID());
+                LOG_NOTIFY("Accensione fissa per %s ", pressControlLED.pinID());
                 pressControlLED.on();
-                LOG_INFO("Accensione fissa per %s ", pumpLED.pinID());
+                LOG_NOTIFY("Accensione fissa per %s ", pumpLED.pinID());
                 pumpLED.on();
 
-            // case a04_relayON_pcOFF_ALARM:
-            //     startAlarmActions();
+
+            // case a05_relayON_pcOFF_pumpOFF:
+            //     LOG_ERROR("Relay ON bat pressControl is OFF");
+            //     // startAlarmActions();
             //     break;
 
-            // case a05_relayON_pcOFF_pumpON_ALARM:
-            //     startAlarmActions();
+            // case a06_relayON_pcOFF_pumpON:
+            //     LOG_ERROR("Relay ON bat pressControl is OFF");
+            //     // startAlarmActions();
             //     break;
 
-            // case a06_relayON_pcON_pumpOFF_OK:
-            //     pressControlLED.on();
-            //     pumpLED.off();
-            // // waitForEnter();
+            // case a07_relayON_pcON_pumpOFF:
+            //     LOG_NOTIFY("Normal condition - pump is OFF");
             //     break;
 
-            // case a07_relayON_pcON_pumpON_OK:
-            //     pressControlLED.on();
-            //     pumpLED.on();
+            // case a08_relayON_pnON_pumpON:
             //     if (pumpState.maxLevelReached()) {
-
+            //         LOG_ERROR("pump ON has reached MAX time");
             //     }
+            //     else {
+            //         LOG_INFO("Normal condition - pump is ON");
+            //     }
+
+
+            //     // pressControlLED.on();
+            //     // pumpLED.on();
             //     break;
 
             default:

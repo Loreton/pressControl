@@ -1,22 +1,24 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 29-07-2025 08.29.02
+// Date .........: 30-07-2025 16.35.10
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
 
-#include "lnLogger_Class.h" // printf:XFN()
-#include "lnGlobalVars.h" //
+#include "main.h"
+
+// #include "lnLogger_Class.h" // printf:XFN()
+// #include "lnGlobalVars.h" //
+// #include "outPinController_Class.h" // per l'active buzzer per inviare un beep durante la pressione del tasto
 
 
 
-#include "outPinController_Class.h" // per l'active buzzer per inviare un beep durante la pressione del tasto
 // #include "callBackPrototypes.h" // per functions protoype
 
 
-extern outPinController_Class activeBuzzer;
+// extern outPinController_Class activeBuzzer;
 
-#include "ButtonLongPress_Class.h"
+// #include "ButtonLongPress_Class.h"
 
 
 void beepNotification(ButtonLongPress_Class *p, uint32_t beep_duration) {
