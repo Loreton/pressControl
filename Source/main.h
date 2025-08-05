@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 05-08-2025 11.43.55
+// Date .........: 05-08-2025 12.47.52
 //
 
 
@@ -41,7 +41,7 @@
 
         RelayManager_Class    pressControlRelay;
         RelayManager_Class    magnetoTermicoRelay;
-        bool                fPressControlTimeExausted = false; // indica che il pressContro ha terminato il tempo massiomo di ON
+        bool                  fPressControlTimeExausted = false; // indica che il pressContro ha terminato il tempo massiomo di ON
 
 
     #else
