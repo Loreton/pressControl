@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 30-07-2025 16.17.46
+// Date .........: 05-08-2025 08.39.13
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -56,7 +56,7 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
     uint32_t phase_beep_duration;
 
 
-    if (p->pressedLevelChanged()) {
+    if (p->pressedLevelHasChanged()) {
         phase_beep_duration = 300 * p->currentPressLevel(); // arbitrario....
 
         switch (p->currentPressLevel()) {

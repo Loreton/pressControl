@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 30-07-2025 17.53.13
+// Date .........: 05-08-2025 11.43.22
 //
 
 
@@ -164,7 +164,7 @@ void loop() {
     // actionState = (relayStatus * 4) + (pcStatus*2) + (pumpStatus*1);
     actionState = (pcStatus*2) + (pumpStatus*1);
 
-    if (actionState != lastActionState || (now - lastDisplayTime) > 15000) { // facciamo comunque il display ogni 15 secondi
+    if (actionState != lastActionState || (now - lastDisplayTime) > ACTION_STATUS_DISPLAY_INTERVAL) { // facciamo comunque il display ogni 15 secondi
         lastActionState=actionState;
         lastDisplayTime=now;
 

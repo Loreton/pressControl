@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 30-07-2025 17.56.15
+// Date .........: 05-08-2025 08.35.37
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -42,7 +42,8 @@ void startButtonNotificationCB(ButtonLongPress_Class *p) {
     static uint32_t lastBeepTime;
     uint32_t phase_beep_duration;
 
-    if (p->pressedLevelChanged()) {
+    // LOG_NOTIFY("%s checking...", p->pinID());
+    if (p->pressedLevelHasChanged()) {
         LOG_NOTIFY("%s level has been changed", p->pinID());
 
         phase_beep_duration = 300 * p->currentPressLevel(); // arbitrario....

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 30-07-2025 16.37.59
+// Date .........: 05-08-2025 11.43.55
 //
 
 
@@ -16,8 +16,14 @@
     #include "relayManager_Class.h"
 
 
-    #define PRESS_CONTROL_PIN_MAX_TIME     3*60*1000 // minutes
-    #define PRESS_CONTROL_RELAY_MAX_TIME   3*60*1000 // minutes
+    #define ACTION_STATUS_DISPLAY_INTERVAL 30*1000
+    #define PRESS_CONTROL_PIN_MAX_TIME     3*60*1000 // milliSeconds
+    #define PRESS_CONTROL_RELAY_MAX_TIME   3*60*1000 // milliSeconds
+    #define PUMP_PHASE_01   5*1000                  // milliSeconds
+    #define PUMP_PHASE_02   15*1000                 // milliSeconds
+    #define PUMP_PHASE_03   20*1000                 // milliSeconds
+    #define PUMP_PHASE_04   25*1000                 // milliSeconds
+
 
 
 
