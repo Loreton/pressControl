@@ -23,7 +23,7 @@ hardware:
         - normalemnte spento, porta fase al magnetotermico. in caso di allarme lo accendiamo per 2 o tre secondi
           per togliere corrente al magnetotermico e spegnerlo. Poi lo si riattiva.
 
-    pressControlState_pin       GPIO_18:
+    pressControl_pin       GPIO_18:
         - status del pressControl
 
     pumpState_pin               GPIO_19:
@@ -40,7 +40,7 @@ Azioni:
     startButton:
         PRESSED:
             1: accende il pressControlRelay_pin
-            2: verifica che il pressControlState_pin sia attivo
+            2: verifica che il pressControl_pin sia attivo
             3: se non attivo allora ALARM
 
 
@@ -62,3 +62,34 @@ Azioni:
 
     Esp32 ho un relè che comanda una pompa ed un pin che controlla il suo stato.  Una volta accesa emettere in beep dopo  60 secondi,
     un beep dopo altri 55 secondi, un beep dopo altri 50 secondi e così via per 6 step. Dopo l'ultimo step emettere un beep ogni 5 sec.
+
+
+
+
+TEST:
+    a: Aprire il filo del PressControl e pigiare il tasto startButton
+        dovrebbe andare in Allarme perché il relè viene acceso ma il PC non viene rilevato.
+        verrà spento il relè e dovrebbe tornare normale
+
+    b: pigiare startButton
+        expexted:
+            - attivazione rele interno
+                - pressControl_pin ON
+                    - controllo sul tempo PRESS_CONTROL_PIN_MAX_TIME:
+                        - scade:
+                            viene disattivato il relè interno
+                            pressControl_pin OFF
+                            - se pressControl_pin==ON:
+                                attivare magnetoTermicoRelay_pin per 5 secondi
+                                toglie corrente al pressControl per 5 sec e quindi pressControl_pin ==> OFF
+                                nel frattempo indicatore di allarme via activeBuzzer
+                        - non scaduto:
+                            situazione normale in attesa di accensione pompa
+
+            - situazione normale in attesa che si accenda la pompa.
+            - comunqne dopo il tempo PRESS_CONTROL_PIN_MAX_TIME il relè viene spento
+        viene segnalato con un triplo beep
+
+    c: chiudere il pressControl_pin
+        expexted:
+            - come se avessi spinto lo startButton ma il rele interno rimane spento

@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 05-08-2025 09.40.31
+// Date .........: 06-08-2025 13.58.52
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -31,6 +31,8 @@ ref: /home/loreto/.platformio/packages/framework-arduinoespressif32/cores/esp32/
    #define ANALOG            0xC0
 ######################################### */
 
+void waitForPulseEnding(outPinController_Class *p, int32_t timeOut=10000);
+void waitForPulseEnding(PassiveBuzzer_Class *p, int32_t timeOut=10000);
 
 
 
@@ -49,6 +51,25 @@ const PROGMEM uint32_t PRESS_CONTROL_STATE_THRESHOLDS[]  = {400, 5000, 10000, 20
 
 
 
+void waitForPulseEnding(outPinController_Class *p, int32_t timeOut) {
+    while (p->isPlayingSomething() && timeOut > 0) {
+        delay(10);
+        timeOut -= 10;
+        p->update();
+        LOG_TRACE("\t[%s] waiting", p->pinID());
+    }
+}
+
+void waitForPulseEnding(PassiveBuzzer_Class *p, int32_t timeOut) {
+    while (p->isPlayingSomething() && timeOut > 0) {
+        delay(10);
+        timeOut -= 10;
+        p->update();
+        LOG_TRACE("\t[%s] waiting", p->pinID());
+    }
+}
+
+
 void pinsInitialization(void) {
     const uint8_t NUM_START_BUTTON_THRESHOLDS           = sizeof(START_BUTTON_THRESHOLDS) / sizeof(START_BUTTON_THRESHOLDS[0]);
     const uint8_t NUM_PUMP_STATE_THRESHOLDS             = sizeof(PUMP_STATE_THRESHOLDS)   / sizeof(PUMP_STATE_THRESHOLDS[0]);
@@ -64,36 +85,52 @@ void pinsInitialization(void) {
     pumpState.init("pumpState", pumpState_pin, LOW, PUMP_STATE_THRESHOLDS, NUM_PUMP_STATE_THRESHOLDS);   // Now an object, not a struct
     LOG_NOTIFY("\t[%s] initialized", pumpState.pinID());
 
-    pressControlState.init("pressControlState",  pressControlState_pin,  LOW, PRESS_CONTROL_STATE_THRESHOLDS, NUM_PRESS_CONTROL_STATE_THRESHOLDS);   // Now an object, not a struct
-    LOG_NOTIFY("\t[%s] initialized", pressControlState.pinID());
+    pressControl.init("pressControl",  pressControl_pin,  LOW, PRESS_CONTROL_STATE_THRESHOLDS, NUM_PRESS_CONTROL_STATE_THRESHOLDS);   // Now an object, not a struct
+    LOG_NOTIFY("\t[%s] initialized", pressControl.pinID());
 
     #if LOG_LEVEL >= LOG_LEVEL_TRACE
         startButton.showStatus();
         pumpState.showStatus();
-        pressControlState.showStatus();
+        pressControl.showStatus();
     #endif
 
 
     //====================================================
     //= set output pins
     //====================================================
+    passiveBuzzer.init("passiveBuzzer", passiveBuzzer_pin, HIGH, 0, 10);
+    passiveBuzzer.playScale(C_major_scale, num_notes_C_major, 150, true); // Scala ascendente, 150ms per nota)
+    waitForPulseEnding(&passiveBuzzer);
+    LOG_NOTIFY("\t[%s] initialized", passiveBuzzer.pinID());
+
+
+
     activeBuzzer.init("Buzzer", activeBuzzer_pin, HIGH);
+    activeBuzzer.pulse(500);
+    waitForPulseEnding(&activeBuzzer);
     LOG_NOTIFY("\t[%s] initialized", activeBuzzer.pinID());
 
+
+
     pressControlLED.init("pressControlLED", pressControlLED_pin, HIGH);
+    pressControlLED.pulse(1000);
+    waitForPulseEnding(&pressControlLED);
     LOG_NOTIFY("\t[%s] initialized", pressControlLED.pinID());
 
     pumpLED.init("pumpLED", pumpLED_pin, HIGH);
+    pumpLED.pulse(1000);
+    waitForPulseEnding(&pumpLED);
     LOG_NOTIFY("\t[%s] initialized", pumpLED.pinID());
 
-    passiveBuzzer.init("passiveBuzzer", passiveBuzzer_pin, HIGH, 0, 10);
-    LOG_NOTIFY("\t[%s] initialized", passiveBuzzer.pinID());
 
     pressControlRelay.init("pressControlRelay", pressControlRelay_pin, LOW);
     LOG_NOTIFY("\t[%s] initialized", pressControlRelay.pinID());
 
     magnetoTermicoRelay.init("magnetoTermicoRelay", magnetoTermicoRelay_pin, LOW);
     LOG_NOTIFY("\t[%s] initialized", magnetoTermicoRelay.pinID());
+
+    passiveBuzzer.playScale(C_major_scale, num_notes_C_major, 150, false); // Scala discendente, 150ms per nota)
+    waitForPulseEnding(&passiveBuzzer);
 
 
 }

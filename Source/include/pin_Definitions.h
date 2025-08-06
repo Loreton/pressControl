@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 18-07-2025 10.03.26
+// Date .........: 05-08-2025 13.20.13
 //
 
 #pragma once
@@ -75,7 +75,7 @@
         #define pumpHornAlarm_pin           GPIO_17  // OUTPUT  GPIO17 mandatory on Esp32_X2_realy_board
         #define led_internal_pin            GPIO_23  // OUTPUT  GPIO23 mandatory on Esp32_X2_realy_board
 
-        #define pressControlState_pin       GPIO_18  // INPUT
+        #define pressControl_pin       GPIO_18  // INPUT
         #define pumpState_pin               GPIO_19  // INPUT
         #define startButton_pin             GPIO_21  // INPUT
         #ifdef _I_AM_PIN_INITIALIZATION_CPP_
@@ -98,7 +98,7 @@
         #define pressControlRelay_pin       GPIO_16  // OUTPUT
         #define magnetoTermicoRelay_pin     GPIO_17  // OUTPUT
 
-        #define pressControlState_pin       GPIO_18  // INPUT
+        #define pressControl_pin       GPIO_18  // INPUT
         #define pumpState_pin               GPIO_19  // INPUT
         #define startButton_pin             GPIO_21  // INPUT
         #ifdef _I_AM_PIN_INITIALIZATION_CPP_

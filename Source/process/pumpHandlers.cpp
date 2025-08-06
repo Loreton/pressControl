@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 05-08-2025 08.39.13
+// Date .........: 05-08-2025 16.44.25
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -29,7 +29,7 @@ void pumpHandler(ButtonLongPress_Class *p) {
 
         case PRESSED_LEVEL_3:
             LOG_DEBUG("PRESSED_LEVEL_3");
-            pressControlRelay.toggle();
+            // pressControlRelay.toggle();
 
             break;
 
@@ -58,9 +58,12 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
 
     if (p->pressedLevelHasChanged()) {
         phase_beep_duration = 300 * p->currentPressLevel(); // arbitrario....
-
         switch (p->currentPressLevel()) {
             case PRESSED_LEVEL_1:
+                LOG_NOTIFY("%s has been detected ON", p->pinID());
+                passiveBuzzer.playScale(C_major_scale, num_notes_C_major, 150, true); // Scala ascendente, 150ms per nota)
+                break;
+
             case PRESSED_LEVEL_2:
             case PRESSED_LEVEL_3:
             case PRESSED_LEVEL_4:

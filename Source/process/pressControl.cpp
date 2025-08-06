@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 05-08-2025 08.38.57
+// Date .........: 05-08-2025 16.40.50
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -22,6 +22,7 @@ void pressControlNotificationCB(ButtonLongPress_Class *p) {
         switch (p->currentPressLevel()) {
             case PRESSED_LEVEL_1:
                 LOG_NOTIFY("PressControl %s has been detected ON", p->pinID());
+                break;
 
             case PRESSED_LEVEL_2:
             case PRESSED_LEVEL_3:
