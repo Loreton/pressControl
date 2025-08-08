@@ -1,15 +1,12 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 05-08-2025 16.40.50
+// Date .........: 08-08-2025 10.54.08
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
 
 
 #include "main.h" // per functions protoype
-
-// extern outPinController_Class activeBuzzer;
-
 
 
 void pressControlNotificationCB(ButtonLongPress_Class *p) {
@@ -60,7 +57,7 @@ void pressControlNotificationCB(ButtonLongPress_Class *p) {
                 pressControlRelay.off(); // forziamo il relè
             }
             else {
-                magnetoTermicoRelay.startPulse(5000); // significa che togliamo corrente al magnetotermico esterno per 5 secondo
+                magnetoTermicoRelay.startPulse(MAGNETOTERMIC_RELAY_PULSETIME); // significa che togliamo corrente al magnetotermico esterno per 5 secondo
             }
 
         }

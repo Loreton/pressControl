@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 06-08-2025 13.58.52
+// Date .........: 08-08-2025 11.05.33
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -31,8 +31,7 @@ ref: /home/loreto/.platformio/packages/framework-arduinoespressif32/cores/esp32/
    #define ANALOG            0xC0
 ######################################### */
 
-void waitForPulseEnding(outPinController_Class *p, int32_t timeOut=10000);
-void waitForPulseEnding(PassiveBuzzer_Class *p, int32_t timeOut=10000);
+
 
 
 
@@ -44,30 +43,11 @@ void waitForPulseEnding(PassiveBuzzer_Class *p, int32_t timeOut=10000);
 // queste definizioni devo essere esterne alla funzione altrimenti le perdiamo wuando si esce dalla funzione
 const PROGMEM uint32_t START_BUTTON_THRESHOLDS[]         = {400, 4000, 5000, 6000};
 const PROGMEM uint32_t PUMP_STATE_THRESHOLDS[]           = {400, PUMP_PHASE_01, PUMP_PHASE_02, PUMP_PHASE_03, PUMP_PHASE_04 };
-const PROGMEM uint32_t PRESS_CONTROL_STATE_THRESHOLDS[]  = {400, 5000, 10000, 20000, PRESS_CONTROL_PIN_MAX_TIME }; // 30 minuti
+const PROGMEM uint32_t PRESS_CONTROL_STATE_THRESHOLDS[]  = {400, PRESS_CONTROL_PIN_MAX_TIME }; // 30 minuti
 // queste definizioni devo essere esterne alla funzione altrimenti le perdiamo wuando si esce dalla funzione
 // queste definizioni devo essere esterne alla funzione altrimenti le perdiamo wuando si esce dalla funzione
 
 
-
-
-void waitForPulseEnding(outPinController_Class *p, int32_t timeOut) {
-    while (p->isPlayingSomething() && timeOut > 0) {
-        delay(10);
-        timeOut -= 10;
-        p->update();
-        LOG_TRACE("\t[%s] waiting", p->pinID());
-    }
-}
-
-void waitForPulseEnding(PassiveBuzzer_Class *p, int32_t timeOut) {
-    while (p->isPlayingSomething() && timeOut > 0) {
-        delay(10);
-        timeOut -= 10;
-        p->update();
-        LOG_TRACE("\t[%s] waiting", p->pinID());
-    }
-}
 
 
 void pinsInitialization(void) {
@@ -105,6 +85,7 @@ void pinsInitialization(void) {
 
 
 
+    delay(500);
     activeBuzzer.init("Buzzer", activeBuzzer_pin, HIGH);
     activeBuzzer.pulse(500);
     waitForPulseEnding(&activeBuzzer);

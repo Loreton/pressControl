@@ -1,11 +1,12 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 05-08-2025 16.45.31
+// Date .........: 08-08-2025 11.21.15
 //
 
 
 #pragma once
 
+    #include "a_decisionalVariables.h"
     #include "lnLogger_Class.h"
     #include "functionPrototypes.h" // per functions protoype
 
@@ -15,15 +16,32 @@
     #include "pin_Definitions.h"
     #include "relayManager_Class.h"
 
+    // ---  TEST
+    #if ln_RELEASE_TYPE == ln_DEVEL
+        #pragma message "siamo in TEST"
+        #define ACTION_STATUS_DISPLAY_INTERVAL 5*60*1000  // xx minuti
+        #define PRESS_CONTROL_PIN_MAX_TIME     3*60*1000 // xx minuti
+        #define PRESS_CONTROL_RELAY_MAX_TIME   3*60*1000 // xx minuti
+        #define MAGNETOTERMIC_RELAY_PULSETIME      5*1000  // tempo magnetotermico relay sarà off
 
-    #define ACTION_STATUS_DISPLAY_INTERVAL 5*60*1000  // xx minuti
-    #define PRESS_CONTROL_PIN_MAX_TIME     3*60*1000 // xx minuti
-    #define PRESS_CONTROL_RELAY_MAX_TIME   3*60*1000 // xx minuti
-    #define PUMP_PHASE_01   5*1000                  // milliSeconds
-    #define PUMP_PHASE_02   15*1000                 // milliSeconds
-    #define PUMP_PHASE_03   20*1000                 // milliSeconds
-    #define PUMP_PHASE_04   25*1000                 // milliSeconds
+        #define PUMP_PHASE_01                     5*1000  // milliSeconds
+        #define PUMP_PHASE_02                     15*1000 // milliSeconds
+        #define PUMP_PHASE_03                     20*1000 // milliSeconds
+        #define PUMP_PHASE_04                     25*1000 // milliSeconds
 
+    #elif ln_RELEASE_TYPE == ln_PRODUCTION
+        // ---  PROD
+        #pragma message "siamo in PRODUCTION"
+        #define ACTION_STATUS_DISPLAY_INTERVAL  5*60*1000  // xx minuti
+        #define PRESS_CONTROL_PIN_MAX_TIME     30*60*1000  // tempo in cui il pressControl starà acceso.
+        #define PRESS_CONTROL_RELAY_MAX_TIME   30*60*1000  // tempo in cui il relay interno starà acceso.
+        #define MAGNETOTERMIC_RELAY_PULSETIME      5*1000  // tempo magnetotermico relay sarà off
+
+        #define PUMP_PHASE_01                   1*60*1000   // milliSeconds
+        #define PUMP_PHASE_02                   2*60*1000  // milliSeconds
+        #define PUMP_PHASE_03                   3*60*1000  // milliSeconds
+        #define PUMP_PHASE_04                   4*60*1000  // milliSeconds
+    #endif
 
 
 
@@ -41,8 +59,11 @@
 
         RelayManager_Class    pressControlRelay;
         RelayManager_Class    magnetoTermicoRelay;
-        bool                  fPressControlTimeExausted = false; // indica che il pressContro ha terminato il tempo massiomo di ON
 
+        bool                  fPressControlTimeExausted = false; // indica che il pressContro ha terminato il tempo massiomo di ON
+        bool                  fPUMP_ALARM = false;
+        bool                    fAscendent = true;
+        bool                    fDiscendent = false;
 
         // Frequenze per una scala Do Maggiore (approssimate)
         int C_major_scale[] = {
@@ -56,6 +77,8 @@
             523  // C5
         };
         int num_notes_C_major = sizeof(C_major_scale) / sizeof(C_major_scale[0]);
+
+
 
     #else
         extern ButtonLongPress_Class startButton; // pulsante per accendre il pressControl tramite Relay del ESP32
@@ -74,6 +97,9 @@
         extern bool                fPressControlTimeExausted; // indica che il pressContro ha terminato il tempo massiomo di ON
         extern int C_major_scale[];
         extern int num_notes_C_major;
+        extern bool fPUMP_ALARM;
+        extern bool fAscendent;
+        extern bool fDiscendent;
     #endif
 
 

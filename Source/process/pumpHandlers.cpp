@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 05-08-2025 16.44.25
+// Date .........: 08-08-2025 12.02.31
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -12,7 +12,8 @@
 
 
 
-
+// bool fAscendent = true;
+// bool fDiscendent = false;
 
 //###########################################################################
 //# richiamata quando il pulsante viene rilasciato
@@ -45,7 +46,9 @@ void pumpHandler(ButtonLongPress_Class *p) {
 
     // Dopo aver processato i dati, li resettiamo per la prossima pressione.
     p->reset();
-
+    passiveBuzzer.playScale(C_major_scale, num_notes_C_major, 150, fDiscendent); // Scala ascendente, 150ms per nota)
+    waitForPulseEnding(&passiveBuzzer, 3000);
+    fPUMP_ALARM = false;
 
 }
 
@@ -57,11 +60,12 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
 
 
     if (p->pressedLevelHasChanged()) {
-        phase_beep_duration = 300 * p->currentPressLevel(); // arbitrario....
+        // phase_beep_duration = 300 * p->currentPressLevel() / 30; // arbitrario....
+        phase_beep_duration = p->currentPressLevel() * 3 * 1000; // arbitrario....
         switch (p->currentPressLevel()) {
             case PRESSED_LEVEL_1:
                 LOG_NOTIFY("%s has been detected ON", p->pinID());
-                passiveBuzzer.playScale(C_major_scale, num_notes_C_major, 150, true); // Scala ascendente, 150ms per nota)
+                passiveBuzzer.playScale(C_major_scale, num_notes_C_major, 150, fAscendent); // Scala ascendente, 150ms per nota)
                 break;
 
             case PRESSED_LEVEL_2:
@@ -72,7 +76,7 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
             case PRESSED_LEVEL_7:
             case PRESSED_LEVEL_8:
             case PRESSED_LEVEL_9:
-                LOG_DEBUG("%s beeping. duration: %lu ms", p->pinID(),  phase_beep_duration);
+                LOG_INFO("%s beeping. duration: %lu ms", p->pinID(),  phase_beep_duration);
                 activeBuzzer.pulse(phase_beep_duration);
                 break;
 
@@ -89,6 +93,7 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
             activeBuzzer.pulse(1000); // NON serve per questo pulstante
             LOG_WARNING("[%s] ALARM! max pressed level %d reached", p->pinID(), p->currentPressLevel());
             lastBeepTime = millis();
+            fPUMP_ALARM = true;
         }
     }
 
