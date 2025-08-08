@@ -1908,6 +1908,258 @@
 				)
 			)
 		)
+		(symbol "lnConnectors:CircuitBreaker_1+1P"
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "CB"
+				(at 6.35 -2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Value" "CircuitBreaker_1+1P"
+				(at 6.35 1.27 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Footprint" ""
+				(at -2.54 -1.27 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at -2.54 -1.27 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Double pole circuit breaker, US symbol"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "CB 2P"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "CircuitBreaker_1+1P_0_1"
+				(rectangle
+					(start -5.588 4.064)
+					(end 5.842 -4.064)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center -2.54 -3.175)
+					(radius 0.635)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center -2.54 3.175)
+					(radius 0.635)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start -0.762 -2.794)
+					(mid -0.0689 -0.142)
+					(end -0.635 2.54)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.254 0) (xy 0.254 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.254 0) (xy 1.27 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.778 0) (xy 2.794 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 3.81) (xy 2.54 -6.35)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 3.302 0) (xy 4.318 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 4.826 0) (xy 5.334 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "CircuitBreaker_1+1P_1_1"
+				(pin passive line
+					(at -2.54 6.35 270)
+					(length 2.54)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -2.54 -6.35 90)
+					(length 2.54)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 -6.35 90)
+					(length 2.54)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 6.35 270)
+					(length 2.54)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
 		(symbol "lnConnectors:SIP_01"
 			(pin_names
 				(offset 0.762) hide)
@@ -5841,7 +6093,7 @@
 		)
 	)
 	(junction
-		(at 107.95 19.05)
+		(at 134.62 19.05)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "174d9b2c-201f-4bd2-a689-e1995559c143")
@@ -5853,7 +6105,7 @@
 		(uuid "212cd754-bf51-4e7b-b988-90323a24ca94")
 	)
 	(junction
-		(at 102.87 24.13)
+		(at 129.54 24.13)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "2b50f14b-50e3-4177-81b2-a5cb5f13124d")
@@ -5871,7 +6123,7 @@
 		(uuid "36deea45-6a85-494e-a2ed-2accbf6ed5ee")
 	)
 	(junction
-		(at 58.42 24.13)
+		(at 91.44 24.13)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "5f6aab49-8952-4dfc-9ff8-522d53d6d3b5")
@@ -5901,6 +6153,12 @@
 		(uuid "6907fca8-f195-4366-b556-b0e554a34958")
 	)
 	(junction
+		(at 81.28 26.67)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "6f798539-418f-4b01-ac36-b3be7e1396e7")
+	)
+	(junction
 		(at 43.18 176.53)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -5925,7 +6183,7 @@
 		(uuid "912e2d5c-7685-4105-8e8e-900ef312d32f")
 	)
 	(junction
-		(at 63.5 21.59)
+		(at 96.52 21.59)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "9226075c-a463-467d-a39d-ef89bc8a7ea1")
@@ -5947,6 +6205,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "b3f95d79-7be6-4d88-bfa6-7bdbf46753be")
+	)
+	(junction
+		(at 36.83 49.53)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "c2b26cd2-9e3d-416c-9667-4874b82e0cd2")
 	)
 	(junction
 		(at 152.4 125.73)
@@ -5999,7 +6263,7 @@
 	)
 	(wire
 		(pts
-			(xy 107.95 19.05) (xy 119.38 19.05)
+			(xy 134.62 19.05) (xy 146.05 19.05)
 		)
 		(stroke
 			(width 0)
@@ -6081,16 +6345,6 @@
 	)
 	(wire
 		(pts
-			(xy 158.75 41.91) (xy 86.36 41.91)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "09155bbe-7f2a-4501-bdb9-37359009df8b")
-	)
-	(wire
-		(pts
 			(xy 21.59 153.67) (xy 21.59 176.53)
 		)
 		(stroke
@@ -6152,7 +6406,7 @@
 	)
 	(wire
 		(pts
-			(xy 58.42 24.13) (xy 58.42 36.83)
+			(xy 91.44 24.13) (xy 91.44 43.18)
 		)
 		(stroke
 			(width 0.381)
@@ -6204,6 +6458,17 @@
 	)
 	(wire
 		(pts
+			(xy 36.83 49.53) (xy 231.14 49.53)
+		)
+		(stroke
+			(width 0.381)
+			(type default)
+			(color 132 0 0 1)
+		)
+		(uuid "12094802-a7de-429a-8a90-7c719c44e401")
+	)
+	(wire
+		(pts
 			(xy 36.83 59.69) (xy 231.14 59.69)
 		)
 		(stroke
@@ -6225,7 +6490,7 @@
 	)
 	(wire
 		(pts
-			(xy 63.5 31.75) (xy 66.04 31.75)
+			(xy 96.52 38.1) (xy 99.06 38.1)
 		)
 		(stroke
 			(width 0)
@@ -6253,6 +6518,17 @@
 			(color 43 2 255 1)
 		)
 		(uuid "16d78b81-c813-4afe-8231-637f83662f93")
+	)
+	(wire
+		(pts
+			(xy 55.88 46.99) (xy 55.88 26.67)
+		)
+		(stroke
+			(width 0.381)
+			(type default)
+			(color 132 0 0 1)
+		)
+		(uuid "18e65535-ae42-4913-912b-2b35e51b4c1a")
 	)
 	(wire
 		(pts
@@ -6340,7 +6616,7 @@
 	)
 	(wire
 		(pts
-			(xy 102.87 36.83) (xy 111.76 36.83)
+			(xy 129.54 36.83) (xy 138.43 36.83)
 		)
 		(stroke
 			(width 0.381)
@@ -6474,16 +6750,6 @@
 	)
 	(wire
 		(pts
-			(xy 86.36 41.91) (xy 86.36 36.83)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "37c441a3-7d5d-4c4d-a2d0-e7501bea2ef3")
-	)
-	(wire
-		(pts
 			(xy 220.98 105.41) (xy 220.98 67.31)
 		)
 		(stroke
@@ -6534,6 +6800,17 @@
 	)
 	(wire
 		(pts
+			(xy 55.88 26.67) (xy 60.96 26.67)
+		)
+		(stroke
+			(width 0.381)
+			(type default)
+			(color 132 0 0 1)
+		)
+		(uuid "3be860ef-daa3-477e-a4f8-bbdc0527f64d")
+	)
+	(wire
+		(pts
 			(xy 218.44 107.95) (xy 218.44 66.04)
 		)
 		(stroke
@@ -6564,7 +6841,7 @@
 	)
 	(wire
 		(pts
-			(xy 107.95 31.75) (xy 111.76 31.75)
+			(xy 134.62 31.75) (xy 138.43 31.75)
 		)
 		(stroke
 			(width 0)
@@ -6604,16 +6881,6 @@
 	)
 	(wire
 		(pts
-			(xy 88.9 34.29) (xy 88.9 40.64)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "457c4ad1-77b2-42bb-8c22-2f2fdf2eb287")
-	)
-	(wire
-		(pts
 			(xy 125.73 156.21) (xy 132.08 156.21)
 		)
 		(stroke
@@ -6645,7 +6912,7 @@
 	)
 	(wire
 		(pts
-			(xy 76.2 34.29) (xy 88.9 34.29)
+			(xy 109.22 40.64) (xy 154.94 40.64)
 		)
 		(stroke
 			(width 0)
@@ -6665,7 +6932,7 @@
 	)
 	(wire
 		(pts
-			(xy 41.91 24.13) (xy 41.91 57.15)
+			(xy 81.28 24.13) (xy 81.28 26.67)
 		)
 		(stroke
 			(width 0.381)
@@ -6676,7 +6943,7 @@
 	)
 	(wire
 		(pts
-			(xy 58.42 36.83) (xy 66.04 36.83)
+			(xy 91.44 43.18) (xy 99.06 43.18)
 		)
 		(stroke
 			(width 0.381)
@@ -6698,7 +6965,7 @@
 	)
 	(wire
 		(pts
-			(xy 102.87 24.13) (xy 119.38 24.13)
+			(xy 129.54 24.13) (xy 146.05 24.13)
 		)
 		(stroke
 			(width 0.381)
@@ -6750,7 +7017,7 @@
 	)
 	(wire
 		(pts
-			(xy 85.09 19.05) (xy 107.95 19.05)
+			(xy 118.11 19.05) (xy 134.62 19.05)
 		)
 		(stroke
 			(width 0)
@@ -6872,6 +7139,17 @@
 	)
 	(wire
 		(pts
+			(xy 73.66 26.67) (xy 81.28 26.67)
+		)
+		(stroke
+			(width 0.381)
+			(type default)
+			(color 132 0 132 1)
+		)
+		(uuid "67604b6f-191e-456c-aa39-736ea129685b")
+	)
+	(wire
+		(pts
 			(xy 38.1 153.67) (xy 27.94 153.67)
 		)
 		(stroke
@@ -6882,7 +7160,17 @@
 	)
 	(wire
 		(pts
-			(xy 85.09 24.13) (xy 102.87 24.13)
+			(xy 73.66 21.59) (xy 96.52 21.59)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "68fcf23b-7565-451a-bf37-49d7d4a3df10")
+	)
+	(wire
+		(pts
+			(xy 118.11 24.13) (xy 129.54 24.13)
 		)
 		(stroke
 			(width 0.381)
@@ -6964,7 +7252,7 @@
 	)
 	(wire
 		(pts
-			(xy 63.5 21.59) (xy 63.5 19.05)
+			(xy 96.52 21.59) (xy 96.52 19.05)
 		)
 		(stroke
 			(width 0)
@@ -7085,6 +7373,17 @@
 	)
 	(wire
 		(pts
+			(xy 81.28 26.67) (xy 81.28 57.15)
+		)
+		(stroke
+			(width 0.381)
+			(type default)
+			(color 132 0 132 1)
+		)
+		(uuid "7c49cdbb-7f6b-4561-8894-b9ce3ac09348")
+	)
+	(wire
+		(pts
 			(xy 181.61 34.29) (xy 181.61 100.33)
 		)
 		(stroke
@@ -7126,7 +7425,7 @@
 	)
 	(wire
 		(pts
-			(xy 107.95 19.05) (xy 107.95 31.75)
+			(xy 134.62 19.05) (xy 134.62 31.75)
 		)
 		(stroke
 			(width 0)
@@ -7176,17 +7475,6 @@
 	)
 	(wire
 		(pts
-			(xy 36.83 24.13) (xy 36.83 59.69)
-		)
-		(stroke
-			(width 0.381)
-			(type default)
-			(color 132 0 0 1)
-		)
-		(uuid "8a72da67-5a0f-4a4a-ba84-627f55d6bda9")
-	)
-	(wire
-		(pts
 			(xy 55.88 146.05) (xy 81.28 146.05)
 		)
 		(stroke
@@ -7214,6 +7502,17 @@
 			(type default)
 		)
 		(uuid "8ec1ede7-8339-4ece-8a7a-dcc219fce27d")
+	)
+	(wire
+		(pts
+			(xy 36.83 49.53) (xy 36.83 59.69)
+		)
+		(stroke
+			(width 0.381)
+			(type default)
+			(color 132 0 0 1)
+		)
+		(uuid "8efc9e77-09d3-4fb1-a0d5-cbacc9161475")
 	)
 	(wire
 		(pts
@@ -7359,7 +7658,7 @@
 	)
 	(wire
 		(pts
-			(xy 121.92 34.29) (xy 158.75 34.29)
+			(xy 148.59 34.29) (xy 158.75 34.29)
 		)
 		(stroke
 			(width 0)
@@ -7450,7 +7749,7 @@
 	)
 	(wire
 		(pts
-			(xy 41.91 57.15) (xy 231.14 57.15)
+			(xy 81.28 57.15) (xy 231.14 57.15)
 		)
 		(stroke
 			(width 0.381)
@@ -7458,6 +7757,16 @@
 			(color 132 0 132 1)
 		)
 		(uuid "ade6e59d-50ed-41a5-861d-ba206c75ebab")
+	)
+	(wire
+		(pts
+			(xy 158.75 43.18) (xy 158.75 41.91)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "af6640c5-4d95-4b46-932a-1f1a4d22eab9")
 	)
 	(wire
 		(pts
@@ -7471,7 +7780,7 @@
 	)
 	(wire
 		(pts
-			(xy 31.75 21.59) (xy 63.5 21.59)
+			(xy 31.75 21.59) (xy 60.96 21.59)
 		)
 		(stroke
 			(width 0)
@@ -7491,7 +7800,7 @@
 	)
 	(wire
 		(pts
-			(xy 76.2 36.83) (xy 86.36 36.83)
+			(xy 109.22 43.18) (xy 158.75 43.18)
 		)
 		(stroke
 			(width 0)
@@ -7551,7 +7860,7 @@
 	)
 	(wire
 		(pts
-			(xy 121.92 36.83) (xy 158.75 36.83)
+			(xy 148.59 36.83) (xy 158.75 36.83)
 		)
 		(stroke
 			(width 0)
@@ -7623,13 +7932,24 @@
 	)
 	(wire
 		(pts
-			(xy 63.5 21.59) (xy 63.5 31.75)
+			(xy 96.52 21.59) (xy 96.52 38.1)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "cc40d0cb-5d47-490a-af5c-4fafdbcc9d7b")
+	)
+	(wire
+		(pts
+			(xy 55.88 46.99) (xy 231.14 46.99)
+		)
+		(stroke
+			(width 0.381)
+			(type default)
+			(color 132 0 0 1)
+		)
+		(uuid "ce347d9c-1226-4adf-9bea-ee109cb3a5fe")
 	)
 	(wire
 		(pts
@@ -7643,7 +7963,7 @@
 	)
 	(wire
 		(pts
-			(xy 63.5 19.05) (xy 69.85 19.05)
+			(xy 96.52 19.05) (xy 102.87 19.05)
 		)
 		(stroke
 			(width 0)
@@ -7692,16 +8012,6 @@
 			(color 43 2 255 1)
 		)
 		(uuid "d2fa5cfb-0ebe-4ae6-a50a-bac5959a984b")
-	)
-	(wire
-		(pts
-			(xy 88.9 40.64) (xy 154.94 40.64)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d322472a-936a-43f2-a46f-b1e4ff2f8379")
 	)
 	(wire
 		(pts
@@ -7828,6 +8138,17 @@
 	)
 	(wire
 		(pts
+			(xy 36.83 24.13) (xy 36.83 49.53)
+		)
+		(stroke
+			(width 0.381)
+			(type default)
+			(color 132 0 0 1)
+		)
+		(uuid "e2ab2c3b-09e0-40df-8887-7558c73057c4")
+	)
+	(wire
+		(pts
 			(xy 168.91 34.29) (xy 181.61 34.29)
 		)
 		(stroke
@@ -7848,7 +8169,7 @@
 	)
 	(wire
 		(pts
-			(xy 102.87 24.13) (xy 102.87 36.83)
+			(xy 129.54 24.13) (xy 129.54 36.83)
 		)
 		(stroke
 			(width 0.381)
@@ -8010,7 +8331,7 @@
 	)
 	(wire
 		(pts
-			(xy 58.42 24.13) (xy 69.85 24.13)
+			(xy 91.44 24.13) (xy 102.87 24.13)
 		)
 		(stroke
 			(width 0.381)
@@ -8031,7 +8352,7 @@
 	)
 	(wire
 		(pts
-			(xy 41.91 24.13) (xy 58.42 24.13)
+			(xy 81.28 24.13) (xy 91.44 24.13)
 		)
 		(stroke
 			(width 0.381)
@@ -8166,6 +8487,17 @@
 			)
 		)
 		(uuid "522fcc2b-58e4-4161-bfdb-d874ffd91f45")
+	)
+	(text "Il secondo relè, quando OFF, porta tensione al CB.\nIl secondo relè viene acceso, in caso di Allarme, \n    per toglere tensione al pressControl e quindi alla pompa\n    nel caso che spegnendo il primo relè l'allarme non cessasse."
+		(exclude_from_sim no)
+		(at 212.09 39.116 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "5acf4a3d-855f-46ad-ab3f-1eebeb8e57fb")
 	)
 	(text "green"
 		(exclude_from_sim no)
@@ -8513,7 +8845,7 @@
 	)
 	(global_label "PumpState"
 		(shape bidirectional)
-		(at 127 30.48 0)
+		(at 140.97 27.94 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -8523,7 +8855,7 @@
 		)
 		(uuid "51c162e3-391d-46ad-9667-1fe19d1c7328")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 138.4049 30.48 0)
+			(at 152.3749 27.94 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8535,7 +8867,7 @@
 	)
 	(global_label "pressControlState"
 		(shape bidirectional)
-		(at 81.28 30.48 0)
+		(at 104.14 33.02 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -8545,7 +8877,7 @@
 		)
 		(uuid "be68608b-7a9e-4453-9f22-fa460e9db284")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 98.0553 30.48 0)
+			(at 120.9153 33.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9153,7 +9485,7 @@
 	)
 	(symbol
 		(lib_id "lnDevice:RELAY_1RT")
-		(at 71.12 35.56 0)
+		(at 104.14 41.91 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -9162,7 +9494,7 @@
 		(fields_autoplaced yes)
 		(uuid "1eeaee7d-600c-4c23-93ad-7f9bf547188b")
 		(property "Reference" "K1"
-			(at 71.12 24.13 0)
+			(at 104.14 30.48 0)
 			(effects
 				(font
 					(size 1.016 1.016)
@@ -9171,7 +9503,7 @@
 			)
 		)
 		(property "Value" "RELAY_1RT"
-			(at 71.12 26.67 0)
+			(at 104.14 33.02 0)
 			(effects
 				(font
 					(size 1.016 1.016)
@@ -9180,7 +9512,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 71.12 34.417 0)
+			(at 104.14 40.767 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -9189,7 +9521,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 71.12 34.417 0)
+			(at 104.14 40.767 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -9198,7 +9530,7 @@
 			)
 		)
 		(property "Description" "LN - Relé ad uno scambio"
-			(at 71.12 35.56 0)
+			(at 104.14 41.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9735,7 +10067,7 @@
 	)
 	(symbol
 		(lib_id "lnDevice:Press_Control")
-		(at 69.85 24.13 0)
+		(at 102.87 24.13 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -9743,7 +10075,7 @@
 		(dnp no)
 		(uuid "5741ecb1-5e94-4bf7-a707-7b95c3613fcd")
 		(property "Reference" "P2"
-			(at 80.01 20.574 0)
+			(at 113.03 20.574 0)
 			(effects
 				(font
 					(size 1.016 1.016)
@@ -9752,7 +10084,7 @@
 			)
 		)
 		(property "Value" "Press_Control"
-			(at 77.47 16.51 0)
+			(at 110.49 16.51 0)
 			(effects
 				(font
 					(size 1.016 1.016)
@@ -9760,7 +10092,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 76.2 20.955 0)
+			(at 109.22 20.955 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -9768,7 +10100,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 76.2 20.955 0)
+			(at 109.22 20.955 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -9776,7 +10108,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 69.85 24.13 0)
+			(at 102.87 24.13 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -9961,7 +10293,7 @@
 	)
 	(symbol
 		(lib_id "lnConnectors:SIP_01")
-		(at 102.87 24.13 0)
+		(at 129.54 24.13 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -9970,7 +10302,7 @@
 		(fields_autoplaced yes)
 		(uuid "659437dd-525c-466e-9bb9-a95de2aec939")
 		(property "Reference" "J12"
-			(at 105.41 24.1299 0)
+			(at 132.08 24.1299 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -9980,7 +10312,7 @@
 			)
 		)
 		(property "Value" "SIP_01"
-			(at 105.41 25.3999 0)
+			(at 132.08 25.3999 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -9990,7 +10322,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 102.87 26.67 0)
+			(at 129.54 26.67 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -9998,7 +10330,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 102.87 26.67 0)
+			(at 129.54 26.67 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -10006,7 +10338,7 @@
 			)
 		)
 		(property "Description" "ymbole general de connecteur"
-			(at 102.87 24.13 0)
+			(at 129.54 24.13 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10164,7 +10496,7 @@
 	)
 	(symbol
 		(lib_id "lnDevice:RELAY_1RT")
-		(at 116.84 35.56 0)
+		(at 143.51 35.56 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -10173,7 +10505,7 @@
 		(fields_autoplaced yes)
 		(uuid "70784493-5297-495d-b3aa-51e5b8e34f79")
 		(property "Reference" "K2"
-			(at 116.84 24.13 0)
+			(at 143.51 24.13 0)
 			(effects
 				(font
 					(size 1.016 1.016)
@@ -10182,7 +10514,7 @@
 			)
 		)
 		(property "Value" "RELAY_1RT"
-			(at 116.84 26.67 0)
+			(at 143.51 26.67 0)
 			(effects
 				(font
 					(size 1.016 1.016)
@@ -10191,7 +10523,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 116.84 34.417 0)
+			(at 143.51 34.417 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -10200,7 +10532,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 116.84 34.417 0)
+			(at 143.51 34.417 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -10209,7 +10541,7 @@
 			)
 		)
 		(property "Description" "LN - Relé ad uno scambio"
-			(at 116.84 35.56 0)
+			(at 143.51 35.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10764,7 +11096,7 @@
 	)
 	(symbol
 		(lib_id "lnDevice:Pump")
-		(at 119.38 24.13 0)
+		(at 146.05 24.13 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -10772,7 +11104,7 @@
 		(dnp no)
 		(uuid "ba1ef61c-bff1-45ec-9775-7e454e0d66e7")
 		(property "Reference" "P1"
-			(at 134.62 20.3199 0)
+			(at 161.29 20.3199 0)
 			(effects
 				(font
 					(size 1.016 1.016)
@@ -10782,7 +11114,7 @@
 			)
 		)
 		(property "Value" "Pump"
-			(at 121.92 16.51 0)
+			(at 148.59 16.51 0)
 			(effects
 				(font
 					(size 1.016 1.016)
@@ -10791,7 +11123,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 125.73 20.955 0)
+			(at 152.4 20.955 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -10799,7 +11131,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 125.73 20.955 0)
+			(at 152.4 20.955 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -10807,7 +11139,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 119.38 24.13 0)
+			(at 146.05 24.13 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11481,7 +11813,7 @@
 	)
 	(symbol
 		(lib_id "lnConnectors:SIP_01")
-		(at 107.95 19.05 0)
+		(at 134.62 19.05 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -11490,7 +11822,7 @@
 		(fields_autoplaced yes)
 		(uuid "e39c6343-400f-4b4f-b3ea-aa7e7b18f26d")
 		(property "Reference" "J13"
-			(at 110.49 19.0499 0)
+			(at 137.16 19.0499 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -11500,7 +11832,7 @@
 			)
 		)
 		(property "Value" "SIP_01"
-			(at 110.49 20.3199 0)
+			(at 137.16 20.3199 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -11510,7 +11842,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 107.95 21.59 0)
+			(at 134.62 21.59 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -11518,7 +11850,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 107.95 21.59 0)
+			(at 134.62 21.59 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -11526,7 +11858,7 @@
 			)
 		)
 		(property "Description" "ymbole general de connecteur"
-			(at 107.95 19.05 0)
+			(at 134.62 19.05 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11541,6 +11873,80 @@
 			(project "PressControl_con_Alim"
 				(path "/893d1d39-dee9-4946-9fed-7eb837b744a6"
 					(reference "J13")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "lnConnectors:CircuitBreaker_1+1P")
+		(at 67.31 24.13 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "e6e20a83-34eb-4565-9ba3-c667d7a66c1f")
+		(property "Reference" "CB3"
+			(at 68.453 13.97 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "CircuitBreaker_1+1P"
+			(at 68.453 16.51 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 68.58 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 68.58 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Double pole circuit breaker, US symbol"
+			(at 67.31 24.13 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "8e2d5e46-6e27-459a-9927-89e04add0255")
+		)
+		(pin "3"
+			(uuid "70660f5e-21c1-4705-8720-8886f646b716")
+		)
+		(pin "1"
+			(uuid "3d12cf8f-a855-4aaa-8a38-17f4d11e725f")
+		)
+		(pin "3"
+			(uuid "1c3a50f1-a6d2-4016-85ae-6f0ab7144803")
+		)
+		(instances
+			(project ""
+				(path "/893d1d39-dee9-4946-9fed-7eb837b744a6"
+					(reference "CB3")
 					(unit 1)
 				)
 			)
