@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 08-08-2025 12.02.31
+// Date .........: 09-08-2025 08.43.49
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -91,7 +91,7 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
     if (p->maxLevelReached() ) {
         if (millis() - lastBeepTime >= ALARM_BEEP_INTERVAL) {
             activeBuzzer.pulse(1000); // NON serve per questo pulstante
-            LOG_WARNING("[%s] ALARM! max pressed level %d reached", p->pinID(), p->currentPressLevel());
+            LOG_WARN("[%s] ALARM! max pressed level %d reached", p->pinID(), p->currentPressLevel());
             lastBeepTime = millis();
             fPUMP_ALARM = true;
         }

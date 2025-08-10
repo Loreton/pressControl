@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 08-08-2025 11.11.59
+// Date .........: 10-08-2025 18.37.28
 //
 
 #pragma once
@@ -30,3 +30,8 @@
 
     void waitForPulseEnding(outPinController_Class *p, int32_t timeOut=10000);
     void waitForPulseEnding(PassiveBuzzer_Class *p, int32_t timeOut=10000);
+
+
+    //* - sendMessageToTelegram
+    void sendMessageToTelegram(String message);
+    void sendMessageToTelegram(const char* message);

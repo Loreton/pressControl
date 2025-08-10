@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 08-08-2025 10.54.08
+// Date .........: 09-08-2025 08.44.00
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -34,7 +34,7 @@ void pressControlNotificationCB(ButtonLongPress_Class *p) {
                 break;
 
             default:
-                LOG_WARNING("[%s] level unknown", p->pinID());
+                LOG_WARN("[%s] level unknown", p->pinID());
                 break;
         }
     }
@@ -45,7 +45,7 @@ void pressControlNotificationCB(ButtonLongPress_Class *p) {
     if (p->maxLevelReached() ) {
         if (millis() - lastBeepTime >= ALARM_BEEP_INTERVAL) {
             activeBuzzer.pulse(1000);
-            LOG_WARNING("[%s] ALARM! max pressed level %d reached", p->pinID(), p->currentPressLevel());
+            LOG_WARN("[%s] ALARM! max pressed level %d reached", p->pinID(), p->currentPressLevel());
             lastBeepTime = millis();
             /**
              * qui prendiamo provvedimenti. chiudiamo prima il relay interno

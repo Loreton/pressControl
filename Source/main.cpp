@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 08-08-2025 12.25.38
+// Date .........: 10-08-2025 18.42.01
 //
 
 
@@ -22,6 +22,13 @@
 // - project headers files
 // ---------------------------------
 #include "main.h"
+#include "lnTime_Class.h"
+#include "WiFiManager_Class.h"
+
+
+#define __LOAD_SSIDS_CPP__
+    #include "wifiManager_ssid_credentials.h"
+#undef __LOAD_SSIDS_CPP__
 
 // extern "C" void lwip_hook_ip6_input() {
     // Funzione hook vuota per risolvere il problema di linking
@@ -33,6 +40,8 @@ size_t initialMemory;
 size_t finalMemory;
 
 
+// Crea un'istanza della classe WiFiManager
+WiFiManager_Class myWiFiManager;
 
 
 #define VERSION_LENGTH 40
@@ -45,24 +54,36 @@ void setup() {
     Serial.begin(115200);
     delay(1000);
     lnLog.init();
+
     LOG_INFO("%s", pressControlVersion);
 
+    // -----------------------------------
+    // ------ WiFi
+    // -----------------------------------
+    myWiFiManager.init(myNetworks, sizeof(myNetworks) / sizeof(myNetworks[0]));
 
     // -----------------------------------
     // ------ set Time
     // -----------------------------------
     lnTime.setup(); // Chiama il metodo setup della tua istanza di LnTime
 
-
-
     // -----------------------------------
     // --- "pins_Initialization.cpp"
     // -----------------------------------
     pinsInitialization();
 
+
+
+    // String message = "Ciao dal tuo ESP32! Sono le " + String(millis() / 1000) + " secondi.";
+    // sendMessageToTelegram(message);
+
+
+
     // ---------------- calcolo memoria
     finalMemory = ESP.getFreeHeap();
     LOG_TRACE("memoria (bytes): initial=%ld - final=%ld - occupied=%ld", initialMemory, finalMemory, (initialMemory - finalMemory)); // Stima RAM allocata
+
+
 }
 
 
@@ -106,16 +127,22 @@ void loop() {
 
 
     // -----------------------------------
-    // ------ lettura/refresh dei pin di output
+    // ------ refresh dei vari oggetti
     // -----------------------------------
     activeBuzzer.update();
     passiveBuzzer.update();
     pressControlLED.update();
     pumpLED.update();
-
     pressControlRelay.update();
     magnetoTermicoRelay.update();
 
+    myWiFiManager.update();
+    lnTime.update();
+    if (lnTime.everyXminutes(5)) {
+        char message[100];
+        snprintf(message, 99, "Ciao dal tuo ESP32! Sono le %lu secondi.", millis() / 1000);
+        sendMessageToTelegram(message);
+    }
 
 
     /**
