@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-08-2025 18.42.01
+// Date .........: 11-08-2025 10.59.36
 //
 
 
@@ -138,9 +138,11 @@ void loop() {
 
     myWiFiManager.update();
     lnTime.update();
-    if (lnTime.everyXminutes(5)) {
+    if (lnTime.everyXminutes(30)) {
         char message[100];
-        snprintf(message, 99, "Ciao dal tuo ESP32! Sono le %lu secondi.", millis() / 1000);
+        // snprintf(message, 99, "Ciao dal tuo ESP32! Sono le %lu secondi.", millis() / 1000);
+        uint8_t msg_len = snprintf(message, 99, lnTime.timeStamp(message, 99));
+        msg_len += snprintf(message+msg_len, 99, "\nCiao dal tuo ESP32!");
         sendMessageToTelegram(message);
     }
 
