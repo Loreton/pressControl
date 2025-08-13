@@ -1,24 +1,27 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-08-2025 11.32.40
+// Date .........: 13-08-2025 11.06.17
 //
 
 
 #pragma once
 
     #include "a_decisionalVariables.h"
-    #include "lnLogger_Class.h"
     #include "functionPrototypes.h" // per functions protoype
-
-    #include "ButtonLongPress_Class.h"
-    #include "outPinController_Class.h"
-    #include "passiveBuzzer_Class.h"
     #include "pin_Definitions.h"
-    #include "relayManager_Class.h"
+
+
+    #include <lnLogger_Class.h>
+    #include <ButtonLongPress_Class.h>
+    #include <outPinController_Class.h>
+    #include <passiveBuzzer_Class.h>
+    #include <relayManager_Class.h>
 
     // ---  TEST
     #if ln_RELEASE_TYPE == ln_DEVEL
-        #pragma message "siamo in TEST"
+        // #ifdef __I_AM_MAIN_CPP__
+        //     #pragma message "siamo in TEST"
+        // #endif
         #define ACTION_STATUS_DISPLAY_INTERVAL 5*60*1000  // xx minuti
         #define PRESS_CONTROL_PIN_MAX_TIME     3*60*1000 // xx minuti
         #define PRESS_CONTROL_RELAY_MAX_TIME   3*60*1000 // xx minuti
@@ -30,8 +33,9 @@
         #define PUMP_PHASE_04                     25*1000 // milliSeconds
 
     #elif ln_RELEASE_TYPE == ln_PRODUCTION
-        // ---  PROD
-        #pragma message "siamo in PRODUCTION"
+        // #ifdef __I_AM_MAIN_CPP__
+        //     #pragma message "siamo in PRODUCTION"
+        // #endif
         #define ACTION_STATUS_DISPLAY_INTERVAL  5*60*1000  // xx minuti
         #define PRESS_CONTROL_PIN_MAX_TIME     30*60*1000  // tempo in cui il pressControl starà acceso.
         #define PRESS_CONTROL_RELAY_MAX_TIME   30*60*1000  // tempo in cui il relay interno starà acceso.

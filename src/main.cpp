@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-08-2025 16.38.14
+// Date .........: 13-08-2025 11.09.13
 //
 
 
@@ -15,19 +15,17 @@
 // ---------------------------------
 // --- lnLibrary headers files
 // ---------------------------------
-#include    "lnGlobalVars.h"
-#include    "lnSerialRead.h" // waitFor...
+#include    <lnGlobalVars.h>
+#include    <lnSerialRead.h> // waitFor...
+#include    <functionPrototypes.h>
 
 // ---------------------------------
 // - project headers files
 // ---------------------------------
 #include "main.h"
-#include "lnTime_Class.h"
-#include "WiFiManager_Class.h"
-
-
+#include <lnTime_Class.h>
 #define __LOAD_SSIDS_CPP__
-    #include "wifiManager_ssid_credentials.h"
+    #include <WiFiManager_Class.h>
 #undef __LOAD_SSIDS_CPP__
 
 // extern "C" void lwip_hook_ip6_input() {
@@ -35,9 +33,10 @@
     // undefined reference to lwip_hook_ip6_input'
 // }
 
-// uint TG_MSG_MAX_SIZE=sizeof(tgMessageBuffer);
 const uint8_t TG_MSG_MAX_SIZE=100;
 char tgMessageBuffer[TG_MSG_MAX_SIZE];
+
+
 uint8_t tgMsgLen=0;
 size_t initialMemory;
 size_t finalMemory;
@@ -57,7 +56,7 @@ void wifiConnectedCB(arduino_event_id_t event) {
     if (event == ARDUINO_EVENT_WIFI_STA_DISCONNECTED) {
         tgMsgLen = snprintf(tgMessageBuffer, TG_MSG_MAX_SIZE, "WIFI - DISCONNECTED");
         LOG_ERROR(tgMessageBuffer);
-        sendMessageToTelegram(tgMessageBuffer);
+        // sendMessageToTelegram(tgMessageBuffer);
         lnTime.setNtpInactive();
 
     }
@@ -167,7 +166,7 @@ void loop() {
         char timestamp[16];
         lnTime.timeStamp(timestamp, sizeof(timestamp));
         tgMsgLen = snprintf(tgMessageBuffer, TG_MSG_MAX_SIZE, "%s Ciao dal tuo ESP32!", timestamp);
-        sendMessageToTelegram(tgMessageBuffer);
+        // sendMessageToTelegram(tgMessageBuffer);
     }
 
 
@@ -225,14 +224,16 @@ void loop() {
         LOG_INFO("actionState [%02d]: %7s %16s %5s", actionState, "RELAY", "PRESS-CONTROL", "PUMP");
         LOG_INFO("actionState [%02d]: %7s %16s %5s", actionState, str_OnOff[relayStatus], str_OnOff[pcStatus], str_OnOff[pumpStatus]);
         tgMsgLen = snprintf(tgMessageBuffer, TG_MSG_MAX_SIZE, "actionState [%02d]: RELAY: %7s PC: %16s Pump: %5s", actionState, str_OnOff[relayStatus], str_OnOff[pcStatus], str_OnOff[pumpStatus]);
-        sendMessageToTelegram(tgMessageBuffer);
+        // sendMessageToTelegram(tgMessageBuffer);
+        LOG_INFO(tgMessageBuffer);
 
         char dateStr[16];
         lnTime.timeStamp(dateStr, sizeof(dateStr));
         // Formatta il messaggio utilizzando tag HTML
         snprintf(tgMessageBuffer, TG_MSG_MAX_SIZE, "<b>ESP32</b> - %s<br>PC relay: <b>%s</b><br>PC status: <b>%s</b><br>PUMP status: <b>%s</b>",
                   dateStr, str_OnOff[relayStatus], str_OnOff[pcStatus], str_OnOff[pumpStatus]);
-        sendMessageToTelegram(tgMessageBuffer, "HTML");
+        LOG_INFO(tgMessageBuffer);
+        // sendMessageToTelegram(tgMessageBuffer, "HTML");
 
 
 

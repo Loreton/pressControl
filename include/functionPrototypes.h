@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-08-2025 16.37.45
+// Date .........: 13-08-2025 11.08.03
 //
 
 #pragma once
@@ -9,9 +9,9 @@
     // #include "main.h"
 
 
-    #include "ButtonLongPress_Class.h"
-    #include "outPinController_Class.h"
-    #include "passiveBuzzer_Class.h"
+    #include <ButtonLongPress_Class.h>
+    #include <outPinController_Class.h>
+    #include <passiveBuzzer_Class.h>
 
     //* - startButtonHandlers
     void startButtonHandler(uint8_t pressedLevel);
@@ -35,4 +35,4 @@
     //* - sendMessageToTelegram
     void sendMessageToTelegram(String message);
     void sendMessageToTelegram(const char* message);
-    void sendMessageToTelegram(const char* message, const char* parseMode);
+    // void sendMessageToTelegram(const char* message, const char* parseMode);

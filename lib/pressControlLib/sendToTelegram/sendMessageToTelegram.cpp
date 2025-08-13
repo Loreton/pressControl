@@ -1,13 +1,13 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-08-2025 16.38.53
+// Date .........: 13-08-2025 11.10.55
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
 #include <HTTPClient.h>
 
 #include <lnLogger_Class.h>
-// #include "main.h"
+#include <functionPrototypes.h>
 
 #define __LN_TELEGRAM_CREDENTIALS_H__
     #include "@ln_esp32_telegram_credentials.h"
@@ -17,6 +17,8 @@
 
 
 void sendMessageToTelegram(const char* message, const char* parseMode) {
+    LOG_NOTIFY("%s", message);
+    return;
     if (WiFi.status() == WL_CONNECTED) {
         HTTPClient http;
 
@@ -49,6 +51,7 @@ void sendMessageToTelegram(const char* message, const char* parseMode) {
 
 
 void sendMessageToTelegram(const char* message) {
+    LOG_NOTIFY("%s", message);
     if (WiFi.status() == WL_CONNECTED) {
         HTTPClient http;
         LOG_NOTIFY("telegram message: %s", message);
