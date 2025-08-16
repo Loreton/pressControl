@@ -1,0 +1,161 @@
+.
+├── a_tree.lst
+├── b_tree.lst
+├── build
+├── include
+│   ├── a_decisionalVariables.h
+│   ├── functionPrototypes.h
+│   ├── main.h
+│   ├── pin_Definitions.h
+│   └── README
+├── Kicad
+│   ├── 2020_arduino
+│   │   ├── lnLib
+│   │   │   ├── LnConnectors.kicad_sym
+│   │   │   ├── LnDevice.kicad_sym
+│   │   │   └── LnDiodiTransistors.kicad_sym
+│   │   ├── pdf
+│   │   │   └── PressControl.pdf
+│   │   ├── PressControl_2020-02-24.sch
+│   │   ├── PressControl-backups
+│   │   │   ├── PressControl-2023-06-24_174743.zip
+│   │   │   ├── PressControl-2023-06-24_175318.zip
+│   │   │   ├── PressControl-2023-06-24_180351.zip
+│   │   │   ├── PressControl-2023-06-24_180914.zip
+│   │   │   └── PressControl-2023-06-24_184543.zip
+│   │   ├── PressControl.kicad_prl
+│   │   ├── PressControl.kicad_pro
+│   │   ├── PressControl.kicad_sch
+│   │   ├── PressControl.pro
+│   │   ├── PressControl.sch
+│   │   └── sym-lib-table
+│   ├── 2024
+│   │   ├── appo
+│   │   │   ├── PressControl.kicad_prl
+│   │   │   └── PressControl.kicad_pro
+│   │   ├── Arduino_Nano3_0.pdf
+│   │   ├── lnReadme.yaml
+│   │   ├── pdf
+│   │   │   ├── PressControl.pdf
+│   │   │   ├── PressControl_vanoPompe_20240912.pdf
+│   │   │   ├── PressControl_vanoPompe_20240917.pdf
+│   │   │   └── PressControl_vanoPompe_20241004.pdf
+│   │   ├── PressControl_con_Alim.kicad_prl
+│   │   ├── PressControl_con_Alim.kicad_pro
+│   │   ├── PressControl_con_Alim.kicad_sch
+│   │   └── prev
+│   │       ├── PressControl_con_Alim_v1.kicad_sch
+│   │       ├── PressControl_con_Alim_v2.kicad_sch
+│   │       ├── PressControl_remoto.kicad_sch
+│   │       ├── PressControl_V1.kicad_sch
+│   │       ├── PressControl_V2.kicad_prl
+│   │       ├── PressControl_V2.kicad_pro
+│   │       ├── PressControl_V2.kicad_sch
+│   │       ├── PressControl_vanoPompe.kicad_prl
+│   │       ├── PressControl_vanoPompe.kicad_pro
+│   │       └── PressControl_vanoPompe.kicad_sch
+│   ├── 2025
+│   │   ├── lnReadme.yaml
+│   │   ├── pdf
+│   │   │   └── PressControl_ESP32_2relay.pdf
+│   │   ├── PressControl_ESP32_2relay.kicad_prl
+│   │   ├── PressControl_ESP32_2relay.kicad_pro
+│   │   └── PressControl_ESP32_2relay.kicad_sch
+│   ├── esp32.sublime-project
+│   └── esp32.sublime-workspace
+├── lib
+│   ├── pressControlLib
+│   │   ├── a_test_modules
+│   │   │   └── platformio.ini -> ../wifiManager_Class/platformio_wifiManager.ini
+│   │   ├── buttonLongPress_Class
+│   │   │   ├── ButtonLongPress_Class.cpp
+│   │   │   ├── ButtonLongPress_Class.h
+│   │   │   ├── platformio_pinLongPress.ini
+│   │   │   └── test
+│   │   │       ├── buttonLongPress_test.cpp
+│   │   │       ├── callBackFunctions.h
+│   │   │       ├── callBack_pumpState.cpp
+│   │   │       ├── callBack_samples.cpp
+│   │   │       ├── callBack_startButton.cpp
+│   │   │       └── project_usefulFunctions.cpp
+│   │   ├── lnLogger_Class
+│   │   │   ├── lnLogger_Class.cpp
+│   │   │   ├── lnLogger_Class.h
+│   │   │   ├── platformio_lnLogger.ini
+│   │   │   └── test
+│   │   │       ├── lnLogger_test.cpp
+│   │   │       └── test_getTimeStamp.cpp
+│   │   ├── lnMainInclude
+│   │   │   └── lnGlobalVars.h
+│   │   ├── lnString
+│   │   │   ├── handleString.cpp
+│   │   │   ├── include
+│   │   │   │   ├── lnSetPinID.h
+│   │   │   │   └── lnString.h
+│   │   │   ├── platformio.ini
+│   │   │   ├── setPinID.cpp
+│   │   │   ├── splitString.cpp
+│   │   │   └── trim.cpp
+│   │   ├── lnTime_Class
+│   │   │   ├── lnTime_Class.cpp
+│   │   │   ├── lnTime_Class.h
+│   │   │   ├── platformio_lnTime.ini
+│   │   │   └── test
+│   │   │       └── lnTime_test.cpp
+│   │   ├── lnTimer_Class
+│   │   │   ├── lnTimer_Class.cpp
+│   │   │   ├── lnTimer_Class.h
+│   │   │   ├── platformio_lnTimer.ini
+│   │   │   └── test
+│   │   │       └── lnTimer_test.cpp
+│   │   ├── outPinController_Class
+│   │   │   ├── outPinController_Class.cpp
+│   │   │   ├── outPinController_Class.h
+│   │   │   ├── platformio_outPinController.ini
+│   │   │   └── test
+│   │   │       └── outPinController_test.cpp
+│   │   ├── passiveBuzzer_Class
+│   │   │   ├── passiveBuzzer_Class.cpp
+│   │   │   ├── passiveBuzzer_Class.h
+│   │   │   ├── platformio_passiveBuzzer.ini
+│   │   │   └── test
+│   │   │       └── passiveBuzzer_test.cpp
+│   │   ├── relayManager_Class
+│   │   │   ├── platformio_relayManager.ini
+│   │   │   ├── relayManager_Class.cpp
+│   │   │   ├── relayManager_Class.h
+│   │   │   └── test
+│   │   │       ├── main_test.cpp_
+│   │   │       └── relayManager_test.cpp
+│   │   ├── serialRead
+│   │   │   ├── include
+│   │   │   │   └── lnSerialRead.h
+│   │   │   ├── SerialRead.cpp
+│   │   │   └── SerialRead_OK.cpp_
+│   │   └── wifiManager_Class
+│   │       ├── platformio_wifiManager.ini
+│   │       ├── test
+│   │       │   └── main_test.cpp
+│   │       ├── WiFiManager_Class.cpp
+│   │       └── WiFiManager_Class.h
+│   ├── README
+│   └── sendToTelegram
+│       ├── sendMessageToTelegram.cpp
+│       ├── sendMessageToTelegram.h
+│       └── test
+│           └── main_test.cpp
+├── platformio.ini
+├── README.md
+├── README.yaml
+├── src
+│   ├── main.cpp
+│   └── process
+│       ├── commonUtilsFunctions.cpp
+│       ├── pinsInitialization.cpp
+│       ├── pressControl.cpp
+│       ├── pumpHandlers.cpp
+│       └── startButtonHandlers.cpp
+└── test
+    └── README
+
+43 directories, 116 files

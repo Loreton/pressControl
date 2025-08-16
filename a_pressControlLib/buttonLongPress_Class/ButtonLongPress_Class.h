@@ -50,10 +50,11 @@ public: // Membri pubblici
     bool pressedLevelHasChanged(void);
 
     // Funzioni inline (getter)
-    inline bool maxLevelReached(void) const { return m_maxLevelReachedAndNotified; }
-    inline bool isPressed(void) const { return (m_buttonPressed == m_pressedLogicLevel); }
-    inline uint8_t currentPressLevel(void) const { return m_currentPressLevel; }
-    inline uint8_t lastPressedLevel(void) const { return m_lastPressedLevel; }
+    inline bool     maxLevelReached(void) const { return m_maxLevelReachedAndNotified; }
+    inline bool     isPressed(void) const { return (m_buttonPressed == m_pressedLogicLevel); }
+    inline uint8_t  currentPressLevel(void) const { return m_currentPressLevel; }
+    inline uint8_t  lastPressedLevel(void) const { return m_lastPressedLevel; }
+    inline uint8_t  maxLevels(void) const { return m_numThresholds; }
     inline const char* pinID(void) const { return m_pinID; }
 
     // Membri pubblici che potrebbero essere consultati esternamente (es. per debug o display)

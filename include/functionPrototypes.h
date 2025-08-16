@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 13-08-2025 11.08.03
+// Date .........: 16-08-2025 11.36.45
 //
 
 #pragma once
@@ -27,12 +27,9 @@
 
     //* - common CallBacks
     void beepNotification(ButtonLongPress_Class *p, uint32_t beep_duration);
+    void sendTelegram(const char *message);
 
     void waitForPulseEnding(outPinController_Class *p, int32_t timeOut=10000);
     void waitForPulseEnding(PassiveBuzzer_Class *p, int32_t timeOut=10000);
 
 
-    //* - sendMessageToTelegram
-    void sendMessageToTelegram(String message);
-    void sendMessageToTelegram(const char* message);
-    // void sendMessageToTelegram(const char* message, const char* parseMode);

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-08-2025 17.43.39
+// Date .........: 14-08-2025 17.19.55
 //
 
 
@@ -9,20 +9,14 @@
 #include <lnLogger_Class.h>
 #include "WiFiManager_Class.h"
 
+/* ---
+    - Al momento dell'init viene lanciato la scanning asyncron connectToBestNetwork()
+    - nel loop() inseriamo la chiamata al metodo update() il quale verifica lo status dello scanning
+    - se lo scanning è completato vengono processate le reti trovate processScanResults()
+    - viene cercala la bestRSSI e si tenta la connessione
+    - se va a buon fine allora dovrebbe scattare l'handleEvent() dove ho messo la callBack
 
-    // Network myNetworks[] = {
-    //     {"Casetta",         "xxxxxxx.Adsl"},
-    //     {"WebPocket-4545",  "xxxxxxx"},
-    //     {"cpe210",          "xxxxxxx.CPE210"},
-    //     {"eap110",          "xxxxxxx.Adsl"},
-    //     {"OpenWrtC6",       "xxxxxxx.Adsl"},
-    //     {"OpenWrtC20",      "xxxxxxx.Adsl"},
-    //     {"CasettaC20",      "xxxxxxx.Adsl"},
-    //     {"LoretoHotSpot",   "xxxxxxx"}
-    // };
-
-    // const uint8_t myNetworksCount = sizeof(myNetworks) / sizeof(myNetworks[0]);
-
+---- */
 
 // ----------------------------------------------------
 // Classe WiFiManager_Class
@@ -51,29 +45,16 @@ void WiFiManager_Class::init(Network* creds, int8_t count) {
 
 
 
-
-// #####################################################################
-// Controlla se è trascorso troppo tempo senza connessione e riavvia l'ESP32
-// #####################################################################
-void WiFiManager_Class::checkOutOfService() {
-    if (millis() - m_wifiOutTime > m_maxWifiTimeout) {
-        LOG_ERROR("Nessuna connessione da più di 1 ora. Riavvio forzato m_wifiOutTime: %lu/%lu", m_wifiOutTime, m_maxWifiTimeout);
-        // ESP.restart();
-    }
-}
-
-
-
 // #####################################################################
 // Funzione da chiamare nel loop principale per monitorare la connessione
 // #####################################################################
 void WiFiManager_Class::update() {
     // Se non siamo connessi o è il momento di scansionare nuovamente, avvia la scansione
-    if ((WiFi.status() != WL_CONNECTED || (millis() - m_lastScanTime > m_scanInterval)) && !m_scanning) {
-        LOG_NOTIFY("Tempo di scansione periodica o connessione persa. Avvio scansione...");
-        connectToBestNetwork();
-        m_lastScanTime = millis();
-    }
+    // if ((WiFi.status() != WL_CONNECTED || (millis() - m_lastScanTime > m_scanInterval)) && !m_scanning) {
+    //     LOG_NOTIFY("Tempo di scansione periodica o connessione persa. Avvio scansione...");
+    //     connectToBestNetwork();
+    //     m_lastScanTime = millis();
+    // }
 
     // Se la scansione è in corso, controlla se è terminata
     if (m_scanning) {
@@ -83,23 +64,43 @@ void WiFiManager_Class::update() {
             processScanResults(scanResult);
         }
     }
-    // else {
-    //     if (WiFi.status() != WL_CONNECTED) {
-    //         if (m_neverConnected) {
-    //             LOG_ERROR("WiFi NOT connected. Start scanNetwork...");
-    //         }
-    //     }
+    else {
+        if (WiFi.status() != WL_CONNECTED) {
+            LOG_ERROR("WiFi NOT connected. Starting scanNetwork...");
+            if (m_wifiDisconnectionTime == 0) {
+                m_wifiDisconnectionTime = millis(); // aggiornamento tempo di disconnessione
+            }
+        }
 
-    //     else if (millis() - m_lastScanTime > m_scanInterval) {
-    //         LOG_NOTIFY("Tempo di scansione periodica scaduto (%lu ms). Start scanNetwork...", m_scanInterval);
-    //     }
-    //     connectToBestNetwork();
-    //     m_lastScanTime = millis();
+        else if (millis() - m_lastScanTime > m_scanInterval) {
+            LOG_NOTIFY("Tempo di scansione periodica scaduto (%lu ms). Starting scanNetwork...", m_scanInterval);
+        }
+        connectToBestNetwork();
+        m_lastScanTime = millis();
 
-    // }
+    }
 
-    // checkOutOfService();
+    if (m_wifiDisconnectionTime != 0) {
+        checkOutOfService();
+    }
 }
+
+
+
+// #####################################################################
+// Controlla se è trascorso troppo tempo senza connessione e riavvia l'ESP32
+// #####################################################################
+void WiFiManager_Class::checkOutOfService() {
+    if (millis() - m_wifiDisconnectionTime > m_maxWifiTimeout) {
+        LOG_ERROR("Nessuna connessione da più di %lu. Riavvio forzato m_wifiDisconnectionTime: %lu", m_maxWifiTimeout, m_wifiDisconnectionTime);
+        LOG_ERROR("RESTARTING ESP");
+        LOG_ERROR("RESTARTING ESP");
+        LOG_ERROR("RESTARTING ESP");
+        LOG_ERROR("RESTARTING ESP");
+        ESP.restart();
+    }
+}
+
 
 // #####################################################################
 // Avvia una scansione non bloccante
@@ -132,7 +133,6 @@ void WiFiManager_Class::processScanResults(int n) {
 
     // Cerca la rete migliore tra quelle configurate
     for (int i = 0; i < n; ++i) {
-        // LOG_INFO("  %d: %s (%d dBm)", i + 1, WiFi.SSID(i).c_str(), WiFi.RSSI(i));
         LOG_INFO("  %d: SSID: %-12s BSSID: %s (%d dBm)", i + 1, WiFi.SSID(i).c_str(), WiFi.BSSIDstr(i).c_str(), WiFi.RSSI(i));
 
         for (int j = 0; j < m_networkCount; ++j) {
@@ -152,9 +152,11 @@ void WiFiManager_Class::processScanResults(int n) {
         if (WiFi.status() == WL_CONNECTED && String(WiFi.SSID()) == String(m_networks[bestNetworkIndex].ssid)) {
             LOG_NOTIFY("Già connesso alla rete migliore: %s - %s.", WiFi.SSID(), WiFi.BSSIDstr().c_str());
             LOG_NOTIFY("...non è necessario cambiare.");
+            m_wifiDisconnectionTime = 0; // aggiornamento tempo di disconnessione
         } else {
             LOG_INFO("Connessione a: %s", m_networks[bestNetworkIndex].ssid);
             WiFi.begin(m_networks[bestNetworkIndex].ssid, m_networks[bestNetworkIndex].password);
+            m_wifiDisconnectionTime = 0; // aggiornamento tempo di disconnessione
         }
     } else {
         LOG_ERROR("Nessuna delle reti configurate è stata trovata.");
@@ -166,12 +168,15 @@ void WiFiManager_Class::processScanResults(int n) {
 void WiFiManager_Class::handleEvent(arduino_event_id_t event) {
     if (s_instance) {
         switch (event) {
+
             case ARDUINO_EVENT_WIFI_STA_GOT_IP:
                 LOG_INFO("Connesso! %s - %s - %s", WiFi.SSID(), WiFi.BSSIDstr().c_str(), WiFi.localIP().toString().c_str());
-                s_instance->m_wifiOutTime = millis(); // Resetta il timer di timeout
+                s_instance->m_wifiDisconnectionTime = 0; // Resetta il timer di timeout
                 break;
+
             case ARDUINO_EVENT_WIFI_STA_DISCONNECTED:
                 LOG_ERROR("WiFi - Connessione persa.");
+                s_instance->m_wifiDisconnectionTime = millis(); // Resetta il timer di timeout
                 // s_instance->m_scanning = false; // to restart connection
                 break;
             // Aggiungi altri eventi se necessario...

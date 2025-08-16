@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-08-2025 17.41.56
+// Date .........: 16-08-2025 19.11.00
 //
 
 
@@ -25,11 +25,16 @@
         Network*            m_networks;
         int8_t              m_networkCount;
         bool                m_neverConnected=true;
-        bool                m_scanning;
+
+            // --- teniamo conto del tempo di disconnessione. S
+            // --- se supera m_maxWifiTimeout allora facciamo il restart dell'ESP32
+        uint32_t            m_wifiDisconnectionTime = 0;
+        const uint32_t      m_maxWifiTimeout = 5*60*1000; // Timeout massimo senza connessione (5 minuti)
+
+            // --- Intervallo di scansione della rete (in ms), qui 50 minuti
+        const uint32_t      m_scanInterval = 50*60*1000;
         uint32_t            m_lastScanTime = 0;
-        uint32_t            m_wifiOutTime = 0;
-        const uint32_t      m_scanInterval = 50*60*1000; // Intervallo di scansione (in ms), qui 50 minuti
-        const uint32_t      m_maxWifiTimeout = 1*60*60*1000; // Timeout massimo senza connessione (1 ora)
+        bool                m_scanning;
 
         ConnectCallback     m_onConnectCallback = nullptr;
 
@@ -46,6 +51,8 @@
         void update();
         void processScanResults(int n);
         bool isConnected(void) {return WiFi.status() == WL_CONNECTED; };
+        void restartScanning(void) { connectToBestNetwork(); };
+        uint32_t disconnectedElapsed(void) const { return m_wifiDisconnectionTime; };
 
         // Imposta la funzione di callback da chiamare in caso di connessione
         void setConnectCallback(ConnectCallback callback) { m_onConnectCallback = callback; }

@@ -1,27 +1,26 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 13-08-2025 11.06.17
+// Date .........: 16-08-2025 17.51.21
 //
 
 
 #pragma once
 
-    #include "a_decisionalVariables.h"
-    #include "functionPrototypes.h" // per functions protoype
-    #include "pin_Definitions.h"
+    // #include "a_decisionalVariables.h"
+    #include    "functionPrototypes.h" // per functions protoype
+    #include    "pin_Definitions.h"
 
 
-    #include <lnLogger_Class.h>
-    #include <ButtonLongPress_Class.h>
-    #include <outPinController_Class.h>
-    #include <passiveBuzzer_Class.h>
-    #include <relayManager_Class.h>
+    #include    <lnLogger_Class.h>
+    #include    <ButtonLongPress_Class.h>
+    #include    <outPinController_Class.h>
+    #include    <passiveBuzzer_Class.h>
+    #include    <relayManager_Class.h>
+    #include    <telegramBot_Class.h>
+    #include    <WiFiManager_Class.h>
 
     // ---  TEST
     #if ln_RELEASE_TYPE == ln_DEVEL
-        // #ifdef __I_AM_MAIN_CPP__
-        //     #pragma message "siamo in TEST"
-        // #endif
         #define ACTION_STATUS_DISPLAY_INTERVAL 5*60*1000  // xx minuti
         #define PRESS_CONTROL_PIN_MAX_TIME     3*60*1000 // xx minuti
         #define PRESS_CONTROL_RELAY_MAX_TIME   3*60*1000 // xx minuti
@@ -33,9 +32,6 @@
         #define PUMP_PHASE_04                     25*1000 // milliSeconds
 
     #elif ln_RELEASE_TYPE == ln_PRODUCTION
-        // #ifdef __I_AM_MAIN_CPP__
-        //     #pragma message "siamo in PRODUCTION"
-        // #endif
         #define ACTION_STATUS_DISPLAY_INTERVAL  5*60*1000  // xx minuti
         #define PRESS_CONTROL_PIN_MAX_TIME     30*60*1000  // tempo in cui il pressControl starà acceso.
         #define PRESS_CONTROL_RELAY_MAX_TIME   30*60*1000  // tempo in cui il relay interno starà acceso.
@@ -50,6 +46,11 @@
 
 
     #ifdef __I_AM_MAIN_CPP__
+        #include "wifiManager_ssid_credentials.h"
+        #include "@ln_esp32_telegram_credentials.h"
+
+
+
         // L'inizializzazione avviene tramite il costruttore.
         ButtonLongPress_Class startButton; // pulsante per accendre il pressControl tramite Relay del ESP32
         ButtonLongPress_Class pumpState;   // pin per controllare lo stato della pompa
@@ -66,8 +67,8 @@
 
         bool                  fPressControlTimeExausted = false; // indica che il pressContro ha terminato il tempo massiomo di ON
         bool                  fPUMP_ALARM = false;
-        bool                    fAscendent = true;
-        bool                    fDiscendent = false;
+        bool                  fAscendent = true;
+        bool                  fDiscendent = false;
 
         // Frequenze per una scala Do Maggiore (approssimate)
         int C_major_scale[] = {
@@ -81,6 +82,16 @@
             523  // C5
         };
         int num_notes_C_major = sizeof(C_major_scale) / sizeof(C_major_scale[0]);
+
+        // Crea un'istanza della classe telegramBot_Class
+        TelegramBot_Class myBot;
+
+        // Crea un'istanza della classe WiFiManager
+        WiFiManager_Class myWiFiManager;
+
+
+
+
 
 
 
@@ -104,6 +115,11 @@
         extern bool fPUMP_ALARM;
         extern bool fAscendent;
         extern bool fDiscendent;
+
+
+        extern TelegramBot_Class myBot;
+        extern WiFiManager_Class myWiFiManager;
+
     #endif
 
 

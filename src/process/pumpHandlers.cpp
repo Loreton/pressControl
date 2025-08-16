@@ -1,10 +1,11 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 09-08-2025 08.43.49
+// Date .........: 16-08-2025 16.55.24
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
-
+#include <lnTime_Class.h>
+// #include <sendMessageToTelegram.h>
 
 #include "main.h" // per functions protoype
 
@@ -76,8 +77,15 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
             case PRESSED_LEVEL_7:
             case PRESSED_LEVEL_8:
             case PRESSED_LEVEL_9:
+
                 LOG_INFO("%s beeping. duration: %lu ms", p->pinID(),  phase_beep_duration);
                 activeBuzzer.pulse(phase_beep_duration);
+                // char dateStr[16];
+                // lnTime.timeStamp(dateStr, sizeof(dateStr));
+                // snprintf(tgMessageBuffer, TG_MSG_MAX_SIZE, "<b>ESP32</b> - %s%%aPump is stiil ON%%alevel: <b>%d/5d</b>",
+                //           dateStr, p->currentPressLevel(), p->maxLevels());
+                // sendMessageToTelegram(tgMessageBuffer, modeHTML);
+
                 break;
 
             default:

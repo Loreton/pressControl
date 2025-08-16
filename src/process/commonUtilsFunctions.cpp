@@ -1,12 +1,14 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 08-08-2025 11.25.34
+// Date .........: 16-08-2025 16.53.32
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
 
-#include "main.h"
+#include <lnTime_Class.h>
+// #include <sendMessageToTelegram.h>
 
+#include "main.h" // per functions protoype
 
 
 
@@ -33,5 +35,23 @@ void waitForPulseEnding(PassiveBuzzer_Class *p, int32_t timeOut) {
         p->update();
         LOG_TRACE("\t[%s] waiting", p->pinID());
     }
+}
+
+
+
+// ##############################################################
+// #  prepara il titolo con la data e poi aggiunge messaggio
+// ##############################################################
+void sendTelegram(const char *message) {
+    // const char *title = "pressControl";
+    // const char *parseMode="HTML";
+    // char timeStr[16];
+    // lnTime.timeStamp(timeStr, sizeof(timeStr)); // timeStamp
+
+    // snprintf(msgBuffer, sizeof(msgBuffer), "<b>pressControl</b> - %s%%0A%s", timeStr, message);
+    // len = snprintf(tgMsg.bufferData, tgMsg.MAX_DATA_LEN, "&parse_mode=%s&text=%s", parseMode, message);
+    // len = snprintf(tgMsg.bufferData, tgMsg.MAX_DATA_LEN, "&parse_mode=%s<b>%s</b> - %s%%0A%s", parseMode, title, timeStr, message);
+    // sendMessageToTelegram();
+
 }
 

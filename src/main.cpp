@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 13-08-2025 11.09.13
+// Date .........: 16-08-2025 19.09.43
 //
 
 
@@ -9,32 +9,27 @@
 #include <Arduino.h>    // in testa anche per le definizioni dei type
 
 
-#define __I_AM_MAIN_CPP__
 
 
+#define __I_AM_MAIN_CPP__   // in testa a tutto
 // ---------------------------------
 // --- lnLibrary headers files
 // ---------------------------------
 #include    <lnGlobalVars.h>
 #include    <lnSerialRead.h> // waitFor...
-#include    <functionPrototypes.h>
+// #include    <functionPrototypes.h>
+#include    <lnTime_Class.h>
+
 
 // ---------------------------------
 // - project headers files
 // ---------------------------------
 #include "main.h"
-#include <lnTime_Class.h>
-#define __LOAD_SSIDS_CPP__
-    #include <WiFiManager_Class.h>
-#undef __LOAD_SSIDS_CPP__
 
-// extern "C" void lwip_hook_ip6_input() {
-    // Funzione hook vuota per risolvere il problema di linking
-    // undefined reference to lwip_hook_ip6_input'
-// }
+#include "wifiProcess.h"
 
-const uint8_t TG_MSG_MAX_SIZE=100;
-char tgMessageBuffer[TG_MSG_MAX_SIZE];
+
+
 
 
 uint8_t tgMsgLen=0;
@@ -43,36 +38,17 @@ size_t finalMemory;
 
 
 
-// #############################################################
-// # WIFI CALLBACK
-// #############################################################
-void wifiConnectedCB(arduino_event_id_t event) {
-    if (event == ARDUINO_EVENT_WIFI_STA_GOT_IP) {
-        tgMsgLen = snprintf(tgMessageBuffer, TG_MSG_MAX_SIZE, "WIFI - CONNECTED");
-        LOG_NOTIFY(tgMessageBuffer);
-        sendMessageToTelegram(tgMessageBuffer);
-        lnTime.initNTP();
-    }
-    if (event == ARDUINO_EVENT_WIFI_STA_DISCONNECTED) {
-        tgMsgLen = snprintf(tgMessageBuffer, TG_MSG_MAX_SIZE, "WIFI - DISCONNECTED");
-        LOG_ERROR(tgMessageBuffer);
-        // sendMessageToTelegram(tgMessageBuffer);
-        lnTime.setNtpInactive();
-
-    }
-}
-
-
-
-
-
-
-// Crea un'istanza della classe WiFiManager
-WiFiManager_Class myWiFiManager;
 
 
 #define VERSION_LENGTH 40
 char pressControlVersion[VERSION_LENGTH+1];
+
+
+
+
+// #############################################################
+// #
+// #############################################################
 void setup() {
     initialMemory = ESP.getFreeHeap();
 
@@ -84,34 +60,25 @@ void setup() {
 
     LOG_INFO("%s", pressControlVersion);
 
-    // -----------------------------------
     // ------ WiFi
-    // -----------------------------------
-    myWiFiManager.init(myNetworks, sizeof(myNetworks) / sizeof(myNetworks[0]));
-    // set callBack
+    myWiFiManager.init(myNetworks, myNetworksCount);
+
+    // ------ set wifi callBack
     myWiFiManager.setConnectCallback(wifiConnectedCB);
 
-    // -----------------------------------
     // ------ set Time
-    // -----------------------------------
     lnTime.setup(); // Chiama il metodo setup della tua istanza di LnTime
 
-    // -----------------------------------
     // --- "pins_Initialization.cpp"
-    // -----------------------------------
     pinsInitialization();
 
+    // --- telegram setup url
+    LOG_NOTIFY("initializing TelegramBot_Class");
+    myBot.init(Loreto_Esp32_BotToken, pressControl_ChatID_str, "HTML");
 
-
-    // String message = "Ciao dal tuo ESP32! Sono le " + String(millis() / 1000) + " secondi.";
-    // sendMessageToTelegram(message);
-
-
-
-    // ---------------- calcolo memoria
+    //  ------  calcolo memoria
     finalMemory = ESP.getFreeHeap();
     LOG_TRACE("memoria (bytes): initial=%ld - final=%ld - occupied=%ld", initialMemory, finalMemory, (initialMemory - finalMemory)); // Stima RAM allocata
-
 
 }
 
@@ -136,19 +103,27 @@ uint8_t lastActionState=1;
 uint32_t lastDisplayTime=0;
 uint32_t actionStateDisplayInterval=ACTION_STATUS_DISPLAY_INTERVAL;
 
+
+
+// #############################################################
+// #
+// #############################################################
 void loop() {
+
     // Piccolo ritardo per evitare busy-waiting e liberare la CPU per altre attività.
     delay(10);
 
     char durationBUFFER[16];
     uint32_t duration;
     uint32_t now=millis();
+    bool    actionStateChanged;
     if (first_run) {
         first_run=false;
         LOG_INFO("processing started....");
     }
 
 
+    // waitForEnter();
 
     // -----------------------------------
     // ------ refresh dei vari oggetti
@@ -160,13 +135,15 @@ void loop() {
     pressControlRelay.update();
     magnetoTermicoRelay.update();
 
+    if (fWifiConnected) {wifiConnectedAction(); }
+    if (fWifiDisconnected) {wifiDisconnectedAction(); }
+
+
+
     myWiFiManager.update();
     lnTime.update();
     if (lnTime.everyXminutes(30)) {
         char timestamp[16];
-        lnTime.timeStamp(timestamp, sizeof(timestamp));
-        tgMsgLen = snprintf(tgMessageBuffer, TG_MSG_MAX_SIZE, "%s Ciao dal tuo ESP32!", timestamp);
-        // sendMessageToTelegram(tgMessageBuffer);
     }
 
 
@@ -212,33 +189,35 @@ void loop() {
     uint8_t pcStatus    = pressControl.isPressed();
 
     actionState = (pcStatus*2) + (pumpStatus*1);
+    actionStateChanged = (actionState == lastActionState) ? false : true;
     if (fPUMP_ALARM) {
         actionState = pumpAlarm;
     }
 
 
-    if ( (actionState != lastActionState) || (now - lastDisplayTime) > actionStateDisplayInterval) { // facciamo comunque il display ogni 15 secondi
+    if (actionStateChanged) { // facciamo comunque il display ogni 15 secondi
+        myBot.clearMessage();
+        myBot.addFormattedString("<b>pressControl</b> - %s\n", lnTime.nowTime());
+        myBot.addFormattedString("PC relay: <b>%s</b>\nPC status: <b>%s</b>\nPUMP status: <b>%s</b>\n", str_OnOff[relayStatus], str_OnOff[pcStatus], str_OnOff[pumpStatus]);
+        myBot.send();
+    }
+
+    // if ( (actionState != lastActionState) || (now - lastDisplayTime) > actionStateDisplayInterval) { // facciamo comunque il display ogni 15 secondi
+    if ( actionStateChanged || (now - lastDisplayTime) > actionStateDisplayInterval) { // facciamo comunque il display ogni 15 secondi
         lastActionState=actionState;
         lastDisplayTime=now;
 
         LOG_INFO("actionState [%02d]: %7s %16s %5s", actionState, "RELAY", "PRESS-CONTROL", "PUMP");
         LOG_INFO("actionState [%02d]: %7s %16s %5s", actionState, str_OnOff[relayStatus], str_OnOff[pcStatus], str_OnOff[pumpStatus]);
-        tgMsgLen = snprintf(tgMessageBuffer, TG_MSG_MAX_SIZE, "actionState [%02d]: RELAY: %7s PC: %16s Pump: %5s", actionState, str_OnOff[relayStatus], str_OnOff[pcStatus], str_OnOff[pumpStatus]);
-        // sendMessageToTelegram(tgMessageBuffer);
-        LOG_INFO(tgMessageBuffer);
-
-        char dateStr[16];
-        lnTime.timeStamp(dateStr, sizeof(dateStr));
-        // Formatta il messaggio utilizzando tag HTML
-        snprintf(tgMessageBuffer, TG_MSG_MAX_SIZE, "<b>ESP32</b> - %s<br>PC relay: <b>%s</b><br>PC status: <b>%s</b><br>PUMP status: <b>%s</b>",
-                  dateStr, str_OnOff[relayStatus], str_OnOff[pcStatus], str_OnOff[pumpStatus]);
-        LOG_INFO(tgMessageBuffer);
-        // sendMessageToTelegram(tgMessageBuffer, "HTML");
-
-
-
 
     }
+
+
+
+
+
+
+
 
     switch (actionState) {
 
@@ -293,6 +272,9 @@ void loop() {
 
 
 
+// #############################################################
+// #
+// #############################################################
 void startAlarmActions() {
     static uint32_t relay_delay=MAGNETOTERMIC_RELAY_PULSETIME + 3000;
     static uint32_t last_relay_time;
@@ -304,9 +286,8 @@ void startAlarmActions() {
     fPUMP_ALARM=true;
     pressControlRelay.off();
     // tentiamo di togliere corrente al magnetotermico
-    // tra un tentativo e l'altro aspettiamo un pò
     if ( (millis() - last_relay_time) > relay_delay ) {
-        magnetoTermicoRelay.startPulse(MAGNETOTERMIC_RELAY_PULSETIME); // non abbiamo armi. proviamo a chiidere il relay esterno togliendo alimentazione
+        magnetoTermicoRelay.startPulse(MAGNETOTERMIC_RELAY_PULSETIME); // non abbiamo armi. proviamo a chiudere il relay esterno togliendogli alimentazione
         last_relay_time = millis();
     }
     pumpLED.blinking(300, 300);
@@ -317,6 +298,9 @@ void startAlarmActions() {
 
 
 
+// #############################################################
+// #
+// #############################################################
 void resetAlarmActions() {
     if (fPUMP_ALARM) {
         LOG_INFO("Recovery Actions for Alarm Ended."); // NO perchè compare ad ogni giro di loop

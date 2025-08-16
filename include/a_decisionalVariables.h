@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 08-08-2025 10.45.55
+// Date .........: 13-08-2025 11.26.37
 //
 #pragma once
 
@@ -17,3 +17,20 @@
 
     #define __USE_DUMMY_NOW_TIME__
     #define __TYPEDEF_STRUCT__
+
+
+
+    #ifdef __I_AM_MAIN_CPP__
+        #if ln_RELEASE_TYPE == ln_PRODUCTION
+            #pragma message "siamo in PRODUCTION"
+        #else
+            #pragma message "siamo in TEST"
+        #endif
+
+        #if ln_ESP32_BOARD_TYPE == ln_ESP32_WROOM_32E_MODULE
+            #pragma message "siamo con la board ln_ESP32_WROOM_32E_MODULE"
+        #else
+            #pragma message "siamo con la board ln_ESP32_WROOM_32E_MODULE_2RELAY"
+        #endif
+
+    #endif
