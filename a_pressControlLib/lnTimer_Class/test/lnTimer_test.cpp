@@ -47,7 +47,7 @@ void loop() {
     myTimer.update(); // Aggiorna lo stato del timer ad ogni loop
     myTimerCB.update(); // Aggiorna lo stato del timer ad ogni loop
 
-    if (!myTimer.hasCallBack() && myTimer.hasCompleted()) {
+    if (!myTimer.hasCallBack() && myTimer.hasExpired()) {
         LOG_INFO("myTimer executed! Timer completed for timer: %s", myTimer.name());
         delay(2000);
         myTimer.restart(); // riAvvia il timer
@@ -55,7 +55,7 @@ void loop() {
 
 
     // questo non dovrebbe essere eseguito....
-    if (!myTimerCB.hasCallBack() && myTimerCB.hasCompleted()) {
+    if (!myTimerCB.hasCallBack() && myTimerCB.hasExpired()) {
         LOG_INFO("myTimerCB executed! Timer completed for timer: %s", myTimerCB.name());
         delay(2000);
         myTimerCB.restart(); // riAvvia il timer

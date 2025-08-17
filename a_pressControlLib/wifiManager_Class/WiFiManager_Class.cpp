@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 17-08-2025 14.12.57
+// Date .........: 17-08-2025 17.43.56
 //
 
 
@@ -11,7 +11,7 @@
 // ---------------------------------
 // #define  NO_MODULE_LOG
 #include <lnLogger_Class.h>
-#include <lnTimer_Class.h>
+// #include <lnTimer_Class.h>
 
 #include "WiFiManager_Class.h"
 
@@ -50,6 +50,7 @@ void WiFiManager_Class::init(Network* creds, int8_t count) {
 
     // Registra la funzione di gestione degli eventi WiFi
     WiFi.onEvent(handleEvent);
+    m_disconnectedTimer.init("disconnetedWiFi", m_maxWifiTimeout); // initialize timer
 
     connectToBestNetwork();
 }
@@ -109,6 +110,7 @@ void WiFiManager_Class::update() {
     //     m_lastScanTime = millis();
     // }
 
+
     // Se la scansione è in corso, controlla se è terminata
     if (m_scanning) {
         int scanResult = WiFi.scanComplete();
@@ -120,8 +122,11 @@ void WiFiManager_Class::update() {
     else {
         if (WiFi.status() != WL_CONNECTED) {
             LOG_ERROR("WiFi NOT connected. Starting scanNetwork...");
-            if (m_disconnectionStartTime == 0) {
-                m_disconnectionStartTime = millis(); // aggiornamento tempo di disconnessione
+            // if (m_disconnectionStartTime == 0) {
+            //     m_disconnectionStartTime = millis(); // aggiornamento tempo di disconnessione
+            // }
+            if (!m_disconnectedTimer.isRunning()) {
+                m_disconnectedTimer.restart();
             }
         }
 
@@ -133,7 +138,7 @@ void WiFiManager_Class::update() {
 
     }
 
-    if (m_disconnectionStartTime != 0) {
+    if (m_disconnectedTimer.hasExpired()) {
         checkOutOfService();
     }
 }
@@ -144,8 +149,9 @@ void WiFiManager_Class::update() {
 // Controlla se è trascorso troppo tempo senza connessione e riavvia l'ESP32
 // #####################################################################
 void WiFiManager_Class::checkOutOfService() {
-    if (millis() - m_disconnectionStartTime > m_maxWifiTimeout) {
-        LOG_ERROR("Nessuna connessione da più di %lu. Riavvio forzato m_disconnectionStartTime: %lu", m_maxWifiTimeout, m_disconnectionStartTime);
+    // if (millis() - m_disconnectionStartTime > m_maxWifiTimeout) {
+    if (m_disconnectedTimer.hasExpired()) {
+        LOG_ERROR("disconnection time expired %lu. restarting....", m_maxWifiTimeout);
         LOG_ERROR("RESTARTING ESP");
         LOG_ERROR("RESTARTING ESP");
         LOG_ERROR("RESTARTING ESP");
@@ -206,12 +212,13 @@ void WiFiManager_Class::processScanResults(int n) {
         if (WiFi.status() == WL_CONNECTED && String(WiFi.SSID()) == String(m_networks[bestNetworkIndex].ssid)) {
             LOG_NOTIFY("Già connesso alla rete migliore: %s - %s.", WiFi.SSID(), WiFi.BSSIDstr().c_str());
             LOG_NOTIFY("...non è necessario cambiare.");
-            m_disconnectionStartTime = 0; // aggiornamento tempo di disconnessione
-            disconnectedTime.
+            // m_disconnectionStartTime = 0; // aggiornamento tempo di disconnessione
+            m_disconnectedTimer.stop();
         } else {
             LOG_INFO("Connessione a: %s", m_networks[bestNetworkIndex].ssid);
             WiFi.begin(m_networks[bestNetworkIndex].ssid, m_networks[bestNetworkIndex].password);
-            m_disconnectionStartTime = 0; // aggiornamento tempo di disconnessione
+            // m_disconnectionStartTime = 0; // aggiornamento tempo di disconnessione
+            m_disconnectedTimer.stop();
         }
     } else {
         LOG_ERROR("Nessuna delle reti configurate è stata trovata.");
@@ -226,12 +233,14 @@ void WiFiManager_Class::handleEvent(arduino_event_id_t event) {
 
             case ARDUINO_EVENT_WIFI_STA_GOT_IP:
                 LOG_INFO("Connesso! %s - %s - %s", WiFi.SSID(), WiFi.BSSIDstr().c_str(), WiFi.localIP().toString().c_str());
-                s_instance->m_disconnectionStartTime = 0; // Resetta il timer di timeout
+                // s_instance->m_disconnectionStartTime = 0; // Resetta il timer di timeout
+                s_instance->m_disconnectedTimer.stop(); // Resetta il timer di timeout
                 break;
 
             case ARDUINO_EVENT_WIFI_STA_DISCONNECTED:
                 LOG_ERROR("WiFi - Connessione persa.");
-                s_instance->m_disconnectionStartTime = millis(); // Resetta il timer di timeout
+                // s_instance->m_disconnectionStartTime = millis(); // Resetta il timer di timeout
+                s_instance->m_disconnectedTimer.restart(); // Resetta il timer di timeout
                 // s_instance->m_scanning = false; // to restart connection
                 break;
             // Aggiungi altri eventi se necessario...

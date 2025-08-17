@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 17-08-2025 14.12.52
+// Date .........: 17-08-2025 17.26.09
 //
 
 
@@ -8,6 +8,12 @@
     #include <WiFi.h>
     #include <esp_wifi.h>
 
+
+
+    // ---------------------------------
+    // lnLibrary headers files
+    // ---------------------------------
+    #include "lnTimer_Class.h"
     #include "wifiManager_ssid_credentials.h"
 
 
@@ -37,8 +43,8 @@
         bool                m_scanning;
 
         ConnectCallback     m_onConnectCallback = nullptr;
+        MillisTimer         m_disconnectedTimer;
 
-        MillisTimer m_disconnectedTimer("discTimer");
 
         static WiFiManager_Class* s_instance; // Istanza statica per la gestione degli eventi
 

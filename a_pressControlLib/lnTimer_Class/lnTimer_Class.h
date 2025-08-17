@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 17-08-2025 14.35.21
+// Date .........: 17-08-2025 20.22.16
 //
 
 #pragma once
@@ -22,14 +22,17 @@ class MillisTimer {
         uint32_t        m_elapsed       = 0;
         uint32_t        m_remaining     = 0;
         bool            m_isRunning     = false;
-        bool            m_isCompleted   = false;
+        bool            m_hasExpired   = false;
+
         TimerCallback   m_onCompleteCallback = nullptr; // Inizializza la callback a null
+
+
 
     public:
         // Costruttore
         MillisTimer();
 
-        void init(const char *name, uint32_t duration=0, TimerCallback callback = nullptr);
+        void init(const char *name, uint32_t duration, TimerCallback callback = nullptr);
 
         // Inizializza il timer (potrebbe non essere strettamente necessario in una classe con costruttore)
         // void begin();
@@ -43,14 +46,16 @@ class MillisTimer {
         void stop();
 
         // Controlla lo stato del timer e gestisce la callback
-        void update();
+        void update(void);
+        void showStatus(void);
 
         // Query: il timer è in esecuzione?
-        inline bool isRunning(void) const { return m_isRunning; }
+        // inline bool isRunning(void) const { return m_isRunning; }
+        bool isRunning(void);
 
         // Query: il timer è completato?
-        // inline bool hasCompleted(void) const { return m_isCompleted; }
-        bool hasCompleted(void);
+        // inline bool hasExpired(void) const { return m_isExpired; }
+        bool hasExpired(void);
         const char *name(void) const { return m_name; };
         bool hasCallBack(void) const { return (m_onCompleteCallback) ? true : false; }; // return true se ha la CallBack attiva
 

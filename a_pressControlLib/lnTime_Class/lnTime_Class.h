@@ -1,9 +1,9 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 11-08-2025 17.21.27
+// Date .........: 17-08-2025 20.24.57
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 11-08-2025 17.21.27
+// Date .........: 17-08-2025 20.24.57
 */
 
 #pragma once
@@ -70,6 +70,8 @@
         int8_t      m_last_second = 99;
         bool        m_ntp_active = false;
         // uint8_t     m_last_second=99;
+
+
 
         static void cbSyncTime(struct timeval *tv) ;
         // const char* m_ntpServer [] = {"pool.ntp.org", "time.google.com", "br.pool.ntp.org", "time.nist.gov", "2.br.pool.ntp.org"};
