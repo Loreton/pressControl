@@ -1,14 +1,15 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 08-08-2025 11.05.33
+// Date .........: 17-08-2025 09.07.11
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
 
 
 // ---------------------------------
-// - project headers files
+// --- lnLibrary headers files
 // ---------------------------------
+#include    <lnLogger_Class.h>
 #include "main.h"
 
 

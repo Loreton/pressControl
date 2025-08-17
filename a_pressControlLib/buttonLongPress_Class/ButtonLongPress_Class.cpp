@@ -1,21 +1,25 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-08-2025 16.01.06
+// Date .........: 17-08-2025 14.43.14
 //
 
 #include <Arduino.h>
 
-#include <lnGlobalVars.h> // Assicurati che questi siano disponibili
-#include <lnLogger_Class.h>
-#include <lnTime_Class.h>
 
+// ---------------------------------
+// lnLibrary headers files
+// ---------------------------------
+// #define  NO_MODULE_LOG
+#include <lnLogger_Class.h>
+#include <lnGlobalVars.h> // Assicurati che questi siano disponibili
+#include <lnTime_Class.h>
 #include <lnSerialRead.h> // Assicurati che questi siano disponibili
 #include <lnSetPinID.h>   // Assicurati che questi siano disponibili
-
 #include "ButtonLongPress_Class.h" // Includi il nuovo header della classe
 
+
+
 // Costruttore della classe.
-// Utilizza la lista di inizializzazione per i membri.
 ButtonLongPress_Class::ButtonLongPress_Class(void) {};
 
 

@@ -1,17 +1,18 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-08-2025 12.28.04
+// Date .........: 17-08-2025 07.51.33
 */
 
 
 #include <Arduino.h>
-#include <lnLogger_Class.h>
-// char msg[] = "1,20,300,4000,50000";
-
 
 // ---------------------------------
 // lnLibrary headers files
 // ---------------------------------
+// #define  NO_MODULE_LOG
+#include <lnLogger_Class.h>
+
+
 
 
 

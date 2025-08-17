@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 17-08-2025 14.12.57
+// Date .........: 17-08-2025 14.08.58
 //
 
 
@@ -11,7 +11,7 @@
 // ---------------------------------
 // #define  NO_MODULE_LOG
 #include <lnLogger_Class.h>
-#include <lnTimer_Class.h>
+// #include <lnTimer_Class.h>
 
 #include "WiFiManager_Class.h"
 
@@ -43,10 +43,6 @@ void WiFiManager_Class::init(Network* creds, int8_t count) {
     m_networkCount = count;
     LOG_INFO("Inizializzazione WiFi...");
     WiFi.mode(WIFI_STA);
-
-    // creazione timer di comodo
-    // MillisTimer _disconnectedTimer("discTimer"); // Crea un'istanza della classe
-
 
     // Registra la funzione di gestione degli eventi WiFi
     WiFi.onEvent(handleEvent);
@@ -207,7 +203,6 @@ void WiFiManager_Class::processScanResults(int n) {
             LOG_NOTIFY("Già connesso alla rete migliore: %s - %s.", WiFi.SSID(), WiFi.BSSIDstr().c_str());
             LOG_NOTIFY("...non è necessario cambiare.");
             m_disconnectionStartTime = 0; // aggiornamento tempo di disconnessione
-            disconnectedTime.
         } else {
             LOG_INFO("Connessione a: %s", m_networks[bestNetworkIndex].ssid);
             WiFi.begin(m_networks[bestNetworkIndex].ssid, m_networks[bestNetworkIndex].password);

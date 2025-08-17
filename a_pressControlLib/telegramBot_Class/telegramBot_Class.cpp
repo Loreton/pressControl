@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 16-08-2025 18.17.43
+// Date .........: 17-08-2025 09.18.35
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -8,6 +8,12 @@
 #include <stdarg.h> // Per i parametri variabili di addFormattedString
 #include <HTTPClient.h>
 
+
+// ---------------------------------
+// lnLibrary headers files
+// ---------------------------------
+// #define  NO_MODULE_LOG
+#include <lnLogger_Class.h>
 #include "telegramBot_Class.h"
 
 
@@ -31,8 +37,11 @@ void TelegramBot_Class::init(const char* token, const char* chatId, const char *
 // # aggiunge una linea in formato HTML quindi aggiunge uno %0a finale
 // # forse posso eliminarla mettendo lo '\n' nella addString()
 // #######################################################################
-void TelegramBot_Class::clearMessage() {
+void TelegramBot_Class::clearMessage(const char* title) {
     m_messageBuffer[0] = '\0';
+    if (title) {
+        addString(title);
+    }
 }
 
 

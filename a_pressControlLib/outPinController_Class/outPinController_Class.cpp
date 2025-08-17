@@ -1,12 +1,17 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-08-2025 12.29.19
+// Date .........: 17-08-2025 07.51.10
 //
 
 #include <Arduino.h>     // in testa anche per le definizioni dei type
 
-#include <lnGlobalVars.h> // Assicurati che questi includano ancora i valori necessari
+
+// ---------------------------------
+// lnLibrary headers files
+// ---------------------------------
+// #define  NO_MODULE_LOG
 #include <lnLogger_Class.h>
+#include <lnGlobalVars.h> // Assicurati che questi includano ancora i valori necessari
 #include <lnSetPinID.h>
 #include <lnSerialRead.h>
 #include "outPinController_Class.h" // Includi il nuovo header della classe

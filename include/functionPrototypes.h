@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 16-08-2025 11.36.45
+// Date .........: 17-08-2025 09.01.19
 //
 
 #pragma once
@@ -33,3 +33,8 @@
     void waitForPulseEnding(PassiveBuzzer_Class *p, int32_t timeOut=10000);
 
 
+    //* - actionStatus
+    void chackActionStatus(void);
+
+    //* - telegramProcess
+    void setTelegramTitle(void);

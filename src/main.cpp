@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 16-08-2025 19.09.43
+// Date .........: 17-08-2025 09.06.19
 //
 
 
@@ -15,8 +15,9 @@
 // ---------------------------------
 // --- lnLibrary headers files
 // ---------------------------------
+#include    <lnLogger_Class.h>
 #include    <lnGlobalVars.h>
-#include    <lnSerialRead.h> // waitFor...
+#include    <lnSerialRead.h>
 // #include    <functionPrototypes.h>
 #include    <lnTime_Class.h>
 
@@ -83,26 +84,7 @@ void setup() {
 }
 
 
-
-// Definisce i possibili tipi di condizioni
-enum ActionState : uint8_t {
-    pcOFF_pumpOFF = 0,      // tutto spento.
-    pcOFF_pumpON,    // solo la pompa è acessa. Anomalo. Non dovrebbe mai accadere
-    pcON_pumpOFF,    // rele esterno - PressControl ON (con il rele esterno)
-    pcON_pumpON,     // rele esterno - Pressione lunga.
-    pumpAlarm,
-} ;
-
-
-// const PROGMEM char *alarmState[] = {"[EXT_RELAY] ALL_OFF", "[EXT_RELAY] ABNORMAL_pumpON", "[EXT_RELAY] pcON", "[EXT_RELAY] PC+PUMP ON", "[INT_RELAY] ALL_OFF", "[INT_RELAY] ABNORMAL_pumpON", "[INT_RELAY] pcON", "[INT_RELAY] PC+PUMP ON", };
-
 bool    first_run=true;
-// bool    fAlarm=false;
-uint8_t actionState=0;
-uint8_t lastActionState=1;
-uint32_t lastDisplayTime=0;
-uint32_t actionStateDisplayInterval=ACTION_STATUS_DISPLAY_INTERVAL;
-
 
 
 // #############################################################
@@ -110,20 +92,21 @@ uint32_t actionStateDisplayInterval=ACTION_STATUS_DISPLAY_INTERVAL;
 // #############################################################
 void loop() {
 
-    // Piccolo ritardo per evitare busy-waiting e liberare la CPU per altre attività.
+    /** ----------------
+      * Piccolo ritardo per evitare busy-waiting
+      * e liberare la CPU per altre attività.
+    ---------- */
     delay(10);
 
     char durationBUFFER[16];
     uint32_t duration;
     uint32_t now=millis();
-    bool    actionStateChanged;
+    bool    actionStatusChanged;
     if (first_run) {
         first_run=false;
         LOG_INFO("processing started....");
     }
 
-
-    // waitForEnter();
 
     // -----------------------------------
     // ------ refresh dei vari oggetti
@@ -135,7 +118,7 @@ void loop() {
     pressControlRelay.update();
     magnetoTermicoRelay.update();
 
-    if (fWifiConnected) {wifiConnectedAction(); }
+    if (fWifiConnected)    {wifiConnectedAction(); }
     if (fWifiDisconnected) {wifiDisconnectedAction(); }
 
 
@@ -181,6 +164,13 @@ void loop() {
     }
 
 
+    /* ------------------------
+        controllo dello stato dei dispositivi
+    ------------------------ */
+    chackActionStatus();
+
+
+    #if 0
     // -----------------------------------
     // ------ Action
     // -----------------------------------
@@ -189,13 +179,13 @@ void loop() {
     uint8_t pcStatus    = pressControl.isPressed();
 
     actionState = (pcStatus*2) + (pumpStatus*1);
-    actionStateChanged = (actionState == lastActionState) ? false : true;
+    actionStatusChanged = (actionState == lastActionState) ? false : true;
     if (fPUMP_ALARM) {
         actionState = pumpAlarm;
     }
 
 
-    if (actionStateChanged) { // facciamo comunque il display ogni 15 secondi
+    if (actionStatusChanged) { // facciamo comunque il display ogni 15 secondi
         myBot.clearMessage();
         myBot.addFormattedString("<b>pressControl</b> - %s\n", lnTime.nowTime());
         myBot.addFormattedString("PC relay: <b>%s</b>\nPC status: <b>%s</b>\nPUMP status: <b>%s</b>\n", str_OnOff[relayStatus], str_OnOff[pcStatus], str_OnOff[pumpStatus]);
@@ -203,7 +193,7 @@ void loop() {
     }
 
     // if ( (actionState != lastActionState) || (now - lastDisplayTime) > actionStateDisplayInterval) { // facciamo comunque il display ogni 15 secondi
-    if ( actionStateChanged || (now - lastDisplayTime) > actionStateDisplayInterval) { // facciamo comunque il display ogni 15 secondi
+    if ( actionStatusChanged || (now - lastDisplayTime) > actionStateDisplayInterval) { // facciamo comunque il display ogni 15 secondi
         lastActionState=actionState;
         lastDisplayTime=now;
 
@@ -267,9 +257,11 @@ void loop() {
 
     } // endo of switch
 
+    #endif
 
 }
 
+    #if 0
 
 
 // #############################################################
@@ -314,3 +306,5 @@ void resetAlarmActions() {
     pressControlRelay.off();       // spegniamo epr sicurezza il relay interno
     magnetoTermicoRelay.off();
 }
+
+    #endif

@@ -1,11 +1,16 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-08-2025 12.28.13
+// Date .........: 17-08-2025 07.51.37
 */
 
 
 #include <Arduino.h>
 
+
+// ---------------------------------
+// lnLibrary headers files
+// ---------------------------------
+// #define  NO_MODULE_LOG
 #include <lnLogger_Class.h>
 
 

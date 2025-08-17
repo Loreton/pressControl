@@ -1,12 +1,14 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 16-08-2025 18.24.32
+// Date .........: 17-08-2025 09.29.07
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
 
-// ----- library includes
-// #include <sendMessageToTelegram.h> // per functions protoype
+// ---------------------------------
+// --- lnLibrary headers files
+// ---------------------------------
+#include    <lnLogger_Class.h>
 #include <lnTime_Class.h> // per functions protoype
 
 
@@ -21,20 +23,18 @@
 
 // #############################################################
 // # WIFI CALLBACK
+// # fare poche azioni ma impostare un flag se serve
 // #############################################################
 void wifiConnectedCB(arduino_event_id_t event) {
     if (event == ARDUINO_EVENT_WIFI_STA_GOT_IP) {
-        const char *tg_msg="WIFI - CONNECTED";
-        LOG_NOTIFY(tg_msg);
-        // sendMessageToTelegram(tg_msg, modeTEXT);
+        LOG_NOTIFY("WiFi_callBack - Connected");
         fWifiConnected=true;
     }
     if (event == ARDUINO_EVENT_WIFI_STA_DISCONNECTED) {
-        const char *tg_msg="WIFI - DISCONNECTED";
-        LOG_ERROR(tg_msg);
-        // sendMessageToTelegram(tg_msg, modeTEXT);
-        fWifiDisconnected=true;
+        LOG_ERROR("WiFi_callBack - DISCONNECTED");
+        fWifiConnected=false;
     }
+    fWifiDisconnected = !fWifiConnected;
 }
 
 
@@ -44,13 +44,13 @@ void wifiConnectedCB(arduino_event_id_t event) {
 void wifiConnectedAction() {
     if (fWifiConnected) {
         fWifiConnected = false;
-        LOG_NOTIFY("wifi connected....");
-        // char timestamp[16];
-        // lnTime.timeStamp(timestamp, sizeof(timestamp));
-        // char tg_msg[100];
-        // snprintf(tg_msg, 100, "<b>ESP32 - %s</b>%%0ajust CONNECTED", timestamp);
-        // LOG_NOTIFY(tg_msg);
-        // sendMessageToTelegram(tg_msg, modeHTML);
+        LOG_NOTIFY("WiFi_connAction Connected!");
+        // myBot.clearMessage();
+        // myBot.addFormattedString("<b>pressControl</b> - %s\n", lnTime.nowTime());
+        setTelegramTitle();
+        myBot.addFormattedString("WiFi: <b>CONNECTED</b>\n");
+
+        myBot.send();
     }
 
 }
@@ -61,16 +61,13 @@ void wifiConnectedAction() {
 // #
 // ##########################################################################
 void wifiDisconnectedAction() {
-    if (fWifiDisconnected) {
-        fWifiDisconnected = false;
-        LOG_NOTIFY("wifi disConnected....");
-        myWiFiManager.restartScanning();
-        // char timestamp[16];
-        // lnTime.timeStamp(timestamp, sizeof(timestamp));
-        // char tg_msg[100];
-        // snprintf(tg_msg, 100, "<b>ESP32 - %s</b>%%0ajust DISCONNECTED", timestamp);
-        // LOG_ERROR(tg_msg);
-        // sendMessageToTelegram(tg_msg, modeHTML);
+    static uint32_t lastRestartRequest=0;
+    if ( fWifiDisconnected && (millis() - lastRestartRequest > 2*60*1000) ) { // 2 minuti
+        lastRestartRequest = millis();
+        if (myWiFiManager.restart()) {
+            LOG_WARN("WiFi_disconnAction....restarting WiFi");
+            fWifiDisconnected = false;
+        }
     }
 }
 

@@ -1,12 +1,15 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-08-2025 12.29.28
+// Date .........: 17-08-2025 07.50.59
 //
 
 #include <Arduino.h> // in testa anche per le definizioni dei type
 #include "driver/ledc.h"
 
-// #include "lnGlobalVars.h" // Assuming these are defined elsewhere
+// ---------------------------------
+// lnLibrary headers files
+// ---------------------------------
+// #define  NO_MODULE_LOG
 #include <lnLogger_Class.h> // Assuming these are defined elsewhere
 #include <lnSetPinID.h>   // Assuming this is defined elsewhere
 #include "passiveBuzzer_Class.h"

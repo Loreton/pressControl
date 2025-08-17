@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 16-08-2025 19.18.54
+// Date .........: 17-08-2025 09.06.45
 //
 
 
@@ -8,6 +8,7 @@
 // ---------------------------------
 // --- lnLibrary headers files
 // ---------------------------------
+#include    <lnLogger_Class.h>
 #include    <lnGlobalVars.h>
 #include    <lnTime_Class.h>
 
@@ -16,10 +17,21 @@
 // - project headers files
 // ---------------------------------
 #include "functionPrototypes.h"
-#include "pressControl_main.h"
+#include "main.h"
 
 
 
+// Definisce i possibili tipi di condizioni
+enum ActionState : uint8_t {
+    pcOFF_pumpOFF = 0,      // tutto spento.
+    pcOFF_pumpON,    // solo la pompa è acessa. Anomalo. Non dovrebbe mai accadere
+    pcON_pumpOFF,    // rele esterno - PressControl ON (con il rele esterno)
+    pcON_pumpON,     // rele esterno - Pressione lunga.
+    pumpAlarm,
+} ;
+
+
+uint32_t actionStateDisplayInterval = ACTION_STATUS_DISPLAY_INTERVAL;
 
 
 
@@ -72,9 +84,9 @@ void resetAlarmActions() {
 // #
 // #############################################################
 void chackActionStatus() {
-    static uint8_t  lastActionState=1;
-    static uint32_t lastDisplayTime=0;
-    uint32_t actionStateDisplayInterval=ACTION_STATUS_DISPLAY_INTERVAL;
+    static uint8_t  lastActionState     = 1;
+    static uint32_t lastDisplayTime     = 0;
+    uint32_t now                        = millis();
 
     bool    actionStateChanged;
     uint8_t actionState;

@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-08-2025 16.21.36
+// Date .........: 17-08-2025 10.20.08
 */
 
 #include <Arduino.h> // ESP32Time.cpp
@@ -9,9 +9,14 @@
 #include <WiFi.h>
 
 
+// ---------------------------------
+// lnLibrary headers files
+// ---------------------------------
+// #define  NO_MODULE_LOG
 #include <lnLogger_Class.h>
-// #include "lnGlobalVars.h"
+// #include <noLogger.h>
 #include "lnTime_Class.h"
+
 
 #define EUROPE_ROME_TZ "CET-1CEST,M3.5.0,M10.5.0/3" // https://github.com/nayarsystems/posix_tz_db/blob/master/zones.csv
 
@@ -28,14 +33,14 @@ LnTime_Class::LnTime_Class() {
 // ==================   NTP functions ==========================
 // ==================   NTP functions ==========================
 
+const char* sntp_status[] = {
+    "SNTP_SYNC_STATUS_RESET",
+    "SNTP_SYNC_STATUS_COMPLETED",
+    "SNTP_SYNC_STATUS_IN_PROGRESS"
+};
 
 // Implementazione del metodo statico
 void LnTime_Class::cbSyncTime(struct timeval *tv) {
-    static const char* sntp_status[] = {
-        "SNTP_SYNC_STATUS_RESET",
-        "SNTP_SYNC_STATUS_COMPLETED",
-        "SNTP_SYNC_STATUS_IN_PROGRESS"
-    };
     uint8_t status = sntp_get_sync_status();
     LOG_NOTIFY("NTP time synched: %d [%s]", status, sntp_status[status]);
 }
@@ -76,11 +81,49 @@ void LnTime_Class::initNTP(void) {
     }
 }
 
+// void LnTime_Class::update(void) {
+//     if (WiFi.status() == WL_CONNECTED && !m_ntp_active) {
+//         initNTP();
+//     }
+// }
+
+
+
+
+
+
+
+// Aggiungi queste variabili globali o private alla tua classe
+unsigned long lastNtpAttempt = 0;
+const unsigned long NTP_TIMEOUT_MS = 60000; // Timeout di 60 secondi
+
 void LnTime_Class::update(void) {
-    if (WiFi.status() == WL_CONNECTED && !m_ntp_active) {
-        initNTP();
+    if (WiFi.status() == WL_CONNECTED) {
+        // Ottieni lo stato attuale della sincronizzazione NTP
+        sntp_sync_status_t status = sntp_get_sync_status();
+
+        if (status != SNTP_SYNC_STATUS_COMPLETED) {
+            LOG_NOTIFY("NTP sync stats: %d [%s]", status, sntp_status[status]);
+            // Se non è sincronizzato, controlla se è passato il tempo di timeout
+            if (millis() - lastNtpAttempt > NTP_TIMEOUT_MS) {
+                LOG_WARN("NTP sync failed or timed out. Restarting NTP client.");
+                sntp_stop();
+                initNTP(); // Avvia un nuovo tentativo
+                lastNtpAttempt = millis();
+            }
+        }
+    } else {
+        // Se il WiFi è disconnesso, disattiva l'NTP per evitare tentativi inutili
+        if (m_ntp_active) {
+            sntp_stop();
+            m_ntp_active = false;
+            LOG_WARN("WiFi disconnected. NTP stopped.");
+        }
+        lastNtpAttempt = millis(); // Resetta il timer per un nuovo tentativo al prossimo reconnect
     }
 }
+
+
 
 
 

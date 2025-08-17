@@ -1,12 +1,16 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 16-08-2025 13.44.41
+// Date .........: 17-08-2025 07.57.37
 //
 
 #include <Arduino.h> // Necessario per funzioni come pinMode, digitalWrite, millis
 
-// #include "lnGlobalVars.h"
+// ---------------------------------
+// lnLibrary headers files
+// ---------------------------------
+// #define  NO_MODULE_LOG
 #include <lnLogger_Class.h>
+
 #include <lnTime_Class.h>
 #include <lnSetPinID.h>
 

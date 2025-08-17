@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 16-08-2025 18.06.42
+// Date .........: 17-08-2025 09.16.43
 //
 
 
@@ -20,7 +20,7 @@
             void init(const char* token, const char* chatId, const char *parseMode="HTML");
 
             // Metodi per la preparazione del messaggio
-            void clearMessage();
+            void clearMessage(const char* title=nullptr);
             void addLine(const char* text);
             void addString(const char* text);
             void addFormattedString(const char* format, ...);

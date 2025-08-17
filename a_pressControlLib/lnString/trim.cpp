@@ -1,12 +1,13 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-08-2025 12.28.34
+// Date .........: 17-08-2025 07.51.51
 */
 
 
 // ---------------------------------
 // lnLibrary headers files
 // ---------------------------------
+// #define  NO_MODULE_LOG
 #include <lnLogger_Class.h>
 
 

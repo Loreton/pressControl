@@ -1,20 +1,19 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 16-08-2025 16.55.24
+// Date .........: 17-08-2025 09.13.24
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
+
+
+
+// ---------------------------------
+// --- lnLibrary headers files
+// ---------------------------------
+#include <lnLogger_Class.h>
 #include <lnTime_Class.h>
-// #include <sendMessageToTelegram.h>
 
 #include "main.h" // per functions protoype
-
-// extern outPinController_Class activeBuzzer;
-
-
-
-// bool fAscendent = true;
-// bool fDiscendent = false;
 
 //###########################################################################
 //# richiamata quando il pulsante viene rilasciato
@@ -79,6 +78,10 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
             case PRESSED_LEVEL_9:
 
                 LOG_INFO("%s beeping. duration: %lu ms", p->pinID(),  phase_beep_duration);
+                setTelegramTitle();
+                myBot.addFormattedString("pump level: <b>%d</b>\nduration ms: <b>%lu</b>\n", p->currentPressLevel(), phase_beep_duration);
+                myBot.send();
+
                 activeBuzzer.pulse(phase_beep_duration);
                 // char dateStr[16];
                 // lnTime.timeStamp(dateStr, sizeof(dateStr));
