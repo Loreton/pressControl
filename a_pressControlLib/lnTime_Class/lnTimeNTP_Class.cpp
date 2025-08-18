@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 18-08-2025 08.47.56
+// Date .........: 18-08-2025 18.28.25
 */
 
 #include <Arduino.h> // ESP32Time.cpp
@@ -163,7 +163,7 @@ void LnTime_Class::update(void) {
         if (m_ntp_active) {
             sntp_stop();
             m_ntp_active = false;
-            LOG_WARN("WiFi disconnected. NTP stopped.");
+            LOG_WARN("No WiFi available. NTP stopped.");
         }
     }
 }
