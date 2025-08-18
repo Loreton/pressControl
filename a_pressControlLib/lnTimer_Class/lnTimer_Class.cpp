@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 17-08-2025 20.18.33
+// Date .........: 18-08-2025 08.56.17
 //
 
 
@@ -20,9 +20,9 @@ void MillisTimer::init(const char *name, uint32_t duration, TimerCallback callba
     m_duration = duration;
     m_onCompleteCallback = callback;
     if (m_onCompleteCallback) {
-        LOG_INFO("[%s] created for %lu ms. (with callback)", m_name, m_duration);
+        LOG_INFO("[TIMER: %s] created for %lu ms. (with callback)", m_name, m_duration);
     } else {
-        LOG_INFO("[%s] created for %lu ms. (without callback)", m_name, m_duration);
+        LOG_INFO("[TIMER: %s] created for %lu ms. (without callback)", m_name, m_duration);
     }
 }
 
@@ -30,14 +30,14 @@ void MillisTimer::init(const char *name, uint32_t duration, TimerCallback callba
 // void MillisTimer::start(uint32_t duration, TimerCallback callback) {
 void MillisTimer::start(uint32_t duration) {
     if (m_isRunning) {
-        LOG_WARN("[%s] already running, new start command was rejected", m_name);
+        LOG_WARN("[TIMER: %s] already running, new start command was rejected", m_name);
     } else {
         m_duration = (duration==0) ? m_duration : duration;
         m_isRunning = true;
         m_hasExpired = false;
         m_startTime = millis();
     }
-    LOG_NOTIFY("%s - start....%lu", m_name, m_duration);
+    LOG_NOTIFY("[TIMER: %s] - start....%lu", m_name, m_duration);
 }
 
 // Avvia o riavvia il timer
@@ -50,7 +50,7 @@ void MillisTimer::restart(uint32_t duration) {
 void MillisTimer::stop() {
     m_isRunning = false;
     m_hasExpired = false; // Resetta lo stato di completamento quando fermato
-    LOG_NOTIFY("[%s] stopped!", m_name);
+    LOG_NOTIFY("[TIMER: %s] stopped!", m_name);
 }
 
 // Controlla se il timer è scaduto e gestisce la callback
@@ -62,9 +62,9 @@ void MillisTimer::update() {
             m_hasExpired = true;
             m_isRunning = false; // Il timer non è più in esecuzione una volta completato
             m_remaining = 0;
-            LOG_NOTIFY("[%s] has been completed!", m_name);
+            LOG_NOTIFY("[TIMER: %s] has been completed!", m_name);
             if (m_onCompleteCallback) {
-                LOG_DEBUG("[%s] running callback!", m_name);
+                LOG_DEBUG("[TIMER: %s] running callback!", m_name);
                 m_onCompleteCallback(this); // Esegue la callback se impostata
             }
         } else {
@@ -97,5 +97,5 @@ bool MillisTimer::isRunning(void) {
 // # Se uso questo ovviamente posso fare a meno di fare l'update()
 // #############################################################
 void MillisTimer::showStatus(void) {
-    LOG_NOTIFY("%s - duration: %lu - remaining: %lu - hasExpired: %d - isRunning: %d", m_name, m_duration, m_remaining, m_hasExpired, m_isRunning);
+    LOG_NOTIFY("[TIMER: %s] - duration: %lu - remaining: %lu - hasExpired: %d - isRunning: %d", m_name, m_duration, m_remaining, m_hasExpired, m_isRunning);
 }

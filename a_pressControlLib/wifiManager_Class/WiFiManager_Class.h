@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 17-08-2025 17.26.09
+// Date .........: 18-08-2025 08.43.20
 //
 
 
@@ -71,6 +71,7 @@
         // Scansiona le reti e si connette a quella migliore (RSSI più alto)
         void connectToBestNetwork();
         void checkOutOfService();
+        void connectToSSID(int8_t networkIndex=-1);
         static void handleEvent(arduino_event_id_t event);
     };
 

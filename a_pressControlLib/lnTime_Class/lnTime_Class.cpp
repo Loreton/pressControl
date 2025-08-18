@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 17-08-2025 20.27.05
+// Date .........: 18-08-2025 07.43.51
 */
 
 #include <Arduino.h> // ESP32Time.cpp
@@ -22,14 +22,14 @@
 
 
 
-extern MillisTimer ntpTimer;
+// extern MillisTimer ntpTimer;
 
 // ==================   TIME functions ==========================
 
 
 // Inizializzazione del modulo tempo
 void LnTime_Class::setup() {
-    ntpTimer.init("ntpTimer", 3*60*1000UL);
+    // ntpTimer.init("ntpTimer", 3*60*1000UL);
     if (WiFi.status() == WL_CONNECTED) {
         LOG_INFO("WiFi is connected. Synchronizing time with NTP server...");
         initNTP(); // Imposta il fuso orario e i server NTP

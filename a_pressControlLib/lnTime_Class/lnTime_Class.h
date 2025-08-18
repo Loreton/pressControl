@@ -1,9 +1,9 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 17-08-2025 20.24.57
+// Date .........: 18-08-2025 08.28.51
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 17-08-2025 20.24.57
+// Date .........: 18-08-2025 08.28.51
 */
 
 #pragma once
@@ -65,23 +65,26 @@
 
     private:
         ESP32Time rtc;
-        struct tm   m_timeinfo;
-        int8_t      m_last_minute = 99;
-        int8_t      m_last_second = 99;
-        bool        m_ntp_active = false;
-        // uint8_t     m_last_second=99;
+        struct tm      m_timeinfo;
+        int8_t         m_last_minute = 99;
+        int8_t         m_last_second = 99;
+        bool           m_ntp_active = false;
+        uint32_t       m_lastNtpAttempt = 0;
+        const uint32_t m_NTP_TIMEOUT_MS = 1*60*1000UL; // Timeout di xx minuti
+        const uint32_t m_NTP_SYNC_INTERVAL = 1*60*1000UL;
+        bool           m_NTP_synched = false;
 
+        const char*    m_ntpServer1 = "pool.ntp.org";
+        const char*    m_ntpServer2 = "time.google.com";
+        const char*    m_ntpServer3 = "br.pool.ntp.org";
+        const char*    m_ntpServer4 = "time.nist.gov";
+        const char*    m_ntpServer5 = "2.br.pool.ntp.org";
+        const char*    m_ntpServer6 = "time.windows.com";
 
+        // methods
+                bool isNtpSynched(void);
+        static  void cbSyncTime(struct timeval *tv) ;
 
-        static void cbSyncTime(struct timeval *tv) ;
-        // const char* m_ntpServer [] = {"pool.ntp.org", "time.google.com", "br.pool.ntp.org", "time.nist.gov", "2.br.pool.ntp.org"};
-
-        const char* m_ntpServer1 = "pool.ntp.org";
-        const char* m_ntpServer2 = "time.google.com";
-        const char* m_ntpServer3 = "br.pool.ntp.org";
-        const char* m_ntpServer4 = "time.nist.gov";
-        const char* m_ntpServer5 = "2.br.pool.ntp.org";
-        const char* m_ntpServer6 = "time.windows.com";
 
     };
 

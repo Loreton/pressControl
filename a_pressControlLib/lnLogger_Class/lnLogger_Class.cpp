@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-08-2025 12.27.46
+// Date .........: 18-08-2025 15.38.51
 */
 
 #include <Arduino.h>
@@ -10,12 +10,6 @@
 #include <lnLogger_Class.h> // Changed to new header file name
 
 ESP32Time       this_rtc;
-// extern ESP32Time      rtc;
-
-
-// char elapsedTimeBUFFER[16];
-// char nextTimeBUFFER[16];
-// char nowTimeBUFFER[16];
 
 
 // Constructor: Initializes the mutex
@@ -36,7 +30,7 @@ void ESP32Logger::init() { // Changed class name
         }
         else {
             m_mutexInitialized = true;
-            Serial.println("\n\nOK: Mutex inizializzato.\n\n");
+            Serial.println("\n\tOK: Logger Mutex inizializzato.\n");
         }
     }
 }
@@ -49,33 +43,75 @@ void ESP32Logger::init() { // Changed class name
  * @brief Formats the file name and line number.
  * The file name is truncated to a maximum length and padded with dots if shorter.
  * @param file The full path of the file (usually __FILE__).
+ * @param function  (usually __FUNCTION__).
  * @param line The line number (usually __LINE__).
- * @return A constant string containing the formatted file name and line number.
+ * @return A constant string containing the formatted file name, function name and line number.
  */
-const char* ESP32Logger::getFileLineInfo(char *outBUFFER, const uint8_t OutBUFFER_maxLen, const char* file, int line) { // Changed class name
-    uint8_t filename_maxLen = OutBUFFER_maxLen-5;                    // Temporary buffer for truncated/padded file name (5 for .lineNo with 3 digits)
-    const char    paddingChar  = '.';                             // padding char for the file
 
-    const char *filename = strrchr(file, '/');                           // Find the last '/' to get only the file name
-    filename = filename ? filename + 1 : file;                           // If found, move the pointer, otherwise use the entire path
+// per eventuali test:
+//     /media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/c-cpp/variEsempi/formatLogFname.cpp
+const char* ESP32Logger::getFileLineInfo(char *outBUFFER, const uint8_t outBUFFER_LEN, const char* file, const char* function, int line) {
 
-    /*
-    const char *sep = strrchr(filename, '_');                            // Find the separator to cut a suffix (e.g. _H)
-    if (!sep) sep = strrchr(filename, '.');                              // Find the separator to cut the extension .cpp)
-    */
+    // Estrai il nome del file (senza percorso)
+   const char *filename = strrchr(file, '/');
+   filename = filename ? filename + 1 : file;
 
-    const char *sep = strrchr(filename, '.');                            // Find the separator to cut a suffix (e.g. .xxx)
-    size_t len = sep ? (size_t)(sep - filename) : strlen(filename);      // Length of the name without extension
 
-    if (len > filename_maxLen) len = filename_maxLen;                                  // Truncate the name if longer than maxlen
+    const char paddingChar      = '.'; // carattere di padding
+    const uint8_t func_len      = strlen(function);
+    const uint8_t line_len      = 1 + 3; // 1 per ':' + 3 per il numero di riga
+    const uint8_t fixed_len     = func_len + line_len  + 1;
+    const uint8_t file_len      = outBUFFER_LEN - fixed_len; // 1 per il terminatore '\0'
 
-    // -- copiamo nel fileBuffer
-    char filenameBUFFER[filename_maxLen+1];                                // space for the filename
-    memset(filenameBUFFER, paddingChar, filename_maxLen);                         // Fill the buffer with dots for padding
-    memcpy(filenameBUFFER, filename, len);                                 // Copy the actual name
-    filenameBUFFER[filename_maxLen] = '\0';                                       // Terminate the string
+    char lineBuff[line_len+1];
+    snprintf(lineBuff, line_len+1 ,":%3d", line);
+    // printf("lineBuff: [%s]\n", lineBuff);
 
-    snprintf(outBUFFER, OutBUFFER_maxLen, "%s.%03d", filenameBUFFER, line);
+
+
+    // printf("outBUFFER_LEN: %d\n", outBUFFER_LEN);
+    // printf("func_len:      %d\n", func_len);
+    // printf("line_len:      %d\n", line_len);
+    // printf("file_len:      %d\n", file_len);
+    // printf("somma:         %d\n", file_len + fixed_len);
+
+    int8_t j;
+
+    // --- fill in buffer whith paddingChar
+    for (j = 0; j < outBUFFER_LEN; j++) { outBUFFER[j] = paddingChar; }
+    outBUFFER[outBUFFER_LEN] = '\0'; // terminatore buffer
+    // printf("outBUFFER filled    [%s] len: %ld\n", outBUFFER, strlen(outBUFFER));
+
+
+    // copiamo nome del file in outBUFFER
+    char *ptr = outBUFFER;
+    for (j = 0; j < file_len && *ptr != '\0'; j++) { // --- verifichiamo anche non superare il limite del buffer '\0' messo precedentemente
+        if (filename[j] == '\0' || filename[j] == '_' || filename[j] == '.') {
+            break;
+        }
+        *ptr++ = filename[j]; // riempi con il carattere di padding
+    }
+    *ptr++ = '.'; // separator file.function
+    // printf("outBUFFER file      [%s] len: %ld\n", outBUFFER, strlen(outBUFFER));
+
+
+    // --- copiamo function name to outBUFFER
+    for (j = 0; function[j] != '\0' && *ptr != '\0'; j++) {  // --- verifichiamo anche non superare il limite del buffer '\0' messo precedentemente
+        *ptr++ = function[j];
+    }
+    // printf("outBUFFER function  [%s] len: %ld\n", outBUFFER, strlen(outBUFFER));
+
+
+
+    // --- copiamo function name to outBUFFER
+    ptr = &outBUFFER[outBUFFER_LEN - line_len];
+    for (j = 0; lineBuff[j] != '\0' && *ptr != '\0'; j++) {  // --- verifichiamo anche non superare il limite del buffer '\0' messo precedentemente
+        *ptr++ = lineBuff[j];
+    }
+   *ptr = '\0'; // terminatore della stringa (per sicurezza.....)
+    // printf("outBUFFER completed [%s] len: %ld\n", outBUFFER, strlen(outBUFFER));
+
+
     return outBUFFER;
 }
 
@@ -90,7 +126,8 @@ const char* ESP32Logger::getFileLineInfo(char *outBUFFER, const uint8_t OutBUFFE
  * @param format Printf-like format string.
  * @param ... Variable arguments for the format string.
  */
-void ESP32Logger::write(const char* color, const char* tag, const char* file, int line, const char* format, ...) { // Changed class name
+// void ESP32Logger::write(const char* color, const char* tag, const char* file, int line, const char* format, ...) { // Changed class name
+void ESP32Logger::write(const char* color, const char* tag, const char* file, const char* function, int line, const char* format, ...) { // Changed class name
     if (!m_mutexInitialized) {
         // If not initialized, we cannot use the mutex or Serial.
         // You might print a crude warning message or discard the log.
@@ -124,7 +161,7 @@ void ESP32Logger::write(const char* color, const char* tag, const char* file, in
         Serial.printf("%s[%s][%s][%s] %s%s\n",
                       color,
                       nowTimeBUFFER,
-                      this->getFileLineInfo(fnameBUFFER, sizeof(fnameBUFFER), file, line),
+                      this->getFileLineInfo(fnameBUFFER, sizeof(fnameBUFFER), file, function, line),
                       tag,
                       logLineBUFFER,
                       LogColors::RESET);

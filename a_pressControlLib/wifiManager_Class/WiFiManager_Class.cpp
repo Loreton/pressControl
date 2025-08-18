@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 17-08-2025 17.43.56
+// Date .........: 18-08-2025 09.29.59
 //
 
 
@@ -43,10 +43,6 @@ void WiFiManager_Class::init(Network* creds, int8_t count) {
     m_networkCount = count;
     LOG_INFO("Inizializzazione WiFi...");
     WiFi.mode(WIFI_STA);
-
-    // creazione timer di comodo
-    // MillisTimer _disconnectedTimer("discTimer"); // Crea un'istanza della classe
-
 
     // Registra la funzione di gestione degli eventi WiFi
     WiFi.onEvent(handleEvent);
@@ -181,8 +177,8 @@ void WiFiManager_Class::connectToBestNetwork() {
 // Elabora i risultati della scansione e si connette alla rete migliore
 // #####################################################################
 void WiFiManager_Class::processScanResults(int n) {
-    int bestRSSI = -127; // Valore RSSI minimo
-    int bestNetworkIndex = -1;
+    int8_t bestRSSI = -127; // Valore RSSI minimo
+    int8_t bestNetworkIndex = -1;
 
     if (n == 0) {
         LOG_WARN("Nessuna rete trovata.");
@@ -206,6 +202,9 @@ void WiFiManager_Class::processScanResults(int n) {
         }
     }
 
+    connectToSSID(bestNetworkIndex);
+
+/*
     // Connessione alla rete scelta
     if (bestNetworkIndex != -1) {
         // Controlla se siamo già connessi alla rete migliore
@@ -222,8 +221,35 @@ void WiFiManager_Class::processScanResults(int n) {
         }
     } else {
         LOG_ERROR("Nessuna delle reti configurate è stata trovata.");
-    }
+    }*/
 }
+
+void WiFiManager_Class::connectToSSID(int8_t networkIndex) {
+    if (networkIndex != -1) {
+        const char *ssid     = m_networks[networkIndex].ssid;
+        const char *password = m_networks[networkIndex].password;
+        LOG_SPEC("best net: [%d] - %s", networkIndex, ssid);
+
+        // LOG_SPEC("networkIndex: %d", networkIndex);
+        // Controlla se siamo già connessi alla rete migliore
+        if (WiFi.status() == WL_CONNECTED && String(WiFi.SSID()) == String(ssid)) {
+            LOG_NOTIFY("Già connesso alla rete migliore: %s - %s.", WiFi.SSID(), WiFi.BSSIDstr().c_str());
+            LOG_NOTIFY("...non è necessario cambiare.");
+            // m_disconnectionStartTime = 0; // aggiornamento tempo di disconnessione
+            m_disconnectedTimer.stop();
+        } else {
+            LOG_INFO("Connessione a: %s", ssid);
+            WiFi.begin(ssid, password);
+            // m_disconnectionStartTime = 0; // aggiornamento tempo di disconnessione
+            m_disconnectedTimer.stop();
+        }
+    } else {
+        LOG_ERROR("Nessuna delle reti configurate è stata trovata.");
+    }
+
+}
+
+
 
 
 // Funzione statica per la gestione degli eventi Wi-Fi

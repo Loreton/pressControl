@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 17-08-2025 09.06.19
+// Date .........: 18-08-2025 09.16.44
 //
 
 
@@ -56,7 +56,7 @@ void setup() {
     snprintf(pressControlVersion, VERSION_LENGTH, "Version_2025-07 - rel_type: %d", ln_RELEASE_TYPE);
 
     Serial.begin(115200);
-    delay(1000);
+    delay(2000);
     lnLog.init();
 
     LOG_INFO("%s", pressControlVersion);
