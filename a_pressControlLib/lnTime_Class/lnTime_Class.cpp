@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 18-08-2025 07.43.51
+// Date .........: 22-08-2025 17.28.02
 */
 
 #include <Arduino.h> // ESP32Time.cpp
@@ -174,35 +174,35 @@ const char *LnTime_Class::to_HHMMSS_discarded(uint32_t millisec, char *buffer, u
 
 
 
-// true: se ci troviamo nel modulo de secondo richiestso (Sec%reqSec)
-bool LnTime_Class::everyXseconds(uint8_t seconds) {
-    uint8_t curr_second;
+// // true: se ci troviamo nel modulo de secondo richiestso (Sec%reqSec)
+// bool LnTime_Class::everyXseconds(uint8_t seconds) {
+//     uint8_t curr_second;
 
-    m_timeinfo = rtc.getTimeStruct();
-    curr_second = m_timeinfo.tm_sec;
+//     m_timeinfo = rtc.getTimeStruct();
+//     curr_second = m_timeinfo.tm_sec;
 
-    if (curr_second%seconds == 0 && curr_second != m_last_second) { // ogni 5 secondi
-        m_last_second = curr_second;
-        return true;
-    }
-    return false;
-}
+//     if (curr_second%seconds == 0 && curr_second != m_last_second) { // ogni 5 secondi
+//         m_last_second = curr_second;
+//         return true;
+//     }
+//     return false;
+// }
 
 
 
-// true: se ci troviamo nel modulo de secondo richiestso (Sec%reqSec)
-bool LnTime_Class::everyXminutes(uint8_t minutes) {
-    uint8_t curr_minute;
+// // true: se ci troviamo nel modulo de secondo richiestso (Sec%reqSec)
+// bool LnTime_Class::everyXminutes(uint8_t minutes) {
+//     uint8_t curr_minute;
 
-    m_timeinfo = rtc.getTimeStruct();
-    curr_minute = m_timeinfo.tm_min;
+//     m_timeinfo = rtc.getTimeStruct();
+//     curr_minute = m_timeinfo.tm_min;
 
-    if (curr_minute%minutes == 0 && curr_minute != m_last_minute) { // ogni 5 minutei
-        m_last_minute = curr_minute;
-        return true;
-    }
-    return false;
-}
+//     if (curr_minute%minutes == 0 && curr_minute != m_last_minute) { // ogni 5 minutei
+//         m_last_minute = curr_minute;
+//         return true;
+//     }
+//     return false;
+// }
 
 
 

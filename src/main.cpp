@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 18-08-2025 09.16.44
+// Date .........: 22-08-2025 18.18.05
 //
 
 
@@ -20,6 +20,7 @@
 #include    <lnSerialRead.h>
 // #include    <functionPrototypes.h>
 #include    <lnTime_Class.h>
+#include    <onTime_Class.h>
 
 
 // ---------------------------------
@@ -37,7 +38,8 @@ uint8_t tgMsgLen=0;
 size_t initialMemory;
 size_t finalMemory;
 
-
+OnTime_Class mainOnTime;
+OnTime_Class wifiOnTime;
 
 
 
@@ -125,8 +127,15 @@ void loop() {
 
     myWiFiManager.update();
     lnTime.update();
-    if (lnTime.everyXminutes(30)) {
+
+
+    if (mainOnTime.onMinuteModulo(30)) {
         char timestamp[16];
+    }
+
+
+    if (wifiOnTime.onMinuteModulo(5)) {
+        LOG_INFO("controllo della connessione WiFi");
     }
 
 

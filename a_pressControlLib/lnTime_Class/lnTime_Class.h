@@ -1,9 +1,9 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 18-08-2025 18.16.27
+// Date .........: 22-08-2025 17.27.51
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 18-08-2025 18.16.27
+// Date .........: 22-08-2025 17.27.51
 */
 
 #pragma once
@@ -40,8 +40,8 @@
         uint32_t minutesOfDay(int offset = 0);
         uint32_t getEpoch(unsigned long offset = 0);
 
-        bool     everyXseconds(uint8_t seconds);
-        bool     everyXminutes(uint8_t minutes);
+        // bool     everyXseconds(uint8_t seconds);
+        // bool     everyXminutes(uint8_t minutes);
 
 
 
