@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 17-08-2025 07.50.59
+// Date .........: 23-08-2025 17.57.11
 //
 
 #include <Arduino.h> // in testa anche per le definizioni dei type
@@ -108,7 +108,7 @@ void PassiveBuzzer_Class::playToneDutyCycle(int frequency, float dutyCyclePercen
 
 // --- Funzionalità 2: Suono Fisso di Durata Variabile (Duty Cycle 50%) ---
 // Usa ledcWriteTone() per un duty cycle automatico del 50%
-void PassiveBuzzer_Class::playToneFixed(int frequency, uint32_t duration) {
+void PassiveBuzzer_Class::playFixedTone(int frequency, uint32_t duration) {
     if (m_isPlaying || m_isPlayingScale) {
         LOG_INFO("%s occupato, impossibile avviare nuovo tono.", m_pinID);
         return;

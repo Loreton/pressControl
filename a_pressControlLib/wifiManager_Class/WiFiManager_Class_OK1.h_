@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 23-08-2025 18.31.07
+// Date .........: 18-08-2025 08.43.20
 //
 
 
@@ -41,7 +41,6 @@
         const uint32_t      m_scanInterval = 50*60*1000;
         uint32_t            m_lastScanTime = 0;
         bool                m_scanning;
-        bool                m_disconnectedMsg = false;
 
         ConnectCallback     m_onConnectCallback = nullptr;
         MillisTimer         m_disconnectedTimer;
@@ -67,10 +66,10 @@
 
         // Imposta la funzione di callback da chiamare in caso di connessione
         void setConnectCallback(ConnectCallback callback) { m_onConnectCallback = callback; }
-        void connectToBestNetwork();
 
     private:
         // Scansiona le reti e si connette a quella migliore (RSSI più alto)
+        void connectToBestNetwork();
         void checkOutOfService();
         void connectToSSID(int8_t networkIndex=-1);
         static void handleEvent(arduino_event_id_t event);

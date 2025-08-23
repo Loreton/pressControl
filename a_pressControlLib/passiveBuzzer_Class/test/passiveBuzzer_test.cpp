@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-07-2025 16.18.11
+// Date .........: 23-08-2025 17.58.51
 // ref:
 // https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html
 //
@@ -64,15 +64,15 @@ void loop() {
     if (!passiveBuzzer.isPlayingSomething() && (millis() - lastActionTime >= PAUSE_BETWEEN_ACTIONS)) {
         switch (step) {
         case 0:
-            passiveBuzzer.playToneFixed(784, 500); // Tono singolo Sol per 500ms
+            passiveBuzzer.playFixedTone(784, 500); // Tono singolo Sol per 500ms
             step = 1;
             break;
         case 1:
-            passiveBuzzer.playScale(C_major_scale, num_notes_C_major, 150, true); // Scala ascendente, 150ms per nota
+            passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 150, true); // Scala ascendente, 150ms per nota
             step = 2;
             break;
         case 2:
-            passiveBuzzer.playScale(C_major_scale, num_notes_C_major, 200, false); // Scala discendente, 200ms per nota
+            passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 200, false); // Scala discendente, 200ms per nota
             step = 3;
             break;
         case 3:

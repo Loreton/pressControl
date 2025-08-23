@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 23-08-2025 20.36.39
+// Date .........: 18-08-2025 09.29.59
 //
 
 
@@ -10,10 +10,7 @@
 // lnLibrary headers files
 // ---------------------------------
 // #define  NO_MODULE_LOG
-// #define  LOG_MODULE_NOTIFY
-#define  LOG_MODULE_LEVEL 4
 #include <lnLogger_Class.h>
-// #undef  LOG_MODULE_NOTIFY
 // #include <lnTimer_Class.h>
 
 #include "WiFiManager_Class.h"
@@ -25,6 +22,7 @@
     - se lo scanning è completato vengono processate le reti trovate processScanResults()
     - viene cercala la bestRSSI e si tenta la connessione
     - se va a buon fine allora dovrebbe scattare l'handleEvent() dove ho messo la callBack
+
 ---- */
 
 // ----------------------------------------------------
@@ -48,8 +46,8 @@ void WiFiManager_Class::init(Network* creds, int8_t count) {
 
     // Registra la funzione di gestione degli eventi WiFi
     WiFi.onEvent(handleEvent);
+    m_disconnectedTimer.init("disconnetedWiFi", m_maxWifiTimeout); // initialize timer
 
-    // fai partire lo scanning delle reti
     connectToBestNetwork();
 }
 
@@ -57,16 +55,16 @@ void WiFiManager_Class::init(Network* creds, int8_t count) {
 // Inizializza il WiFi in modalità Station e si connette
 // #####################################################################
 bool WiFiManager_Class::restart(void) {
-    disconnect();
-    LOG_INFO("re.Inizializzazione WiFi...");
-    WiFi.mode(WIFI_STA);
+    if (disconnect()) {
+        LOG_INFO("re.Inizializzazione WiFi...");
+        WiFi.mode(WIFI_STA);
 
-    // Registra la funzione di gestione degli eventi WiFi
-    WiFi.onEvent(handleEvent);
+        // Registra la funzione di gestione degli eventi WiFi
+        WiFi.onEvent(handleEvent);
 
-    connectToBestNetwork();
-    return true;
-    // };
+        connectToBestNetwork();
+        return true;
+    };
     return false;
 }
 
@@ -76,21 +74,21 @@ bool WiFiManager_Class::restart(void) {
 // # not used... comodo dall'esterno....
 // #########################################
 bool WiFiManager_Class::disconnect() {
-    // if (millis() - m_disconnectionStartTime > 2*60*1000) { // non facciamo disconnessione troppo spesso
+    if (millis() - m_disconnectionStartTime > 2*60*1000) { // non facciamo disconnessione troppo spesso
         LOG_NOTIFY("Disconnecting wifi %s", WiFi.SSID());
         WiFi.scanDelete();
         if (WiFi.disconnect()) {
             LOG_INFO("[WIFI] Disconnected");
             delay(100);
         } else {
-            LOG_ERROR("WiFi was not Connected!");
+            LOG_ERROR("Error Disconnecting");
         }
         m_scanning = false;
         m_lastScanTime = millis();
-        // m_disconnectionStartTime = millis(); // aggiornamento tempo di disconnessione
-        // return true;
-    // }
-    // LOG_WARN("disconnection already in progress.....");
+        m_disconnectionStartTime = millis(); // aggiornamento tempo di disconnessione
+        return true;
+    }
+    LOG_WARN("disconnection already in progress.....");
     return false;
 }
 
@@ -118,28 +116,27 @@ void WiFiManager_Class::update() {
         }
     }
     else {
-        if (WiFi.status() != WL_CONNECTED && !m_disconnectedMsg) {
-            LOG_ERROR("WiFi NOT connected. cosa fare????");
-            m_disconnectedMsg = true;
+        if (WiFi.status() != WL_CONNECTED) {
+            LOG_ERROR("WiFi NOT connected. Starting scanNetwork...");
             // if (m_disconnectionStartTime == 0) {
             //     m_disconnectionStartTime = millis(); // aggiornamento tempo di disconnessione
             // }
-            // if (!m_disconnectedTimer.isRunning()) {
-            //     m_disconnectedTimer.restart();
-            // }
+            if (!m_disconnectedTimer.isRunning()) {
+                m_disconnectedTimer.restart();
+            }
         }
 
-        // else if (millis() - m_lastScanTime > m_scanInterval) {
-        //     LOG_NOTIFY("Tempo di scansione periodica scaduto (%lu ms). Starting scanNetwork...", m_scanInterval);
-        // }
-        // connectToBestNetwork();
-        // m_lastScanTime = millis();
+        else if (millis() - m_lastScanTime > m_scanInterval) {
+            LOG_NOTIFY("Tempo di scansione periodica scaduto (%lu ms). Starting scanNetwork...", m_scanInterval);
+        }
+        connectToBestNetwork();
+        m_lastScanTime = millis();
 
     }
 
-    // if (m_disconnectedTimer.hasExpired()) {
-    //     checkOutOfService();
-    // }
+    if (m_disconnectedTimer.hasExpired()) {
+        checkOutOfService();
+    }
 }
 
 
@@ -149,15 +146,15 @@ void WiFiManager_Class::update() {
 // #####################################################################
 void WiFiManager_Class::checkOutOfService() {
     // if (millis() - m_disconnectionStartTime > m_maxWifiTimeout) {
-    // if (m_disconnectedTimer.hasExpired()) {
-    //     LOG_ERROR("disconnection time expired %lu. restarting....", m_maxWifiTimeout);
-    //     LOG_ERROR("RESTARTING ESP");
-    //     LOG_ERROR("RESTARTING ESP");
-    //     LOG_ERROR("RESTARTING ESP");
-    //     LOG_ERROR("RESTARTING ESP");
-    //     restart();
-    //     // ESP.restart();
-    // }
+    if (m_disconnectedTimer.hasExpired()) {
+        LOG_ERROR("disconnection time expired %lu. restarting....", m_maxWifiTimeout);
+        LOG_ERROR("RESTARTING ESP");
+        LOG_ERROR("RESTARTING ESP");
+        LOG_ERROR("RESTARTING ESP");
+        LOG_ERROR("RESTARTING ESP");
+        restart();
+        // ESP.restart();
+    }
 }
 
 
@@ -238,11 +235,13 @@ void WiFiManager_Class::connectToSSID(int8_t networkIndex) {
         if (WiFi.status() == WL_CONNECTED && String(WiFi.SSID()) == String(ssid)) {
             LOG_NOTIFY("Già connesso alla rete migliore: %s - %s.", WiFi.SSID(), WiFi.BSSIDstr().c_str());
             LOG_NOTIFY("...non è necessario cambiare.");
-            m_disconnectedMsg = false;
+            // m_disconnectionStartTime = 0; // aggiornamento tempo di disconnessione
+            m_disconnectedTimer.stop();
         } else {
             LOG_INFO("Connessione a: %s", ssid);
             WiFi.begin(ssid, password);
-            m_disconnectedMsg = false;
+            // m_disconnectionStartTime = 0; // aggiornamento tempo di disconnessione
+            m_disconnectedTimer.stop();
         }
     } else {
         LOG_ERROR("Nessuna delle reti configurate è stata trovata.");
@@ -260,10 +259,15 @@ void WiFiManager_Class::handleEvent(arduino_event_id_t event) {
 
             case ARDUINO_EVENT_WIFI_STA_GOT_IP:
                 LOG_INFO("Connesso! %s - %s - %s", WiFi.SSID(), WiFi.BSSIDstr().c_str(), WiFi.localIP().toString().c_str());
+                // s_instance->m_disconnectionStartTime = 0; // Resetta il timer di timeout
+                s_instance->m_disconnectedTimer.stop(); // Resetta il timer di timeout
                 break;
 
             case ARDUINO_EVENT_WIFI_STA_DISCONNECTED:
                 LOG_ERROR("WiFi - Connessione persa.");
+                // s_instance->m_disconnectionStartTime = millis(); // Resetta il timer di timeout
+                s_instance->m_disconnectedTimer.restart(); // Resetta il timer di timeout
+                // s_instance->m_scanning = false; // to restart connection
                 break;
             // Aggiungi altri eventi se necessario...
         }

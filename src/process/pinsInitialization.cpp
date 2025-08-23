@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 17-08-2025 09.07.11
+// Date .........: 23-08-2025 20.40.48
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -9,6 +9,7 @@
 // ---------------------------------
 // --- lnLibrary headers files
 // ---------------------------------
+#define LOG_MODULE_LEVEL 0
 #include    <lnLogger_Class.h>
 #include "main.h"
 
@@ -80,7 +81,7 @@ void pinsInitialization(void) {
     //= set output pins
     //====================================================
     passiveBuzzer.init("passiveBuzzer", passiveBuzzer_pin, HIGH, 0, 10);
-    passiveBuzzer.playScale(C_major_scale, num_notes_C_major, 150, true); // Scala ascendente, 150ms per nota)
+    passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 150, true); // Scala ascendente, 150ms per nota)
     waitForPulseEnding(&passiveBuzzer);
     LOG_NOTIFY("\t[%s] initialized", passiveBuzzer.pinID());
 
@@ -111,7 +112,7 @@ void pinsInitialization(void) {
     magnetoTermicoRelay.init("magnetoTermicoRelay", magnetoTermicoRelay_pin, LOW);
     LOG_NOTIFY("\t[%s] initialized", magnetoTermicoRelay.pinID());
 
-    passiveBuzzer.playScale(C_major_scale, num_notes_C_major, 150, false); // Scala discendente, 150ms per nota)
+    passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 150, false); // Scala discendente, 150ms per nota)
     waitForPulseEnding(&passiveBuzzer);
 
 

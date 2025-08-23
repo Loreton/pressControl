@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 22-08-2025 17.28.02
+// Date .........: 23-08-2025 17.22.30
 */
 
 #include <Arduino.h> // ESP32Time.cpp
@@ -60,44 +60,6 @@ char *LnTime_Class::nowTime() {
 
 
 
-// // Converte millisecondi in HH:MM:SS.ms
-// const char* LnTime_Class::timeStamp(char *buffer, uint8_t buffer_len, uint32_t millisec, bool stripHeader) {
-//     if (millisec == 0) {
-//         int64_t time_since_boot = esp_timer_get_time(); // Time in microseconds from boot
-//         millisec = time_since_boot / 1000; // Time in microseconds from boot
-//     }
-
-//     uint16_t msec    = (millisec % 1000);
-//     uint32_t seconds = (millisec / 1000);
-//     uint8_t sec      = (seconds  % 60);
-//     uint8_t min      = (seconds / 60) % 60;
-//     uint8_t hour     = (seconds / 3600);
-
-//     snprintf(buffer, buffer_len, "%02d:%02d:%02d.%03lu", hour, min, sec, msec);
-//     if (stripHeader) {
-//         if (hour > 0) {
-//             return buffer;
-//         } else if (min > 0) {
-//             return buffer+3;
-//         } else {
-//             return buffer+6;
-//         }
-//     }
-//     return buffer;
-// }
-
-/** ------------------ Sample
-    if (millisec == 0) {
-        struct tm timeInfo = rtc.getTimeStruct(); // ora corrente
-        millisec = rtc.getMillis();  // current mSeconds (0-999)
-        strftime(buffer, buffer_len, "%H:%M:%S", &timeInfo);
-    }
-    else {
-        time_t rawTime = millisec / 1000;
-        struct tm *timeInfo = gmtime(&rawTime); // Utilizza gmtime per orario UTC - vedi getEpoch()
-        strftime(buffer, buffer_len, "%H:%M:%S", timeInfo);
-    }
------------------ */
 
 // ################################################################
 // Converte millisecondi in HH:MM:SS.ms
@@ -173,52 +135,18 @@ const char *LnTime_Class::to_HHMMSS_discarded(uint32_t millisec, char *buffer, u
 
 
 
-
-// // true: se ci troviamo nel modulo de secondo richiestso (Sec%reqSec)
-// bool LnTime_Class::everyXseconds(uint8_t seconds) {
-//     uint8_t curr_second;
-
-//     m_timeinfo = rtc.getTimeStruct();
-//     curr_second = m_timeinfo.tm_sec;
-
-//     if (curr_second%seconds == 0 && curr_second != m_last_second) { // ogni 5 secondi
-//         m_last_second = curr_second;
-//         return true;
-//     }
-//     return false;
-// }
-
-
-
-// // true: se ci troviamo nel modulo de secondo richiestso (Sec%reqSec)
-// bool LnTime_Class::everyXminutes(uint8_t minutes) {
-//     uint8_t curr_minute;
-
-//     m_timeinfo = rtc.getTimeStruct();
-//     curr_minute = m_timeinfo.tm_min;
-
-//     if (curr_minute%minutes == 0 && curr_minute != m_last_minute) { // ogni 5 minutei
-//         m_last_minute = curr_minute;
-//         return true;
-//     }
-//     return false;
-// }
-
-
-
 // Allinea l'esecuzione all'inizio del minuto
-void LnTime_Class::alignToMinute() {
-    LOG_DEBUG("waiting for minute o'clock");
-    m_timeinfo = rtc.getTimeStruct();
-    while (m_timeinfo.tm_sec != 0) {
-        delay(50); // Piccolo ritardo per evitare busy-waiting eccessivo
-        m_timeinfo = rtc.getTimeStruct();
-    }
-    // LOG_INFO("ready...");
-}
+// void LnTime_Class::alignToMinute() {
+//     LOG_DEBUG("waiting for minute o'clock");
+//     m_timeinfo = rtc.getTimeStruct();
+//     while (m_timeinfo.tm_sec != 0) {
+//         delay(50); // Piccolo ritardo per evitare busy-waiting eccessivo
+//         m_timeinfo = rtc.getTimeStruct();
+//     }
+// }
 
 // Controlla se è iniziato un nuovo secondo
-bool LnTime_Class::isSecondOClock() {
+bool LnTime_Class::atSecond() {
     m_timeinfo = rtc.getTimeStruct();
     if (m_timeinfo.tm_sec != m_last_second) {
         m_last_second = m_timeinfo.tm_sec;
@@ -226,9 +154,18 @@ bool LnTime_Class::isSecondOClock() {
     }
     return false;
 }
+// Controlla se è iniziato il secondo spicificato
+bool LnTime_Class::atSecond(uint8_t second) {
+    m_timeinfo = rtc.getTimeStruct();
+    if (m_timeinfo.tm_sec == second && m_timeinfo.tm_sec != m_last_second) {
+        m_last_second = m_timeinfo.tm_sec;
+        return true;
+    }
+    return false;
+}
 
 // Controlla se è iniziato un nuovo minuto
-bool LnTime_Class::isMinuteOClock() {
+bool LnTime_Class::atMinute() {
     m_timeinfo = rtc.getTimeStruct();
     if (m_timeinfo.tm_sec == 0 && m_timeinfo.tm_min != m_last_minute) {
         m_last_minute = m_timeinfo.tm_min;
@@ -237,24 +174,60 @@ bool LnTime_Class::isMinuteOClock() {
     return false;
 }
 
-// Controlla se è iniziato un nuovo quarto d'ora
-bool LnTime_Class::isQuarterOClock() {
+// Controlla se è iniziato il minuto specificato
+bool LnTime_Class::atMinute(uint8_t minute) {
     m_timeinfo = rtc.getTimeStruct();
-    if (m_timeinfo.tm_min % 15 == 0 && m_timeinfo.tm_min != m_last_minute) {
+    if (m_timeinfo.tm_sec == 0 && m_timeinfo.tm_min == minute && m_timeinfo.tm_min != m_last_minute) {
         m_last_minute = m_timeinfo.tm_min;
         return true;
     }
     return false;
 }
 
-// Attende il cambio di secondo
-int8_t LnTime_Class::waitForSecond() {
-    m_last_second = m_timeinfo.tm_sec; // Usa m_timeinfo che dovrebbe essere aggiornato dall'ultima chiamata a getTimeStruct
-    while (rtc.getTimeStruct().tm_sec == m_last_second) { // Rileggi direttamente da rtc per l'attesa
-        delay(50);
+// Controlla se è iniziato un nuovo quarto d'ora
+// bool LnTime_Class::isQuarterOClock() {
+//     m_timeinfo = rtc.getTimeStruct();
+//     if (m_timeinfo.tm_min % 15 == 0 && m_timeinfo.tm_min != m_last_minute) {
+//         m_last_minute = m_timeinfo.tm_min;
+//         return true;
+//     }
+//     return false;
+// }
+
+// Controlla se è iniziato siamo nel modulo richiesto
+bool LnTime_Class::atSecondModulo(uint8_t modulo) {
+    m_timeinfo = rtc.getTimeStruct();
+
+    if (m_timeinfo.tm_sec % modulo == 0 && m_timeinfo.tm_sec != m_last_second) { // ogni 5 secondi
+        m_last_second = m_timeinfo.tm_sec;
+        return true;
     }
-    return rtc.getTimeStruct().tm_sec - m_last_second;
+    return false;
 }
+
+// Controlla se è iniziato un nuovo quarto d'ora
+bool LnTime_Class::atMinuteModulo(uint8_t modulo) {
+    m_timeinfo = rtc.getTimeStruct();
+
+    if (m_timeinfo.tm_min % modulo == 0 && m_timeinfo.tm_min != m_last_minute) { // ogni 5 minutei
+        m_last_minute = m_timeinfo.tm_min;
+        return true;
+    }
+    return false;
+}
+
+
+
+
+
+// Attende il cambio di secondo
+// int8_t LnTime_Class::waitForSecond() {
+//     m_last_second = m_timeinfo.tm_sec; // Usa m_timeinfo che dovrebbe essere aggiornato dall'ultima chiamata a getTimeStruct
+//     while (rtc.getTimeStruct().tm_sec == m_last_second) { // Rileggi direttamente da rtc per l'attesa
+//         delay(50);
+//     }
+//     return rtc.getTimeStruct().tm_sec - m_last_second;
+// }
 
 // Restituisce i secondi mancanti al prossimo minuto completo
 int8_t LnTime_Class::secondsToMinute() {

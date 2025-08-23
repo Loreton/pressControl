@@ -1,9 +1,9 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 22-08-2025 17.27.51
+// Date .........: 23-08-2025 17.22.32
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 22-08-2025 17.27.51
+// Date .........: 23-08-2025 17.22.32
 */
 
 #pragma once
@@ -29,12 +29,21 @@
         // const char* timeStamp(char *buffer, uint8_t buffer_len, uint32_t millisec=0, bool stripHeader=false);
         const char* timeStamp(char *buffer, uint8_t buffer_len, uint32_t millisec=0, bool addMilliSec=false, bool stripHeader=false); // msec from boot (or millisec) HH:MM:SS.msec
         // const char *to_HHMMSS(uint32_t mseconds, char *buffer, uint8_t buffer_len, bool addMilliSec=false); // un po dupllicato di msecToTimeStamp()
-        void alignToMinute();
-        bool isSecondOClock();
-        bool isMinuteOClock();
-        bool isQuarterOClock();
-        int8_t waitForSecond();
-        int8_t secondsToMinute();
+
+
+        // void alignToMinute();                // Attende il cambio di minuto
+        // int8_t waitForSecond();              // Attende il cambio di secondo
+        int8_t secondsToMinute(); // Restituisce i secondi mancanti al prossimo minuto completo
+
+        bool atSecond();                     // on second change
+        bool atSecond(uint8_t second);       // on second xx change
+        bool atSecondModulo(uint8_t modulo); // on second xx modulo  (ex.: atSecondModulo(20) return true at second 20, 40, 0)
+
+        bool atMinute();                     // on minute change
+        bool atMinute(uint8_t minute);       // on minute xx change
+        bool atMinuteModulo(uint8_t modulo); // on minute xx modulo  (ex.: atMinuteModulo(20) return true at minute 20, 40, 0)
+
+        // bool isQuarterOClock();
         uint32_t millisecOfDay(int offset = 0);
         uint32_t secondsOfDay(int offset = 0);
         uint32_t minutesOfDay(int offset = 0);

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 17-08-2025 09.13.24
+// Date .........: 23-08-2025 17.40.44
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -46,7 +46,7 @@ void pumpHandler(ButtonLongPress_Class *p) {
 
     // Dopo aver processato i dati, li resettiamo per la prossima pressione.
     p->reset();
-    passiveBuzzer.playScale(C_major_scale, num_notes_C_major, 150, fDiscendent); // Scala ascendente, 150ms per nota)
+    passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 150, fDiscendent); // Scala ascendente, 150ms per nota)
     waitForPulseEnding(&passiveBuzzer, 3000);
     fPUMP_ALARM = false;
 
@@ -65,7 +65,7 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
         switch (p->currentPressLevel()) {
             case PRESSED_LEVEL_1:
                 LOG_NOTIFY("%s has been detected ON", p->pinID());
-                passiveBuzzer.playScale(C_major_scale, num_notes_C_major, 150, fAscendent); // Scala ascendente, 150ms per nota)
+                passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 150, fAscendent); // Scala ascendente, 150ms per nota)
                 break;
 
             case PRESSED_LEVEL_2:

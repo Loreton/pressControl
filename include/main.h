@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 17-08-2025 09.07.54
+// Date .........: 23-08-2025 17.39.36
 //
 
 
@@ -81,7 +81,8 @@
             494, // B4
             523  // C5
         };
-        int num_notes_C_major = sizeof(C_major_scale) / sizeof(C_major_scale[0]);
+        // int num_notes_C_major = sizeof(C_major_scale) / sizeof(C_major_scale[0]);
+        int C_major_num_notes = sizeof(C_major_scale) / sizeof(C_major_scale[0]);
 
         // Crea un'istanza della classe telegramBot_Class
         TelegramBot_Class myBot;
@@ -111,7 +112,7 @@
 
         extern bool                fPressControlTimeExausted; // indica che il pressContro ha terminato il tempo massiomo di ON
         extern int C_major_scale[];
-        extern int num_notes_C_major;
+        extern int C_major_num_notes;
         extern bool fPUMP_ALARM;
         extern bool fAscendent;
         extern bool fDiscendent;

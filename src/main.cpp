@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 22-08-2025 18.18.05
+// Date .........: 23-08-2025 18.26.17
 //
 
 
@@ -20,7 +20,7 @@
 #include    <lnSerialRead.h>
 // #include    <functionPrototypes.h>
 #include    <lnTime_Class.h>
-#include    <onTime_Class.h>
+// #include    <onTime_Class.h>
 
 
 // ---------------------------------
@@ -38,8 +38,8 @@ uint8_t tgMsgLen=0;
 size_t initialMemory;
 size_t finalMemory;
 
-OnTime_Class mainOnTime;
-OnTime_Class wifiOnTime;
+// OnTime_Class mainOnTime;
+// OnTime_Class wifiOnTime;
 
 
 
@@ -119,23 +119,30 @@ void loop() {
     pumpLED.update();
     pressControlRelay.update();
     magnetoTermicoRelay.update();
-
-    if (fWifiConnected)    {wifiConnectedAction(); }
-    if (fWifiDisconnected) {wifiDisconnectedAction(); }
-
-
-
     myWiFiManager.update();
     lnTime.update();
 
 
-    if (mainOnTime.onMinuteModulo(30)) {
+    // if (fWifiConnected)    {wifiConnectedAction(); }
+    // if (fWifiDisconnected) {wifiDisconnectedAction(); }
+
+
+
+
+
+    if (lnTime.atMinuteModulo(30)) {
         char timestamp[16];
     }
 
 
-    if (wifiOnTime.onMinuteModulo(5)) {
+    if (lnTime.atMinuteModulo(5)) { // ogni xx minuti...
         LOG_INFO("controllo della connessione WiFi");
+        if (!myWiFiManager.isConnected()) {
+            myWiFiManager.restart();
+        }
+        else {
+            myWiFiManager.connectToBestNetwork(); // rescanning
+        }
     }
 
 
