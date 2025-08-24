@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 07.49.35
+// Date .........: 24-08-2025 20.38.01
 //
 
 
@@ -17,7 +17,7 @@
 // ---------------------------------
 // - project headers files
 // ---------------------------------
-#include "functionPrototypes.h"
+// #include "functionPrototypes.h"
 #include "main.h"
 
 
@@ -107,8 +107,9 @@ void chackActionStatus() {
 
 
     if (actionStateChanged) { // facciamo comunque il display ogni 15 secondi
-        myBot.clearMessage();
-        myBot.addFormattedString("<b>pressControl</b> - %s\n", lnTime.nowTime());
+        // myBot.clearMessage();
+        // myBot.addFormattedString("<b>pressControl</b> - %s\n", lnTime.nowTime());
+        setTelegramTitle();
         myBot.addFormattedString("PC relay: <b>%s</b>\nPC status: <b>%s</b>\nPUMP status: <b>%s</b>\n", str_OnOff[relayStatus], str_OnOff[pcStatus], str_OnOff[pumpStatus]);
         myBot.send();
     }

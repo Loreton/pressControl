@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 10.18.28
+// Date .........: 24-08-2025 20.36.30
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -79,7 +79,8 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
             case PRESSED_LEVEL_9:
 
                 LOG_INFO("%s beeping. duration: %lu ms", p->pinID(),  phase_beep_duration);
-                myBot.startNewMessage("<b>PressControl\nTime: %s</b>\n", lnTime.nowTime());
+                setTelegramTitle();
+                // myBot.startNewMessage("<b>PressControl\nTime: %s</b>\n", lnTime.nowTime());
                 myBot.addFormattedString("pump level: <b>%d</b>\nduration ms: <b>%lu</b>\n", p->currentPressLevel(), phase_beep_duration);
                 myBot.send();
 

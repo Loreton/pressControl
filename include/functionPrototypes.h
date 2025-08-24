@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 17-08-2025 09.01.19
+// Date .........: 24-08-2025 20.31.05
 //
 
 #pragma once
@@ -38,3 +38,4 @@
 
     //* - telegramProcess
     void setTelegramTitle(void);
+    void sendNtpTelegramMessage(void);

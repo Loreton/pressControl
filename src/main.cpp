@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 20.27.56
+// Date .........: 24-08-2025 20.31.34
 //
 
 
@@ -86,7 +86,6 @@ void setup() {
 
 
 bool    first_run=true;
-bool    ntpSynchedMessage = false;
 
 
 // #############################################################
@@ -130,7 +129,7 @@ void loop() {
 
 
     if (lnTime.atMinuteModulo(2)) {
-        sendNtpTelegramMEssage();
+        sendNtpTelegramMessage();
     }
 
 
