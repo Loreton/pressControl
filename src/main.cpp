@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 20.10.15
+// Date .........: 24-08-2025 20.22.37
 //
 
 
@@ -129,7 +129,7 @@ void loop() {
 
 
 
-    if (lnTime.atMinuteModulo(30)) {
+    if (lnTime.atMinuteModulo(2)) {
         if (lnTime.isNtpSynched()) {
             if (!ntpSynchedMessage) {
                 myBot.startNewMessage("<b>PressControl\nTime: %s</b>\n", lnTime.nowTime());
