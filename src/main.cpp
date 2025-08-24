@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 20.22.37
+// Date .........: 24-08-2025 20.27.56
 //
 
 
@@ -130,17 +130,7 @@ void loop() {
 
 
     if (lnTime.atMinuteModulo(2)) {
-        if (lnTime.isNtpSynched()) {
-            if (!ntpSynchedMessage) {
-                myBot.startNewMessage("<b>PressControl\nTime: %s</b>\n", lnTime.nowTime());
-                myBot.addFormattedString("NTP: <b>Synched</b>\n");
-                myBot.send();
-                ntpSynchedMessage = true;
-            }
-        }
-        else {
-            ntpSynchedMessage = false;
-        }
+        sendNtpTelegramMEssage();
     }
 
 
