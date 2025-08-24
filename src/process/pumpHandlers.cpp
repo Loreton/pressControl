@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 23-08-2025 17.40.44
+// Date .........: 24-08-2025 10.18.28
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -10,6 +10,7 @@
 // ---------------------------------
 // --- lnLibrary headers files
 // ---------------------------------
+#define  LOG_MODULE_LEVEL LOG_DEFAULT_LEVEL
 #include <lnLogger_Class.h>
 #include <lnTime_Class.h>
 
@@ -78,7 +79,7 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
             case PRESSED_LEVEL_9:
 
                 LOG_INFO("%s beeping. duration: %lu ms", p->pinID(),  phase_beep_duration);
-                setTelegramTitle();
+                myBot.startNewMessage("<b>PressControl\nTime: %s</b>\n", lnTime.nowTime());
                 myBot.addFormattedString("pump level: <b>%d</b>\nduration ms: <b>%lu</b>\n", p->currentPressLevel(), phase_beep_duration);
                 myBot.send();
 

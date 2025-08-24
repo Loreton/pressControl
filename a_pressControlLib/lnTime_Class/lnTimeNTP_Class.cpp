@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 18-08-2025 18.28.25
+// Date .........: 24-08-2025 19.36.28
 */
 
 #include <Arduino.h> // ESP32Time.cpp
@@ -12,7 +12,7 @@
 // ---------------------------------
 // lnLibrary headers files
 // ---------------------------------
-// #define  NO_MODULE_LOG
+#define  LOG_MODULE_LEVEL LOG_DEFAULT_LEVEL
 #include <lnLogger_Class.h>
 // #include <lnTimer_Class.h>
 #include "lnTime_Class.h"
@@ -44,6 +44,9 @@ const char* sntp_status[] = {
 // Implementazione del metodo statico (non posso accedere agli attributi della calsse)
 void LnTime_Class::cbSyncTime(struct timeval *tv) {
     uint8_t status = sntp_get_sync_status();
+    // if (s_instance) {
+    //     s_instance->m_NTP_synched = (status != 0) ? true : false;
+    // }
     LOG_NOTIFY("NTP time synched: %d [%s]", status, sntp_status[status]);
 }
 
@@ -64,8 +67,8 @@ void LnTime_Class::cbSyncTime(struct timeval *tv) {
 // ##########################################
 // - aggiorna la variabile NTP_synched
 // ##########################################
-bool LnTime_Class::isNtpSynched() {
-    bool NTP_synched = true;
+bool LnTime_Class::checkNtpSynched() {
+    // bool NTP_synched = true;
     uint32_t elapsed = millis() - m_lastNtpAttempt;
 
     // Se non è sincronizzato, controlla se è passato il tempo di timeout
@@ -73,18 +76,18 @@ bool LnTime_Class::isNtpSynched() {
 
         // metodo 2
         struct tm timeinfo;
-        if (!getLocalTime(&timeinfo)) {
-            Serial.println("Failed to obtain time");
-            NTP_synched = false;
+        if (getLocalTime(&timeinfo)) {
+            Serial.println("Got the time from NTP");
+            m_NTP_synched = true;
         }
         else {
-            Serial.println("Got the time from NTP");
-            NTP_synched = true;
+            Serial.println("Failed to obtain time");
+            m_NTP_synched = false;
         }
 
 
     }
-    return NTP_synched;
+    return m_NTP_synched;
 }
 
 
@@ -118,6 +121,7 @@ void LnTime_Class::initNTP(void) {
         if (getLocalTime(&timeinfo)) {
             rtc.setTimeStruct(timeinfo);
             LOG_INFO("RTC synchronized with NTP time. (waiting for NTP sync status...)");
+            m_NTP_synched = true;
         }
     } else {
         LOG_WARN("WiFi not connected. Skipping NTP initialization.");
@@ -148,7 +152,7 @@ void LnTime_Class::update(void) {
         if (!m_ntp_active) {
             LOG_INFO("WiFi is connected. Starting NTP client...");
             initNTP(); // Imposta il fuso orario e i server NTP
-        } else if (! isNtpSynched() ) {
+        } else if (! checkNtpSynched() ) {
             LOG_ERROR("NTP sync failed or timed out. Restarting NTP client.");
             sntp_stop();
             initNTP(); // Avvia un nuovo tentativo

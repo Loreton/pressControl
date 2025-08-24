@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 17-08-2025 09.16.43
+// Date .........: 24-08-2025 09.55.38
 //
 
 
@@ -21,6 +21,7 @@
 
             // Metodi per la preparazione del messaggio
             void clearMessage(const char* title=nullptr);
+            void startNewMessage(const char* format, ...);
             void addLine(const char* text);
             void addString(const char* text);
             void addFormattedString(const char* format, ...);

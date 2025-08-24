@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 23-08-2025 17.58.16
+// Date .........: 24-08-2025 16.09.33
 //
 
 #pragma once
@@ -37,7 +37,10 @@ class PassiveBuzzer_Class {
         uint8_t  m_on = HIGH;         // Livello che attiva il relè (HIGH o LOW)
         uint8_t  m_off = LOW;         // Livello che attiva il relè (HIGH o LOW)
 
-        int      m_channel = 0;
+        // The ESP32 has 16 channels which can generate 16 independent waveforms
+        // We'll just choose PWM channel 0 here
+        int      m_tonePwmChannel = 0;
+        // int      m_channel = 0;
         int      m_resolutionBits = 10; // resolution bits=10
         int      m_currentFrequency = 0;
 

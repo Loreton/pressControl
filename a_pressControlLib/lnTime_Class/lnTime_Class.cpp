@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 23-08-2025 17.22.30
+// Date .........: 24-08-2025 19.36.16
 */
 
 #include <Arduino.h> // ESP32Time.cpp
@@ -12,17 +12,29 @@
 // ---------------------------------
 // lnLibrary headers files
 // ---------------------------------
-// #define  NO_MODULE_LOG
+#define  LOG_MODULE_LEVEL LOG_DEFAULT_LEVEL
 #include <lnLogger_Class.h>
 #include <lnTimer_Class.h>
 // #include <noLogger.h>
 #include "lnTime_Class.h"
 
 
+// ----------------------------------------------------
+// Classe LnTime_Class
+// ----------------------------------------------------
 
 
 
-// extern MillisTimer ntpTimer;
+// --- da usare nei metodi statici....
+// LnTime_Class* LnTime_Class::s_instance = nullptr;
+
+// // Costruttore
+// LnTime_Class::LnTime_Class() {
+//     s_instance = this;
+// };
+
+
+
 
 // ==================   TIME functions ==========================
 

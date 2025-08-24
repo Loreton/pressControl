@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 23-08-2025 17.58.51
+// Date .........: 24-08-2025 15.57.20
 // ref:
 // https://docs.espressif.com/projects/arduino-esp32/en/latest/api/wifi.html
 //
@@ -24,7 +24,7 @@
 // --- Esempio di utilizzo ---
 
 // Frequenze per una scala Do Maggiore (approssimate)
-int C_major_scale[] = {
+uint8_t C_major_scale[] = {
     262, // C4
     294, // D4
     330, // E4
@@ -34,7 +34,7 @@ int C_major_scale[] = {
     494, // B4
     523  // C5
 };
-int num_notes_C_major = sizeof(C_major_scale) / sizeof(C_major_scale[0]);
+uint8_t num_notes_C_major = sizeof(C_major_scale) / sizeof(C_major_scale[0]);
 
 // Crea un'istanza del buzzer
 #define LEDC_CHANNEL 0
@@ -55,9 +55,9 @@ void loop() {
     // Chiamare update() per ogni istanza del buzzer nel loop principale
     passiveBuzzer.update();
 
-    static unsigned long lastActionTime = 0;
-    static int step = 0;
-    const unsigned long PAUSE_BETWEEN_ACTIONS = 2000; // 2 secondi di pausa tra un'azione e l'altra
+    static uint32_t lastActionTime = 0UL;
+    static uint8_t step = 0;
+    const uint32_t PAUSE_BETWEEN_ACTIONS = 2000UL; // 2 secondi di pausa tra un'azione e l'altra
 
     // Esegue un'azione solo se il buzzer non sta suonando (né tono singolo né scala)
     // e il tempo di pausa è trascorso

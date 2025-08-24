@@ -1,11 +1,10 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 09-08-2025 08.43.09
+// Date .........: 24-08-2025 07.48.44
 //
 
 
-#ifdef __ln_MODULE_DEBUG_TEST__
-// #include "lnLogger_Struct.h"
+#define  LOG_MODULE_LEVEL LOG_DEFAULT_LEVEL
 #include "lnLogger_Class.h"
 
 #include "lnTime_Class.h"

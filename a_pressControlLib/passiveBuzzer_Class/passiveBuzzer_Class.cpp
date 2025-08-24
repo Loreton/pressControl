@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 23-08-2025 17.57.11
+// Date .........: 24-08-2025 16.09.01
 //
 
 #include <Arduino.h> // in testa anche per le definizioni dei type
@@ -28,7 +28,7 @@ void PassiveBuzzer_Class::init(const char* pin_name, int buzzerPin, uint8_t acti
     m_on               = m_activeLevel;
     m_off              = !m_activeLevel;
 
-    m_channel          = ledcChannel;
+    m_tonePwmChannel   = ledcChannel;
     m_resolutionBits   = resBits;
     m_currentFrequency = 0; // Inizialmente nessuna frequenza
 
@@ -64,21 +64,21 @@ void PassiveBuzzer_Class::init(const char* pin_name, int buzzerPin, uint8_t acti
 // # Metodo per inizializzare il buzzer
 // ###############################################################
 void PassiveBuzzer_Class::begin() {
-    unsigned long actualFreq = ledcSetup(m_channel, 1, m_resolutionBits); // Frequenza iniziale > 0 altrimenti da errore
+    uint32_t actualFreq = ledcSetup(m_tonePwmChannel, 1, m_resolutionBits); // Frequenza iniziale > 0 altrimenti da errore
 
     if (actualFreq == 0) {
-        LOG_ERROR("%s [ERRORE] ledcSetup() FALLITO per canale %d. Controlla pin, canale e risoluzione.", m_channel);
+        LOG_ERROR("%s [ERRORE] ledcSetup() FALLITO per canale %d. Controlla pin, canale e risoluzione.", m_tonePwmChannel);
         // Puoi aggiungere qui una logica per gestire l'errore, es. bloccare l'esecuzione
         while (true); // Ferma il programma in caso di errore critico
     }
     else {
         // Inizializza il canale con una frequenza di base (può essere 0 o una bassa frequenza)
         // e la risoluzione. La frequenza verrà poi impostata da playTone/playScale.
-        ledcAttachPin(m_pin, m_channel);
+        ledcAttachPin(m_pin, m_tonePwmChannel);
         // ledcDetachPin(pin_nr); // se dovesse servire
 
         myNoTone(); // Assicurati che sia spento all'inizio
-        LOG_TRACE("%s Channel: %d - Risoluzione: %d bit inizializzato.", m_pinID, m_channel, m_resolutionBits);
+        LOG_TRACE("%s Channel: %d - Risoluzione: %d bit inizializzato.", m_pinID, m_tonePwmChannel, m_resolutionBits);
     }
 }
 
@@ -96,8 +96,8 @@ void PassiveBuzzer_Class::playToneDutyCycle(int frequency, float dutyCyclePercen
     // Imposta la nuova frequenza e poi il duty cycle.
     // ledcSetup ricarica la frequenza e la risoluzione, ripartendo da capo.
     // E' il modo più affidabile per cambiare dinamicamente frequenza e duty cycle.
-    ledcSetup(m_channel, frequency, m_resolutionBits);
-    ledcWrite(m_channel, dutyValue);
+    ledcSetup(m_tonePwmChannel, frequency, m_resolutionBits);
+    ledcWrite(m_tonePwmChannel, dutyValue);
 
     m_currentFrequency = frequency; // Aggiorna la frequenza corrente
     m_toneStartTime = millis();
@@ -114,7 +114,7 @@ void PassiveBuzzer_Class::playFixedTone(int frequency, uint32_t duration) {
         return;
     }
 
-    ledcWriteTone(m_channel, frequency); // Imposta frequenza, duty cycle 50% automatico
+    ledcWriteTone(m_tonePwmChannel, frequency); // esp32-hal-ledc.h double ledcWriteTone(uint8_t chan, double freq)
     m_currentFrequency = frequency; // Aggiorna la frequenza corrente
 
     m_toneStartTime = millis();
@@ -149,17 +149,17 @@ void PassiveBuzzer_Class::playScale(int noteFrequencies[], int numberOfNotes, ui
     }
 
     LOG_INFO("%s Avvio scala %s", m_pinID, (m_scaleDirectionUp ? "Ascendente" : "Discendente"));
-    // ledcAttachPin(m_pin, m_channel);
+    // ledcAttachPin(m_pin, m_tonePwmChannel);
 
     // Inizia a suonare la prima nota
-    ledcWriteTone(m_channel, m_scaleNotes[m_currentNoteIndex]);
+    ledcWriteTone(m_tonePwmChannel, m_scaleNotes[m_currentNoteIndex]);
     m_currentFrequency = m_scaleNotes[m_currentNoteIndex]; // Aggiorna la frequenza corrente
     m_noteStartTime = millis();
 }
 
 // Metodo per fermare qualsiasi suono (singolo o scala)
 void PassiveBuzzer_Class::myNoTone() {
-    ledcWrite(m_channel, 0); // Imposta il duty cycle a 0 per spegnere completamente
+    ledcWrite(m_tonePwmChannel, 0); // Imposta il duty cycle a 0 per spegnere completamente
     m_currentFrequency = 0;  // Resetta la frequenza corrente
     m_isPlaying = false;
     m_isPlayingScale = false;
@@ -189,10 +189,10 @@ void PassiveBuzzer_Class::update() {
                 LOG_INFO("%s Scala terminata.", m_pinID);
             }
             else {
-                // ledcAttachPin(m_pin, m_channel);
+                // ledcAttachPin(m_pin, m_tonePwmChannel);
 
                 // Suona la prossima nota
-                ledcWriteTone(m_channel, m_scaleNotes[m_currentNoteIndex]);
+                ledcWriteTone(m_tonePwmChannel, m_scaleNotes[m_currentNoteIndex]);
                 m_currentFrequency = m_scaleNotes[m_currentNoteIndex]; // Aggiorna la frequenza corrente
                 m_noteStartTime = millis(); // Resetta il tempo di inizio per la nuova nota
                 LOG_DEBUG("%s nota %d", m_pinID, m_scaleNotes[m_currentNoteIndex]);

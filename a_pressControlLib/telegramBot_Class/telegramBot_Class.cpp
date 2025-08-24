@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 17-08-2025 09.18.35
+// Date .........: 24-08-2025 09.57.17
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -44,6 +44,21 @@ void TelegramBot_Class::clearMessage(const char* title) {
     }
 }
 
+// #######################################################################
+// # aggiunge una linea in formato HTML quindi aggiunge uno %0a finale
+// # forse posso eliminarla mettendo lo '\n' nella addString()
+// #######################################################################
+void TelegramBot_Class::startNewMessage(const char* format, ...) {
+    m_messageBuffer[0] = '\0';
+    if (strlen(m_messageBuffer) < MAX_MESSAGE_SIZE) {
+        char tempBuffer[MAX_MESSAGE_SIZE - strlen(m_messageBuffer)];
+        va_list args;
+        va_start(args, format);
+        vsnprintf(tempBuffer, sizeof(tempBuffer), format, args);
+        va_end(args);
+        strcat(m_messageBuffer, tempBuffer);
+    }
+}
 
 
 // #######################################################################

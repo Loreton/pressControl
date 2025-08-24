@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-08-2025 17.37.09
+// Date .........: 24-08-2025 11.04.11
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -25,11 +25,11 @@
 void wifiConnectedCB(arduino_event_id_t event) {
     if (event == ARDUINO_EVENT_WIFI_STA_GOT_IP) {
         LOG_NOTIFY("CALLBACK_WIFI - CONNECTED");
-        lnTime.initNTP();
+        // lnTime.initNTP();
     }
     if (event == ARDUINO_EVENT_WIFI_STA_DISCONNECTED) {
         LOG_ERROR("CALLBACK_WIFI - DIS-CONNECTED");
-        lnTime.setNtpInactive();
+        // lnTime.setNtpInactive();
     }
 }
 

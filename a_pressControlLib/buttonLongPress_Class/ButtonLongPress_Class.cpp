@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 17-08-2025 14.43.14
+// Date .........: 24-08-2025 07.48.18
 //
 
 #include <Arduino.h>
@@ -9,7 +9,7 @@
 // ---------------------------------
 // lnLibrary headers files
 // ---------------------------------
-// #define  NO_MODULE_LOG
+#define  LOG_MODULE_LEVEL LOG_DEFAULT_LEVEL
 #include <lnLogger_Class.h>
 #include <lnGlobalVars.h> // Assicurati che questi siano disponibili
 #include <lnTime_Class.h>
