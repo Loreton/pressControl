@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 07.48.18
+// Date .........: 24-08-2025 20.13.45
 //
 
 #include <Arduino.h>
@@ -12,12 +12,12 @@
 #define  LOG_MODULE_LEVEL LOG_DEFAULT_LEVEL
 #include <lnLogger_Class.h>
 #include <lnGlobalVars.h> // Assicurati che questi siano disponibili
-#include <lnTime_Class.h>
 #include <lnSerialRead.h> // Assicurati che questi siano disponibili
 #include <lnSetPinID.h>   // Assicurati che questi siano disponibili
+#include <lnTime_Class.h>
+extern LnTime_Class lnTime;
+
 #include "ButtonLongPress_Class.h" // Includi il nuovo header della classe
-
-
 
 // Costruttore della classe.
 ButtonLongPress_Class::ButtonLongPress_Class(void) {};

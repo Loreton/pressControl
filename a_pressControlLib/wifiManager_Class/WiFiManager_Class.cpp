@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 19.49.04
+// Date .........: 24-08-2025 20.05.07
 //
 
 
@@ -221,7 +221,7 @@ void WiFiManager_Class::update() {
 // #####################################################################
 // Controlla se è trascorso troppo tempo senza connessione e riavvia l'ESP32
 // #####################################################################
-void WiFiManager_Class::checkOutOfService() {
+// void WiFiManager_Class::checkOutOfService() {
     // if (millis() - m_disconnectionStartTime > m_maxWifiTimeout) {
     // if (m_disconnectedTimer.hasExpired()) {
     //     LOG_ERROR("disconnection time expired %lu. restarting....", m_maxWifiTimeout);
@@ -232,7 +232,7 @@ void WiFiManager_Class::checkOutOfService() {
     //     restart();
     //     // ESP.restart();
     // }
-}
+// }
 
 
 // #####################################################################

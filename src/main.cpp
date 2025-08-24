@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 10.51.33
+// Date .........: 24-08-2025 20.10.15
 //
 
 
@@ -29,8 +29,8 @@
 #include "wifiProcess.h"
 
 
-
-
+// --- creazione istanze classi....
+// LnTime_Class lnTime;
 
 
 uint8_t tgMsgLen=0;

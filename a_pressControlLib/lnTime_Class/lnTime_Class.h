@@ -1,9 +1,9 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 19.33.14
+// Date .........: 24-08-2025 20.09.28
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 19.33.14
+// Date .........: 24-08-2025 20.09.28
 */
 
 #pragma once
@@ -95,7 +95,7 @@
                     bool checkNtpSynched(void);
             static  void cbSyncTime(struct timeval *tv) ;
 
-            static LnTime_Class* s_instance; // Istanza statica per la gestione degli eventi
+            // static LnTime_Class* s_instance; // Istanza statica per la gestione degli eventi
 
 
     };
@@ -114,4 +114,14 @@
     Le dichiarazioni di printLocalTime e print_rtc_time sono state spostate fuori dalla classe,
     ma all'interno del file .h per renderle visibili ad altri file che includono LnTime_Class.h.
 */
-extern LnTime_Class lnTime;
+
+
+
+
+/*
+    #ifdef __I_AM_MAIN_CPP__
+        LnTime_Class lnTime;
+    #else
+        extern LnTime_Class lnTime;
+    #endif
+*/

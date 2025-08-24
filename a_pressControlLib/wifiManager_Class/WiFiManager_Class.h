@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 19.34.21
+// Date .........: 24-08-2025 20.04.45
 //
 
 
@@ -61,7 +61,7 @@
             void update();
             void processScanResults(int n);
             bool isConnected(void) {return WiFi.status() == WL_CONNECTED; };
-            // void restartScanning(void) { connectToBestNetwork(); };
+
             void restart(void);
             bool disconnect(void);
             uint32_t disconnectedElapsed(void) const { return m_disconnectionStartTime; };
@@ -72,26 +72,8 @@
 
         private:
             // Scansiona le reti e si connette a quella migliore (RSSI più alto)
-            void checkOutOfService();
+            // void checkOutOfService();
             void connectToSSID(int8_t networkIndex=-1);
             static void handleEvent(arduino_event_id_t event);
     };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

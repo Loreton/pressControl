@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 23-08-2025 17.39.36
+// Date .........: 24-08-2025 20.09.49
 //
 
 
@@ -18,6 +18,7 @@
     #include    <relayManager_Class.h>
     #include    <telegramBot_Class.h>
     #include    <WiFiManager_Class.h>
+    #include    <lnTime_Class.h>
 
     // ---  TEST
     #if ln_RELEASE_TYPE == ln_DEVEL
@@ -89,6 +90,8 @@
 
         // Crea un'istanza della classe WiFiManager
         WiFiManager_Class myWiFiManager;
+        LnTime_Class lnTime;
+
 
 
 
@@ -120,6 +123,7 @@
 
         extern TelegramBot_Class myBot;
         extern WiFiManager_Class myWiFiManager;
+        extern LnTime_Class lnTime;
 
     #endif
 
