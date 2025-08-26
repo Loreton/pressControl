@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 20.05.07
+// Date .........: 26-08-2025 19.41.35
 //
 
 
@@ -11,9 +11,8 @@
 // ---------------------------------
 #define  LOG_MODULE_LEVEL LOG_LEVEL_INFO
 #include <lnLogger_Class.h>
-// #undef  LOG_MODULE_NOTIFY
-// #include <lnTimer_Class.h>
 
+// #include "wifiManager_ssid_credentials.h" // ssid definition networkd
 #include "WiFiManager_Class.h"
 
 
@@ -98,33 +97,23 @@ bool WiFiManager_Class::disconnect() {
 // Se non siamo connessi o è il momento di scansionare nuovamente, avvia la scansione
 // #####################################################################
 void WiFiManager_Class::update() {
-    // if (millis() - m_disconnectionStartTime > m_maxWifiTimeout) {
-    //     LOG_ERROR("WiFi - too long time (%lu ms) disconnected", m_maxWifiTimeout);
-    //     m_scanning = false;
-    // }
 
-    uint32_t scanTime = millis() - m_lastScanTime;
+    m_scanInterval = ( WiFi.status() == WL_CONNECTED) ? 10*60*1000 : 1*60*1000;  // velocizziamo l'intervallo se disconnessi
 
-    // if ((WiFi.status() != WL_CONNECTED || (millis() - m_lastScanTime > m_scanInterval)) && !m_scanning) {
-    if ( (WiFi.status() != WL_CONNECTED || scanTime > m_scanInterval ) && !m_scanning) {
-        // LOG_NOTIFY("Tempo di scansione periodica o connessione persa. Avvio scansione...");
-        if (WiFi.status() != WL_CONNECTED)   {LOG_ERROR("WiFi - connessione non attiva."); }
-        if (scanTime > m_scanInterval)       {LOG_NOTIFY("WiFi - Tempo di scansione periodica (%lu ms) scaduto", m_scanInterval); }
-        connectToBestNetwork();
-        m_lastScanTime = millis();
+    uint32_t scanElapsed = millis() - m_lastScanTime;
+    if ( (WiFi.status() != WL_CONNECTED || scanElapsed > m_scanInterval ) && !m_scanning) {
+        if ( scanElapsed > m_scanInterval) {
+            if (WiFi.status() != WL_CONNECTED)   {LOG_ERROR("WiFi - connessione non attiva."); }
+            if (scanElapsed > m_scanInterval)    {LOG_NOTIFY("WiFi - Tempo di scansione periodica (%lu ms) scaduto", m_scanInterval); }
+            connectToBestNetwork();
+            m_lastScanTime = millis();
+        }
+        else {
+            if (scanElapsed % 5000UL < 100) {
+                LOG_NOTIFY("scanElapsed/m_scanInterval is not expired: (%lu/%lu)", scanElapsed,  m_scanInterval);
+            }
+        }
     }
-
-    // if (!m_scanning) {
-    //     if ( (WiFi.status() != WL_CONNECTED) ) {
-    //         LOG_ERROR("WiFi - connessione persa");
-    //     }
-    //     if (scanTime > m_scanInterval) {
-    //         LOG_NOTIFY("WiFi - Tempo di scansione periodica (%lu ms) scaduto", m_scanInterval);
-    //     }
-    //     // m_disconnectionStartTime = millis();
-    //     connectToBestNetwork();
-    //     m_lastScanTime = millis();
-    // }
 
 
     // Se la scansione è in corso, controlla se è terminata
@@ -136,45 +125,30 @@ void WiFiManager_Class::update() {
         }
     }
 
-    // else {// if (m_scanning) {
-    //     m_disconnectionStartTime = millis(); // aggiorna continuamente
-    //     int scanResult = WiFi.scanComplete();
-    //     if (scanResult >= 0) { // La scansione è completata
-    //         processScanResults(scanResult);
-    //     }
-    // }
 }
-
-
-
-
-
-
 
 /*
 // #####################################################################
 // Funzione da chiamare nel loop principale per monitorare la connessione
+// Se non siamo connessi o è il momento di scansionare nuovamente, avvia la scansione
 // #####################################################################
-void WiFiManager_Class::update() {
-    // Se non siamo connessi o è il momento di scansionare nuovamente, avvia la scansione
-    // if ((WiFi.status() != WL_CONNECTED || (millis() - m_lastScanTime > m_scanInterval)) && !m_scanning) {
-    //     LOG_NOTIFY("Tempo di scansione periodica o connessione persa. Avvio scansione...");
-    //     connectToBestNetwork();
-    //     m_lastScanTime = millis();
-    // }
+void WiFiManager_Class::update_OK() {
 
-
-
-    bool wifi_action = ( (WiFi.status() != WL_CONNECTED || (millis() - m_lastScanTime > m_scanInterval)) && !m_scanning);
-    if (wifi_action) {
-        if ( (WiFi.status() != WL_CONNECTED) ) {
-            LOG_ERROR("WiFi - connessione persa. Avvio scansione...");
-        } else {
-            LOG_NOTIFY("WiFi - Tempo di scansione periodica (%lu ms) scaduto. Avvio scansione...", m_scanInterval);
+    uint32_t scanElapsed = millis() - m_lastScanTime;
+    if ( (WiFi.status() != WL_CONNECTED || scanElapsed > m_scanInterval ) && !m_scanning) {
+        if ( scanElapsed > m_scanInterval) {
+            if (WiFi.status() != WL_CONNECTED)   {LOG_ERROR("WiFi - connessione non attiva."); }
+            if (scanElapsed > m_scanInterval)    {LOG_NOTIFY("WiFi - Tempo di scansione periodica (%lu ms) scaduto", m_scanInterval); }
+            connectToBestNetwork();
+            m_lastScanTime = millis();
         }
-        connectToBestNetwork();
-        m_lastScanTime = millis();
+        else {
+            if (scanElapsed % 5000UL < 100) {
+                LOG_NOTIFY("scanElapsed/m_scanInterval is not expired: (%lu/%lu)", scanElapsed,  m_scanInterval);
+            }
+        }
     }
+
 
     // Se la scansione è in corso, controlla se è terminata
     if (m_scanning) {
@@ -184,39 +158,14 @@ void WiFiManager_Class::update() {
             processScanResults(scanResult);
         }
     }
+
 }
 */
 
-/*// #####################################################################
-// Funzione da chiamare nel loop principale per monitorare la connessione
-// #####################################################################
-void WiFiManager_Class::update() {
-    // Se non siamo connessi o è il momento di scansionare nuovamente, avvia la scansione
-    // if ((WiFi.status() != WL_CONNECTED || (millis() - m_lastScanTime > m_scanInterval)) && !m_scanning) {
-    //     LOG_NOTIFY("Tempo di scansione periodica o connessione persa. Avvio scansione...");
-    //     connectToBestNetwork();
-    //     m_lastScanTime = millis();
-    // }
 
-    // Se la scansione è in corso, controlla se è terminata
-    if (m_scanning) {
-        int scanResult = WiFi.scanComplete();
-        if (scanResult >= 0) { // La scansione è completata
-            m_scanning = false;
-            processScanResults(scanResult);
-        }
-    }
-    else {
-        if (WiFi.status() != WL_CONNECTED && !m_disconnectedMsg) {
-            LOG_ERROR("WiFi NOT connected.");
-            m_disconnectedMsg = true;
-        }
 
-    }
 
-}
 
-*/
 
 // #####################################################################
 // Controlla se è trascorso troppo tempo senza connessione e riavvia l'ESP32
@@ -316,6 +265,26 @@ void WiFiManager_Class::connectToSSID(int8_t networkIndex) {
         }
     }
 
+}
+
+
+void WiFiManager_Class::showCurrentConnection() {
+// #if LOG_MODULE_LEVEL >= LOG_LEVEL_SPECIAL
+    if (WiFi.status() == WL_CONNECTED) {
+        LOG_SPEC("Connected to:     %s - %s.", WiFi.SSID(), WiFi.BSSIDstr().c_str());
+        LOG_SPEC("\tRSSI:           %4ld", WiFi.RSSI());
+        LOG_SPEC("\tCHANNEL:        %2ld", WiFi.channel());
+        LOG_SPEC("\tIP:             %s",   WiFi.localIP().toString().c_str());
+    }
+    else {
+        LOG_ERROR("WiFi is not connected!");
+    }
+    uint32_t scanElapsed = millis() - m_lastScanTime;
+    LOG_SPEC("\tScan interval:  %lu", m_scanInterval);
+    LOG_SPEC("\tlast scanTime:  %lu", m_lastScanTime);
+    LOG_SPEC("\tscanElapsed:    %lu", scanElapsed);
+    LOG_SPEC("\tis scanning:    %d", m_scanning);
+// #endif
 }
 
 

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 20.04.45
+// Date .........: 26-08-2025 19.41.15
 //
 
 
@@ -11,10 +11,12 @@
 
 
     // ---------------------------------
-    // lnLibrary headers files
+    // ssid definition networkd
     // ---------------------------------
-    // #include "lnTimer_Class.h"
-    #include "wifiManager_ssid_credentials.h"
+    #include "wifiManager_ssid_credentials.h" // ssid definition networkd
+
+
+
 
 
     // CallBack per gestire connessione e disconnessione
@@ -39,7 +41,8 @@
             // uint32_t            m_disconnectedTime = 1*60*1000UL; // tempo di disconnessione.... 1 minuto
 
                 // --- Intervallo di scansione della rete (in ms), qui 50 minuti
-            const uint32_t      m_scanInterval = 5*60*1000;
+            // const uint32_t      m_scanInterval = 1*60*1000;
+            uint32_t            m_scanInterval = 10*60*1000;
             uint32_t            m_lastScanTime = 0;
             bool                m_scanning;
             bool                m_disconnectedMsg = false;
@@ -62,6 +65,7 @@
             void processScanResults(int n);
             bool isConnected(void) {return WiFi.status() == WL_CONNECTED; };
 
+            void showCurrentConnection(void);
             void restart(void);
             bool disconnect(void);
             uint32_t disconnectedElapsed(void) const { return m_disconnectionStartTime; };

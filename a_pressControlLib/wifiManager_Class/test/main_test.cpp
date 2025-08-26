@@ -1,35 +1,36 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 11.04.11
+// Date .........: 26-08-2025 18.27.14
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
 #include <WiFi.h>
 
+#define __I_AM_MAIN_CPP__
+
 #include "lnLogger_Class.h"
 #include "lnSerialRead.h" // waitForEnter()
-#include "lnTime_Class.h"
+#include "LnTime_Class.h"
 
-#define __LOAD_SSIDS_CPP__
-    #include "WiFiManager_Class.h"
-    // #include "wifiManager_ssid_credentials.h"
-#undef __LOAD_SSIDS_CPP__
-// #include "WiFiManager_Class.h"
+#include "WiFiManager_Class.h"
 
+
+
+// Crea un'istanza della classe WiFiManager
+WiFiManager_Class myWiFiManager;
+LnTime_Class LnTime;
 
 // ----------------------------------------------------
 // callBack on wifi events
 // ----------------------------------------------------
-
-
 void wifiConnectedCB(arduino_event_id_t event) {
     if (event == ARDUINO_EVENT_WIFI_STA_GOT_IP) {
         LOG_NOTIFY("CALLBACK_WIFI - CONNECTED");
-        // lnTime.initNTP();
+        // LnTime.initNTP();
     }
     if (event == ARDUINO_EVENT_WIFI_STA_DISCONNECTED) {
         LOG_ERROR("CALLBACK_WIFI - DIS-CONNECTED");
-        // lnTime.setNtpInactive();
+        // LnTime.setNtpInactive();
     }
 }
 
@@ -41,13 +42,13 @@ void wifiConnectedCB(arduino_event_id_t event) {
 //         tgMsgLen = snprintf(tgMessageBuffer, TG_MSG_MAX_SIZE, "WIFI - CONNECTED");
 //         LOG_NOTIFY(tgMessageBuffer);
 //         sendMessageToTelegram(tgMessageBuffer);
-//         lnTime.initNTP();
+//         LnTime.initNTP();
 //     }
 //     if (event == ARDUINO_EVENT_WIFI_STA_DISCONNECTED) {
 //         tgMsgLen = snprintf(tgMessageBuffer, TG_MSG_MAX_SIZE, "WIFI - DISCONNECTED");
 //         LOG_ERROR(tgMessageBuffer);
 //         sendMessageToTelegram(tgMessageBuffer);
-//         lnTime.setNtpInactive();
+//         LnTime.setNtpInactive();
 
 //     }
 // }
@@ -65,21 +66,17 @@ bool isElapsed() {
 }
 
 
-// Crea un'istanza della classe WiFiManager
-// WiFiManager_Class myWiFiManager(myNetworks, sizeof(myNetworks) / sizeof(myNetworks[0]));
-WiFiManager_Class myWiFiManager;
-// LnTime_Class lnTime;
 
 void setup() {
     Serial.begin(115200);
     delay(1000);
     lnLog.init();
     // Inizializza la classe
-    myWiFiManager.init(myNetworks, sizeof(myNetworks) / sizeof(myNetworks[0]));
-    // myWiFiManager.init(myNetworks, myNetworksCount);
+    myWiFiManager.init(loretoNetworks, sizeof(loretoNetworks) / sizeof(loretoNetworks[0]));
+    // myWiFiManager.init(loretoNetworks, loretoNetworksCount);
     myWiFiManager.setConnectCallback(wifiConnectedCB);
     delay(5000); // attendiamo un po...
-    lnTime.setup();
+    LnTime.setup();
 }
 
 
@@ -91,7 +88,7 @@ void loop() {
     // static uint32_t startedMillis;
     char nowTimeBUFFER[16];
     // uint32_t now;
-    timeinfo = lnTime.getTimeStruct();
+    timeinfo = LnTime.getTimeStruct();
     curr_second = timeinfo.tm_sec;
     // LOG_SPEC("curr_second: %d", curr_second);
 
@@ -103,31 +100,27 @@ void loop() {
 
     // Chiama il metodo loop() della classe per la gestione continua
     myWiFiManager.update();
-    lnTime.update();
+    LnTime.update();
 
 
 
 
     // now = millis() - startedMillis;
     // if (curr_second%5 == 0 && curr_second != last_second) { // ogni 5 secondi
-    if (lnTime.everyXseconds(5)) { // ogni 5 secondi
+    if (LnTime.atSecondModulo(15)) { // ogni 5 secondi
         LOG_SPEC("curr_second: %d", curr_second);
         // last_second = curr_second;
         LOG_NOTIFY("-----------");
-        LOG_INFO("nowTime:                %s",         lnTime.nowTime());
-        LOG_INFO("nowTime:         0      %s",         lnTime.timeStamp(nowTimeBUFFER, sizeof(nowTimeBUFFER)) );
-        LOG_INFO("nowTime:         0      %s",         lnTime.timeStamp(nowTimeBUFFER, sizeof(nowTimeBUFFER), 0, true) );
+        LOG_INFO("nowTime:                %s",         LnTime.nowTime());
+        LOG_INFO("nowTime:         0      %s",         LnTime.timeStamp(nowTimeBUFFER, sizeof(nowTimeBUFFER)) );
+        LOG_INFO("nowTime:         0      %s",         LnTime.timeStamp(nowTimeBUFFER, sizeof(nowTimeBUFFER), 0, true) );
 
-        LOG_INFO("msecToTimeStamp: millis %s",         lnTime.timeStamp(nowTimeBUFFER, sizeof(nowTimeBUFFER), millis(), true));
+        LOG_INFO("msecToTimeStamp: millis %s",         LnTime.timeStamp(nowTimeBUFFER, sizeof(nowTimeBUFFER), millis(), true));
 
-        LOG_INFO("msecToTimeStamp: mymsec %s",        lnTime.timeStamp(nowTimeBUFFER, sizeof(nowTimeBUFFER), lnTime.millisecOfDay(), true));
+        LOG_INFO("msecToTimeStamp: mymsec %s",        LnTime.timeStamp(nowTimeBUFFER, sizeof(nowTimeBUFFER), LnTime.millisecOfDay(), true));
         LOG_NOTIFY("------------");
-        // uint32_t epoch = lnTime.getEpoch();
-        // LOG_SPEC(" epoch ms  %lu",         epoch);
-        // uint32_t seconds = lnTime.getSecond();
-        // LOG_SPEC(" seconds  %lu",         epoch);
-        // LOG_NOTIFY("------------");
 
+        myWiFiManager.showCurrentConnection();
     }
 
     delay(50);
