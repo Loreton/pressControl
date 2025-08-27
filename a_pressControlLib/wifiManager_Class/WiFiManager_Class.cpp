@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 26-08-2025 19.41.35
+// Date .........: 27-08-2025 12.32.54
 //
 
 
@@ -197,6 +197,17 @@ void WiFiManager_Class::connectToBestNetwork() {
 
 
 
+//##############################################################
+// check if ssid is in the configured list
+//##############################################################
+// int8_t isInMyList(const char *ssid, ssid_t *ptr)  {
+//     for (int i = 0; i < SSID_ELEMENTS; i++, ptr++) {
+//         if (strcmp(ssid, ptr->ssid) == 0) {
+//             return i; // matched
+//         }
+//     }
+//     return -1;
+// }
 
 
 // #####################################################################
@@ -212,7 +223,7 @@ void WiFiManager_Class::processScanResults(int networks) {
     }
 
     LOG_INFO("reti trovate: %d", networks);
-
+/*
     // Cerca la rete migliore tra quelle configurate
     for (int i = 0; i < networks; ++i) {
         LOG_INFO("  %d: SSID: %-12s BSSID: %s (%d dBm)", i + 1, WiFi.SSID(i).c_str(), WiFi.BSSIDstr(i).c_str(), WiFi.RSSI(i));
@@ -227,6 +238,24 @@ void WiFiManager_Class::processScanResults(int networks) {
             }
         }
     }
+*/
+    // Cerca la rete migliore tra quelle configurate
+    for (int i = 0; i < networks; ++i) {
+        LOG_INFO("  %d: SSID: %-12s BSSID: %s (%d dBm)", i + 1, WiFi.SSID(i).c_str(), WiFi.BSSIDstr(i).c_str(), WiFi.RSSI(i));
+        for (int j = 0; j < m_networkCount; ++j) {
+            if (strcmp(WiFi.SSID(i).c_str(), m_networks[j].ssid) == 0) {
+                if (WiFi.RSSI(i) > bestRSSI) {
+                    bestRSSI = WiFi.RSSI(i);
+                    bestNetworkIndex = j;
+                }
+                break;
+            }
+        }
+    }
+
+
+
+
     // --- non cambiamo se il gap di livello è inferiore a 10
     int8_t currRSSI = WiFi.RSSI();
     if ( (currRSSI == 0) || (bestRSSI - currRSSI >= 10) ) {
