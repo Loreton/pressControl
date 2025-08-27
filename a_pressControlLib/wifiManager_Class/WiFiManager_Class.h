@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 27-08-2025 14.23.51
+// Date .........: 27-08-2025 19.25.27
 //
 
 
@@ -47,7 +47,9 @@
             uint32_t            m_scanIntervalWhenNotConnected = 1*60*1000UL;
             uint32_t            m_lastScanTime = 0;
             bool                m_scanning;
+            bool                m_starting = true;
             bool                m_disconnectedMsg = false;
+            uint8_t             m_eventCounter = 0;
 
             ConnectCallback     m_onConnectCallback = nullptr;
             // MillisTimer         m_disconnectedTimer;
@@ -61,6 +63,10 @@
 
             // Inizializza il WiFi in modalità Station e si connette
             void init(Network* creds, int8_t count);
+            void start(void);
+            void restart(void);
+            void disconnect(void);
+            uint32_t disconnectedElapsed(void) const { return m_disconnectionStartTime; };
 
             // Funzione da chiamare nel loop principale per monitorare la connessione
             void update();
@@ -69,9 +75,6 @@
 
             void setScanInterval(uint16_t whenConnected=10*60, uint16_t whenNotConnected=1*60); // seconds
             void showCurrentConnection(void);
-            void restart(void);
-            bool disconnect(void);
-            uint32_t disconnectedElapsed(void) const { return m_disconnectionStartTime; };
 
             // Imposta la funzione di callback da chiamare in caso di connessione
             void setConnectCallback(ConnectCallback callback) { m_onConnectCallback = callback; }

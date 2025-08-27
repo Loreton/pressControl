@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 27-08-2025 14.28.21
+// Date .........: 27-08-2025 20.20.46
 //
 
 
@@ -9,7 +9,7 @@
 // ---------------------------------
 // lnLibrary headers files
 // ---------------------------------
-#define  LOG_MODULE_LEVEL LOG_LEVEL_INFO
+#define  LOG_MODULE_LEVEL LOG_LEVEL_TRACE
 #include <lnLogger_Class.h>
 
 // #include "wifiManager_ssid_credentials.h" // ssid definition networkd
@@ -40,6 +40,17 @@ WiFiManager_Class::WiFiManager_Class() {
 void WiFiManager_Class::init(Network* creds, int8_t count) {
     m_networks     = creds;
     m_networkCount = count;
+
+    start();
+}
+
+
+
+
+// #####################################################################
+// Inizializza il WiFi in modalità Station e si connette
+// #####################################################################
+void WiFiManager_Class::start() {
     LOG_INFO("Inizializzazione WiFi...");
     WiFi.mode(WIFI_STA);
 
@@ -47,51 +58,53 @@ void WiFiManager_Class::init(Network* creds, int8_t count) {
     WiFi.onEvent(handleEvent);
 
     // fai partire lo scanning delle reti
+    m_starting = true;
     connectToBestNetwork();
 }
 
-#ifdef XXXXXXXXXXXXXXXXXXXXXXXXX
 
 // #####################################################################
-// Inizializza il WiFi in modalità Station e si connette
+// # Inizializza il WiFi in modalità Station e si connette
 // #####################################################################
 void WiFiManager_Class::restart(void) {
-    // disconnect();
-    // LOG_INFO("re.Inizializzazione WiFi...");
-    // WiFi.mode(WIFI_STA);
+    LOG_WARN("Restart() called");
 
-    // // Registra la funzione di gestione degli eventi WiFi
-    // WiFi.onEvent(handleEvent);
-    LOG_ERROR("WiFi restarting....");
-    m_scanning = false;
-    connectToBestNetwork();
-}
-
-
-
-// #########################################
-// # not used... comodo dall'esterno....
-// #########################################
-bool WiFiManager_Class::disconnect() {
-    // if (millis() - m_disconnectionStartTime > 2*60*1000) { // non facciamo disconnessione troppo spesso
-        LOG_NOTIFY("Disconnecting wifi %s", WiFi.SSID());
-        WiFi.scanDelete();
-        if (WiFi.disconnect()) {
-            LOG_INFO("[WIFI] Disconnected");
-            delay(100);
-        } else {
-            LOG_ERROR("WiFi was not Connected!");
+    if (!m_starting) {
+        m_eventCounter=0;
+        disconnect();
+        start();
+    }
+    else {
+        if (m_eventCounter == 0) {
+            LOG_TRACE("executing restarting");
         }
-        m_scanning = false;
-        m_lastScanTime = millis();
-        // m_disconnectionStartTime = millis(); // aggiornamento tempo di disconnessione
-        // return true;
-    // }
-    // LOG_WARN("disconnection already in progress.....");
-    return false;
+        else if (m_eventCounter > 0) {
+            LOG_TRACE("Restarting already called, m_eventCounter: %d", m_eventCounter);
+        }
+        else if (m_eventCounter > 20) {
+            LOG_ERROR("Restarting  ESP32...");
+            ESP.restart();
+        }
+    }
 }
 
-#endif
+
+
+// #########################################
+// # ....
+// #########################################
+void WiFiManager_Class::disconnect() {
+    LOG_NOTIFY("Disconnecting wifi %s", WiFi.SSID());
+    WiFi.scanDelete();
+    m_scanning = false;
+    if (WiFi.disconnect()) {
+        LOG_INFO("[WIFI] Disconnected");
+        delay(100);
+    } else {
+        LOG_ERROR("WiFi was not Connected!");
+    }
+    m_scanInterval = m_scanIntervalWhenNotConnected;
+}
 
 
 // ---- valori in secondi
@@ -109,6 +122,7 @@ void WiFiManager_Class::update() {
     m_scanInterval = ( WiFi.status() == WL_CONNECTED) ? m_scanIntervalWhenConnected : m_scanIntervalWhenNotConnected;  // velocizziamo l'intervallo se disconnessi
 
     uint32_t scanElapsed = millis() - m_lastScanTime;
+
     if ( (WiFi.status() != WL_CONNECTED || scanElapsed > m_scanInterval ) && !m_scanning) {
         if ( scanElapsed > m_scanInterval) {
             if (WiFi.status() != WL_CONNECTED)   {LOG_ERROR("WiFi - connessione non attiva."); }
@@ -122,7 +136,6 @@ void WiFiManager_Class::update() {
             }
         }
     }
-
 
     // Se la scansione è in corso, controlla se è terminata
     if (m_scanning) {
@@ -232,6 +245,9 @@ void WiFiManager_Class::processScanResults(int networks) {
 
 
 
+// #####################################################################
+// #
+// #####################################################################
 void WiFiManager_Class::connectToSSID(int8_t networkIndex) {
     if (networkIndex == -1) {
         LOG_ERROR("Nessuna delle reti configurate è stata trovata.");
@@ -244,56 +260,72 @@ void WiFiManager_Class::connectToSSID(int8_t networkIndex) {
         if (WiFi.status() == WL_CONNECTED && String(WiFi.SSID()) == String(ssid)) {
             LOG_NOTIFY("Già connesso alla rete migliore: %s - %s.", WiFi.SSID(), WiFi.BSSIDstr().c_str());
             LOG_NOTIFY("...non è necessario cambiare.");
-            m_disconnectedMsg = false;
-            m_scanning = false;
         } else {
             LOG_INFO("Connessione a: %s", ssid);
             WiFi.begin(ssid, password);
-            m_disconnectedMsg = false;
-            m_scanning = false;
         }
+        m_disconnectedMsg = false;
+        m_scanning = false;
+        m_starting = false;
+        m_eventCounter=0;
     }
 
 }
 
 
+
+// #####################################################################
+// #
+// #####################################################################
 void WiFiManager_Class::showCurrentConnection() {
-#if LOG_MODULE_LEVEL >= LOG_LEVEL_DEBUG
+#if LOG_MODULE_LEVEL >= LOG_LEVEL_SPEC
+    char buffer[16];
+    const char *ptr;
+
     if (WiFi.status() == WL_CONNECTED) {
-        LOG_SPEC("Connected to:     %s - %s.", WiFi.SSID(), WiFi.BSSIDstr().c_str());
-        LOG_SPEC("\tRSSI:           %4ld", WiFi.RSSI());
-        LOG_SPEC("\tCHANNEL:        %2ld", WiFi.channel());
+        LOG_SPEC("Connected to:     %s", WiFi.SSID());
+        LOG_SPEC("\tBSSID:          %s", WiFi.BSSIDstr().c_str());
+        LOG_SPEC("\tRSSI:           %ld", WiFi.RSSI());
+        LOG_SPEC("\tCHANNEL:        %ld", WiFi.channel());
         LOG_SPEC("\tIP:             %s",   WiFi.localIP().toString().c_str());
     }
     else {
         LOG_ERROR("WiFi is not connected!");
     }
     uint32_t scanElapsed = millis() - m_lastScanTime;
-    LOG_SPEC("\tScan interval:  %lu", m_scanInterval);
-    LOG_SPEC("\tlast scanTime:  %lu", m_lastScanTime);
-    LOG_SPEC("\tscanElapsed:    %lu", scanElapsed);
+
+    ptr = lnLog.toHHMMSS(buffer, 16, m_scanInterval, fMilliSecondsTrue, fstripHoursTrue);
+    LOG_SPEC("\tScan interval:  %s - %7lu", ptr, m_scanInterval);
+
+    ptr = lnLog.toHHMMSS(buffer, 16, scanElapsed, fMilliSecondsTrue, fstripHoursTrue);
+    LOG_SPEC("\tScan elapsed:   %s - %7lu", ptr, scanElapsed);
+
+    ptr = lnLog.toHHMMSS(buffer, 16, (m_scanInterval-scanElapsed), fMilliSecondsTrue, fstripHoursTrue);
+    LOG_SPEC("\tNext Scan:      %s - %7lu", ptr,  (m_scanInterval-scanElapsed));
+
     LOG_SPEC("\tis scanning:    %d", m_scanning);
+    LOG_SPEC("\tis starting:    %d", m_starting);
 #endif
 }
 
 
 
 
-// Funzione statica per la gestione degli eventi Wi-Fi
+// #####################################################################
+// # Funzione statica per la gestione degli eventi Wi-Fi
+// #####################################################################
 void WiFiManager_Class::handleEvent(arduino_event_id_t event) {
     if (s_instance) {
         switch (event) {
 
             case ARDUINO_EVENT_WIFI_STA_GOT_IP:
                 LOG_INFO("Connesso! %s - %s - %s", WiFi.SSID(), WiFi.BSSIDstr().c_str(), WiFi.localIP().toString().c_str());
-                // m_disconnectedTime = millis();
-                s_instance->m_disconnectionStartTime = millis();
+                s_instance->m_starting = false;
                 break;
 
             case ARDUINO_EVENT_WIFI_STA_DISCONNECTED:
                 LOG_ERROR("WiFi - Connessione persa.");
-                // m_disconnectedTime = millis();
-                s_instance->m_disconnectionStartTime = millis();
+                s_instance->restart();
                 break;
             // Aggiungi altri eventi se necessario...
         }

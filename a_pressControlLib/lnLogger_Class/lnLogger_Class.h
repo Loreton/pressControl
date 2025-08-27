@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 16.40.10
+// Date .........: 27-08-2025 20.29.02
 */
 
 #pragma once
@@ -8,6 +8,16 @@
 #include <Arduino.h>
 #include <freertos/semphr.h> // Required for FreeRTOS types (SemaphoreHandle_t)
 #include "esp_timer.h" // For esp_timer_get_time()
+#include <ESP32Time.h> // ESP32Time.cpp
+
+#ifndef fstripHeaderTrue
+    #define fMilliSecondsFalse 0
+    #define fMilliSecondsTrue  1
+
+    #define fstripHoursTrue  1
+    #define fstripHoursFalse  0
+#endif
+
 
 // #########################################################################
 // #     Logger CLASS     Logger CLASS     Logger CLASS     Logger CLASS
@@ -18,14 +28,16 @@ class ESP32Logger { // Renamed from ESP32LoggerMutex for simplicity and clarity
     public:
         ESP32Logger(void);
         void init(void);
-        // void write(const char* color, const char* tag, const char* file, int line, const char* format, ...);
         void write(const char* color, const char* tag, const char* file, const char* function, int line, const char* format, ...);
+        const char* toHHMMSS(char *buffer, uint8_t buffer_len, uint32_t millisec, bool addMilliSec=false, bool stripHeader=false);
 
     private:
+        ESP32Time rtc;
+        struct tm      m_timeinfo;
+
         bool m_mutexInitialized = false;
         SemaphoreHandle_t m_logMutex = NULL; // The mutex to protect log operations
         const char* getFileLineInfo(char *outBUFFER, const uint8_t OutBUFFER_maxLen, const char* file, const char* function, int line);
-        // const char* getFileLineInfo_new(char *outBUFFER, const uint8_t OutBUFFER_maxLen, const char* file, const char* function, int line);
 }; // class ESP32Logger
 
 
@@ -43,28 +55,18 @@ extern ESP32Logger lnLog; // defined in lnLogger.cpp
 
     // ANSI Color Definitions
     namespace LogColors {
-        const char* const RESET  = "\x1B[0m";
-        const char* const RED    = "\x1B[1;31m";
-        const char* const GREEN  = "\x1B[1;32m";
-        const char* const YELLOW = "\x1B[1;33m";
-        const char* const BLUE   = "\x1B[1;34m";
-        const char* const PURPLE = "\x1B[1;35m";
-        const char* const CYAN   = "\x1B[1;36m";
-        const char* const WHITE  = "\x1B[1;37m";
+        const char* const RESET   = "\x1B[0m";
+
+        const char* const RED     = "\x1B[0;31m"; const char* const REDH    = "\x1B[1;31m";
+        const char* const GREEN   = "\x1B[0;32m"; const char* const GREENH  = "\x1B[1;32m";
+        const char* const YELLOW  = "\x1B[0;33m"; const char* const YELLOWH = "\x1B[1;33m";
+        const char* const BLUE    = "\x1B[0;34m"; const char* const BLUEH   = "\x1B[1;34m";
+        const char* const PURPLE  = "\x1B[0;35m"; const char* const PURPLEH = "\x1B[1;35m";
+        const char* const CYAN    = "\x1B[0;36m"; const char* const CYANH   = "\x1B[1;36m";
+        const char* const GRAY    = "\x1B[0;37m"; const char* const WHITEH  = "\x1B[1;37m";
+
     } // namespace LogColors
 
-
-
-    // #ifdef NO_MODULE_LOG   // definendo questa variabil all'interno di un modulo inibiamo il logging
-    //         #define LOG_DEBUG(...) do {} while (0)
-    //         #define LOG_INFO(...) do {} while (0)
-    //         #define LOG_SPEC(...) do {} while (0)
-    //         #define LOG_NOTIFY(...) do {} while (0)
-    //         #define LOG_WARN(...) do {} while (0)
-    //         #define LOG_ERROR(...) do {} while (0)
-    //         #define LOG_TRACE(...) do {} while (0)
-
-    // #else
 
     // Set the global log level
     #ifndef LOG_DEFAULT_LEVEL
@@ -93,44 +95,44 @@ extern ESP32Logger lnLog; // defined in lnLogger.cpp
     // and call write only if the level is enabled, otherwise
     // they expand to `do {} while(0)` to generate no code.
     #if LOG_MODULE_LEVEL >= LOG_LEVEL_SPECIAL
-        #define LOG_SPEC(fmt, ...)     lnLog.write(LogColors::WHITE, "SPC", __FILE__, __FUNCTION__ , __LINE__, fmt, ##__VA_ARGS__)
+        #define LOG_SPEC(fmt, ...)     lnLog.write(LogColors::BLUEH, "SPC", __FILE__, __FUNCTION__ , __LINE__, fmt, ##__VA_ARGS__)
     #else
         #define LOG_SPEC(...) do {} while (0)
     #endif
 
     #if LOG_MODULE_LEVEL >= LOG_LEVEL_ERROR
-        #define LOG_ERROR(fmt, ...)    lnLog.write(LogColors::RED, "ERR", __FILE__, __FUNCTION__ , __LINE__, fmt, ##__VA_ARGS__)
+        #define LOG_ERROR(fmt, ...)    lnLog.write(LogColors::REDH, "ERR", __FILE__, __FUNCTION__ , __LINE__, fmt, ##__VA_ARGS__)
     #else
         #define LOG_ERROR(...) do {} while (0)
     #endif
 
     #if LOG_MODULE_LEVEL >= LOG_LEVEL_WARN
-        #define LOG_WARN(fmt, ...)     lnLog.write(LogColors::YELLOW, "WRN", __FILE__, __FUNCTION__ , __LINE__, fmt, ##__VA_ARGS__)
+        #define LOG_WARN(fmt, ...)     lnLog.write(LogColors::YELLOWH, "WRN", __FILE__, __FUNCTION__ , __LINE__, fmt, ##__VA_ARGS__)
     #else
         #define LOG_WARN(...) do {} while (0)
     #endif
 
 
     #if LOG_MODULE_LEVEL >= LOG_LEVEL_INFO
-        #define LOG_INFO(fmt, ...)     lnLog.write(LogColors::GREEN, "INF", __FILE__, __FUNCTION__ , __LINE__, fmt, ##__VA_ARGS__)
+        #define LOG_INFO(fmt, ...)     lnLog.write(LogColors::GREENH, "INF", __FILE__, __FUNCTION__ , __LINE__, fmt, ##__VA_ARGS__)
     #else
         #define LOG_INFO(...) do {} while (0)
     #endif
 
     #if LOG_MODULE_LEVEL >= LOG_LEVEL_NOTIFY
-        #define LOG_NOTIFY(fmt, ...)  lnLog.write(LogColors::PURPLE, "NFY", __FILE__, __FUNCTION__ , __LINE__, fmt, ##__VA_ARGS__)
+        #define LOG_NOTIFY(fmt, ...)  lnLog.write(LogColors::PURPLEH, "NFY", __FILE__, __FUNCTION__ , __LINE__, fmt, ##__VA_ARGS__)
     #else
         #define LOG_NOTIFY(...) do {} while (0)
     #endif
 
     #if LOG_MODULE_LEVEL >= LOG_LEVEL_DEBUG
-        #define LOG_DEBUG(fmt, ...)    lnLog.write(LogColors::CYAN, "DBG", __FILE__, __FUNCTION__ , __LINE__, fmt, ##__VA_ARGS__)
+        #define LOG_DEBUG(fmt, ...)    lnLog.write(LogColors::CYANH, "DBG", __FILE__, __FUNCTION__ , __LINE__, fmt, ##__VA_ARGS__)
     #else
         #define LOG_DEBUG(...) do {} while (0)
     #endif
 
     #if LOG_MODULE_LEVEL >= LOG_LEVEL_TRACE
-        #define LOG_TRACE(fmt, ...)    lnLog.write(LogColors::WHITE, "TRC", __FILE__, __FUNCTION__ , __LINE__, fmt, ##__VA_ARGS__)
+        #define LOG_TRACE(fmt, ...)    lnLog.write(LogColors::WHITEH, "TRC", __FILE__, __FUNCTION__ , __LINE__, fmt, ##__VA_ARGS__)
     #else
         #define LOG_TRACE(...) do {} while (0)
     #endif

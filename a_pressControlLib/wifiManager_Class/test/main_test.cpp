@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 27-08-2025 14.27.49
+// Date .........: 27-08-2025 18.23.44
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -73,7 +73,7 @@ void setup() {
     lnLog.init();
     // Inizializza la classe
     myWiFiManager.init(loretoNetworks, sizeof(loretoNetworks) / sizeof(loretoNetworks[0]));
-    myWiFiManager.setScanInterval(10*60, 1*60);  //  seconds uint16_t whenConnected=10*60, uint16_t whenNotConnected=1*60)
+    myWiFiManager.setScanInterval(3*60, 1*60);  //  seconds uint16_t whenConnected=10*60, uint16_t whenNotConnected=1*60)
 
     // myWiFiManager.init(loretoNetworks, loretoNetworksCount);
     myWiFiManager.setConnectCallback(wifiConnectedCB);
@@ -115,11 +115,11 @@ void loop() {
         LOG_NOTIFY("-----------");
         LOG_INFO("nowTime:                %s",         LnTime.nowTime());
         LOG_INFO("nowTime:         0      %s",         LnTime.timeStamp(nowTimeBUFFER, sizeof(nowTimeBUFFER)) );
-        LOG_INFO("nowTime:         0      %s",         LnTime.timeStamp(nowTimeBUFFER, sizeof(nowTimeBUFFER), 0, true) );
+        LOG_INFO("nowTime:         0      %s",         LnTime.timeStamp(nowTimeBUFFER, sizeof(nowTimeBUFFER), 0, fMilliSecondsTrue) );
 
-        LOG_INFO("msecToTimeStamp: millis %s",         LnTime.timeStamp(nowTimeBUFFER, sizeof(nowTimeBUFFER), millis(), true));
+        LOG_INFO("msecToTimeStamp: millis %s",         LnTime.timeStamp(nowTimeBUFFER, sizeof(nowTimeBUFFER), millis(), fMilliSecondsTrue));
 
-        LOG_INFO("msecToTimeStamp: mymsec %s",        LnTime.timeStamp(nowTimeBUFFER, sizeof(nowTimeBUFFER), LnTime.millisecOfDay(), true));
+        LOG_INFO("msecToTimeStamp: mymsec %s",        LnTime.timeStamp(nowTimeBUFFER, sizeof(nowTimeBUFFER), LnTime.millisecOfDay(), fMilliSecondsTrue));
         LOG_NOTIFY("------------");
 
         myWiFiManager.showCurrentConnection();
