@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 26-08-2025 19.41.15
+// Date .........: 27-08-2025 14.23.51
 //
 
 
@@ -42,7 +42,9 @@
 
                 // --- Intervallo di scansione della rete (in ms), qui 50 minuti
             // const uint32_t      m_scanInterval = 1*60*1000;
-            uint32_t            m_scanInterval = 10*60*1000;
+            uint32_t            m_scanInterval = 10*60*1000UL;
+            uint32_t            m_scanIntervalWhenConnected = 10*60*1000UL;
+            uint32_t            m_scanIntervalWhenNotConnected = 1*60*1000UL;
             uint32_t            m_lastScanTime = 0;
             bool                m_scanning;
             bool                m_disconnectedMsg = false;
@@ -65,6 +67,7 @@
             void processScanResults(int n);
             bool isConnected(void) {return WiFi.status() == WL_CONNECTED; };
 
+            void setScanInterval(uint16_t whenConnected=10*60, uint16_t whenNotConnected=1*60); // seconds
             void showCurrentConnection(void);
             void restart(void);
             bool disconnect(void);

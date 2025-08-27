@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 07.49.41
+// Date .........: 27-08-2025 14.12.48
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -11,7 +11,7 @@
 // ---------------------------------
 #define  LOG_MODULE_LEVEL LOG_DEFAULT_LEVEL
 #include    <lnLogger_Class.h>
-#include <lnTime_Class.h>
+#include <LnTime_Class.h>
 
 
 #include "main.h" // per functions protoype

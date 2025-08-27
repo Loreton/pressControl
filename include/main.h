@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 20.09.49
+// Date .........: 27-08-2025 14.13.28
 //
 
 
@@ -18,7 +18,7 @@
     #include    <relayManager_Class.h>
     #include    <telegramBot_Class.h>
     #include    <WiFiManager_Class.h>
-    #include    <lnTime_Class.h>
+    #include    <LnTime_Class.h>
 
     // ---  TEST
     #if ln_RELEASE_TYPE == ln_DEVEL

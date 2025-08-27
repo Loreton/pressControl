@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 20.13.45
+// Date .........: 27-08-2025 14.28.49
 //
 
 #include <Arduino.h>
@@ -14,7 +14,7 @@
 #include <lnGlobalVars.h> // Assicurati che questi siano disponibili
 #include <lnSerialRead.h> // Assicurati che questi siano disponibili
 #include <lnSetPinID.h>   // Assicurati che questi siano disponibili
-#include <lnTime_Class.h>
+#include <LnTime_Class.h>
 extern LnTime_Class lnTime;
 
 #include "ButtonLongPress_Class.h" // Includi il nuovo header della classe

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 20.13.30
+// Date .........: 27-08-2025 14.29.07
 //
 
 #include <Arduino.h> // Necessario per funzioni come pinMode, digitalWrite, millis
@@ -12,7 +12,7 @@
 #include <lnLogger_Class.h>
 #include <lnSetPinID.h>
 
-#include <lnTime_Class.h>
+#include <LnTime_Class.h>
 extern LnTime_Class lnTime;
 
 #include "relayManager_Class.h" // Include l'header della classe

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 27-08-2025 12.32.54
+// Date .........: 27-08-2025 14.28.21
 //
 
 
@@ -50,6 +50,8 @@ void WiFiManager_Class::init(Network* creds, int8_t count) {
     connectToBestNetwork();
 }
 
+#ifdef XXXXXXXXXXXXXXXXXXXXXXXXX
+
 // #####################################################################
 // Inizializza il WiFi in modalità Station e si connette
 // #####################################################################
@@ -89,8 +91,14 @@ bool WiFiManager_Class::disconnect() {
     return false;
 }
 
+#endif
 
 
+// ---- valori in secondi
+void WiFiManager_Class::setScanInterval(uint16_t whenConnected, uint16_t whenNotConnected) {
+    m_scanIntervalWhenConnected = whenConnected*1000UL;
+    m_scanIntervalWhenNotConnected = whenNotConnected*1000UL;
+}
 
 // #####################################################################
 // Funzione da chiamare nel loop principale per monitorare la connessione
@@ -98,7 +106,7 @@ bool WiFiManager_Class::disconnect() {
 // #####################################################################
 void WiFiManager_Class::update() {
 
-    m_scanInterval = ( WiFi.status() == WL_CONNECTED) ? 10*60*1000 : 1*60*1000;  // velocizziamo l'intervallo se disconnessi
+    m_scanInterval = ( WiFi.status() == WL_CONNECTED) ? m_scanIntervalWhenConnected : m_scanIntervalWhenNotConnected;  // velocizziamo l'intervallo se disconnessi
 
     uint32_t scanElapsed = millis() - m_lastScanTime;
     if ( (WiFi.status() != WL_CONNECTED || scanElapsed > m_scanInterval ) && !m_scanning) {
@@ -126,42 +134,6 @@ void WiFiManager_Class::update() {
     }
 
 }
-
-/*
-// #####################################################################
-// Funzione da chiamare nel loop principale per monitorare la connessione
-// Se non siamo connessi o è il momento di scansionare nuovamente, avvia la scansione
-// #####################################################################
-void WiFiManager_Class::update_OK() {
-
-    uint32_t scanElapsed = millis() - m_lastScanTime;
-    if ( (WiFi.status() != WL_CONNECTED || scanElapsed > m_scanInterval ) && !m_scanning) {
-        if ( scanElapsed > m_scanInterval) {
-            if (WiFi.status() != WL_CONNECTED)   {LOG_ERROR("WiFi - connessione non attiva."); }
-            if (scanElapsed > m_scanInterval)    {LOG_NOTIFY("WiFi - Tempo di scansione periodica (%lu ms) scaduto", m_scanInterval); }
-            connectToBestNetwork();
-            m_lastScanTime = millis();
-        }
-        else {
-            if (scanElapsed % 5000UL < 100) {
-                LOG_NOTIFY("scanElapsed/m_scanInterval is not expired: (%lu/%lu)", scanElapsed,  m_scanInterval);
-            }
-        }
-    }
-
-
-    // Se la scansione è in corso, controlla se è terminata
-    if (m_scanning) {
-        int scanResult = WiFi.scanComplete();
-        if (scanResult >= 0) { // La scansione è completata
-            m_scanning = false;
-            processScanResults(scanResult);
-        }
-    }
-
-}
-*/
-
 
 
 
@@ -196,18 +168,6 @@ void WiFiManager_Class::connectToBestNetwork() {
 }
 
 
-
-//##############################################################
-// check if ssid is in the configured list
-//##############################################################
-// int8_t isInMyList(const char *ssid, ssid_t *ptr)  {
-//     for (int i = 0; i < SSID_ELEMENTS; i++, ptr++) {
-//         if (strcmp(ssid, ptr->ssid) == 0) {
-//             return i; // matched
-//         }
-//     }
-//     return -1;
-// }
 
 
 // #####################################################################
@@ -298,7 +258,7 @@ void WiFiManager_Class::connectToSSID(int8_t networkIndex) {
 
 
 void WiFiManager_Class::showCurrentConnection() {
-// #if LOG_MODULE_LEVEL >= LOG_LEVEL_SPECIAL
+#if LOG_MODULE_LEVEL >= LOG_LEVEL_DEBUG
     if (WiFi.status() == WL_CONNECTED) {
         LOG_SPEC("Connected to:     %s - %s.", WiFi.SSID(), WiFi.BSSIDstr().c_str());
         LOG_SPEC("\tRSSI:           %4ld", WiFi.RSSI());
@@ -313,7 +273,7 @@ void WiFiManager_Class::showCurrentConnection() {
     LOG_SPEC("\tlast scanTime:  %lu", m_lastScanTime);
     LOG_SPEC("\tscanElapsed:    %lu", scanElapsed);
     LOG_SPEC("\tis scanning:    %d", m_scanning);
-// #endif
+#endif
 }
 
 

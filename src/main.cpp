@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 20.31.34
+// Date .........: 27-08-2025 14.27.31
 //
 
 
@@ -16,10 +16,11 @@
 // --- lnLibrary headers files
 // ---------------------------------
 #define  LOG_MODULE_LEVEL LOG_DEFAULT_LEVEL
-#include    <lnLogger_Class.h>
-#include    <lnGlobalVars.h>
-#include    <lnSerialRead.h>
-#include    <lnTime_Class.h>
+#include <lnLogger_Class.h>
+#include <lnGlobalVars.h>
+#include <lnSerialRead.h>
+#include <LnTime_Class.h>
+#include <WiFiManager_Class.h>
 
 
 // ---------------------------------
@@ -63,7 +64,9 @@ void setup() {
     LOG_INFO("%s", pressControlVersion);
 
     // ------ WiFi
-    myWiFiManager.init(myNetworks, myNetworksCount);
+    myWiFiManager.init(loretoNetworks, loretoNetworksCount);
+    myWiFiManager.setScanInterval(10*60, 1*60);  //  seconds uint16_t whenConnected=10*60, uint16_t whenNotConnected=1*60)
+
 
     // ------ set wifi callBack
     myWiFiManager.setConnectCallback(wifiConnectedCB);

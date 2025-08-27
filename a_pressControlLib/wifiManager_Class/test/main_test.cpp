@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 26-08-2025 18.27.14
+// Date .........: 27-08-2025 14.27.49
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -73,6 +73,8 @@ void setup() {
     lnLog.init();
     // Inizializza la classe
     myWiFiManager.init(loretoNetworks, sizeof(loretoNetworks) / sizeof(loretoNetworks[0]));
+    myWiFiManager.setScanInterval(10*60, 1*60);  //  seconds uint16_t whenConnected=10*60, uint16_t whenNotConnected=1*60)
+
     // myWiFiManager.init(loretoNetworks, loretoNetworksCount);
     myWiFiManager.setConnectCallback(wifiConnectedCB);
     delay(5000); // attendiamo un po...
