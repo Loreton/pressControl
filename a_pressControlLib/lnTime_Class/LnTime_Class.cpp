@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-08-2025 14.14.03
+// Date .........: 28-08-2025 16.30.41
 */
 
 #include <Arduino.h> // ESP32Time.cpp
@@ -129,6 +129,26 @@ bool LnTime_Class::atSecond() {
     }
     return false;
 }
+
+
+bool LnTime_Class::atSecond(uint8_t second) {
+    m_timeinfo = rtc.getTimeStruct();
+
+    // Trova l'ultimo secondo registrato per questo valore "second".
+    // Se non esiste, il valore di default è -1 (o un valore che non si ripete mai) per la prima esecuzione.
+    int8_t last_at_second = -1;
+    if (m_at_last_second_map.count(second)) {
+        last_at_second = m_at_last_second_map[second];
+    }
+
+    if (m_timeinfo.tm_sec == second && m_timeinfo.tm_sec != last_at_second) {
+        m_at_last_second_map[second] = m_timeinfo.tm_sec;
+        return true;
+    }
+    return false;
+}
+
+/*
 // Controlla se è iniziato il secondo spicificato
 bool LnTime_Class::atSecond(uint8_t second) {
     m_timeinfo = rtc.getTimeStruct();
@@ -138,6 +158,7 @@ bool LnTime_Class::atSecond(uint8_t second) {
     }
     return false;
 }
+*/
 
 // Controlla se è iniziato un nuovo minuto
 bool LnTime_Class::atMinute() {
@@ -149,7 +170,24 @@ bool LnTime_Class::atMinute() {
     return false;
 }
 
-// Controlla se è iniziato il minuto specificato
+bool LnTime_Class::atMinute(uint8_t minute) {
+    m_timeinfo = rtc.getTimeStruct();
+
+    // Trova l'ultimo minuto registrato per questo valore "minute".
+    int8_t last_at_minute = -1;
+    if (m_at_last_minute_map.count(minute)) {
+        last_at_minute = m_at_last_minute_map[minute];
+    }
+
+    if (m_timeinfo.tm_sec == 0 && m_timeinfo.tm_min == minute && m_timeinfo.tm_min != last_at_minute) {
+        m_at_last_minute_map[minute] = m_timeinfo.tm_min;
+        return true;
+    }
+    return false;
+}
+
+
+/*// Controlla se è iniziato il minuto specificato
 bool LnTime_Class::atMinute(uint8_t minute) {
     m_timeinfo = rtc.getTimeStruct();
     if (m_timeinfo.tm_sec == 0 && m_timeinfo.tm_min == minute && m_timeinfo.tm_min != m_at_last_minute) {
@@ -159,35 +197,45 @@ bool LnTime_Class::atMinute(uint8_t minute) {
     return false;
 }
 
-
-
-// Controlla se è iniziato siamo nel modulo richiesto
+*/
+// ###############################################################
+// # Controlla se è iniziato siamo nel modulo richiesto
+// # utilizzo di std::map
+// ###############################################################
 bool LnTime_Class::atSecondModulo(uint16_t modulo) {
-    uint32_t epoch = rtc.getEpoch();
-    if (epoch != m_last_epoch_seconds && epoch % modulo == 0 ) {
-        m_last_epoch_seconds = epoch;
+    uint32_t current_epoch = rtc.getEpoch();
+
+    // Controlla se il modulo esiste già nella mappa. Se no, usa 0 come valore iniziale.
+    uint32_t last_epoch = 0;
+    if (m_last_epoch_seconds_map.count(modulo)) {
+        last_epoch = m_last_epoch_seconds_map[modulo];
+    }
+
+    if (current_epoch != last_epoch && current_epoch % modulo == 0) {
+        m_last_epoch_seconds_map[modulo] = current_epoch; // Aggiorna la mappa per questo modulo
         return true;
     }
     return false;
 }
 
-// Controlla se è iniziato un nuovo quarto d'ora
-bool LnTime_Class::atMinuteModulo(uint16_t modulo) {
-    uint32_t epoch = rtc.getEpoch()/60;
 
-    if (epoch != m_last_epoch_minutes && epoch % modulo == 0 ) {
-        m_last_epoch_minutes = epoch;
+// ###############################################################
+// # Controlla se è iniziato siamo nel modulo richiesto
+// # utilizzo di std::map
+// ###############################################################
+bool LnTime_Class::atMinuteModulo(uint16_t modulo) {
+    uint32_t current_epoch_minutes = rtc.getEpoch() / 60;
+
+    uint32_t last_epoch_minutes = 0;
+    if (m_last_epoch_minutes_map.count(modulo)) {
+        last_epoch_minutes = m_last_epoch_minutes_map[modulo];
+    }
+
+    if (current_epoch_minutes != last_epoch_minutes && current_epoch_minutes % modulo == 0) {
+        m_last_epoch_minutes_map[modulo] = current_epoch_minutes; // Aggiorna la mappa
         return true;
     }
     return false;
-
-/*    m_timeinfo = rtc.getTimeStruct();
-
-    if (m_timeinfo.tm_min % modulo == 0 && m_timeinfo.tm_min != m_last_minute) { // ogni 5 minutei
-        m_last_minute = m_timeinfo.tm_min;
-        return true;
-    }
-    return false; */
 }
 
 

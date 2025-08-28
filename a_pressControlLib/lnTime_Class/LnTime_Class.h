@@ -1,15 +1,16 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-08-2025 14.12.26
+// Date .........: 28-08-2025 16.29.30
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-08-2025 14.12.26
+// Date .........: 28-08-2025 16.29.30
 */
 
 #pragma once
 
     #include "Arduino.h"
     #include <ESP32Time.h> // ESP32Time.cpp
+    #include <map>
     // #include "lnLogger_Class.h" // Assicurati che lnLogger.h sia disponibile nel tuo progetto
 
     // #define TIME_BUFFER_LENGTH 16
@@ -17,15 +18,22 @@
 
     class LnTime_Class {
         private:
+            std::map<uint16_t, uint32_t> m_last_epoch_seconds_map;  // LnTime_Class_StdMap.txt
+            std::map<uint16_t, uint32_t> m_last_epoch_minutes_map;   // LnTime_Class_StdMap.txt
+
+            // Con queste:
+            std::map<uint8_t, int8_t> m_at_last_second_map;
+            std::map<uint8_t, int8_t> m_at_last_minute_map;
+
             ESP32Time rtc;
             struct tm      m_timeinfo;
-            int8_t         m_at_last_second     = 99;
-            int8_t         m_at_last_minute     = 99;
+            // int8_t         m_at_last_second     = 99;
+            // int8_t         m_at_last_minute     = 99;
 
             int8_t         m_last_minute        = 99;
             int8_t         m_last_second        = 99;
-            uint32_t       m_last_epoch_seconds = 0;
-            uint32_t       m_last_epoch_minutes = 0;
+            // uint32_t       m_last_epoch_seconds = 0;
+            // uint32_t       m_last_epoch_minutes = 0;
 
             bool           m_ntp_active        = false;
             uint32_t       m_lastNtpAttempt    = 0;

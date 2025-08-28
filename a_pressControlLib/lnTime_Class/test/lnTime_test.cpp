@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-08-2025 16.03.40
+// Date .........: 28-08-2025 16.32.58
 //
 
 
@@ -36,8 +36,33 @@ void loop() {
         print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
     }
 
+    if (lnTime.atMinute(5)) {
+        LOG_WARN("It's a minute 5!");
+        print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
+    }
+
+    if (lnTime.atSecond(14)) {
+        LOG_WARN("It's a second 5!");
+        print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
+    }
+
+    if (lnTime.atSecond(44)) {
+        LOG_WARN("It's a second 44!");
+        print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
+    }
+
+    if (lnTime.atMinute(12)) {
+        LOG_WARN("It's a minute 12!");
+        print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
+    }
+
     if (lnTime.atMinuteModulo(2)) {
         LOG_WARN("It's a 2 minute modulo!");
+        print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
+    }
+
+    if (lnTime.atMinuteModulo(3)) {
+        LOG_WARN("It's a 3 minute modulo!");
         print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
     }
 
