@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-08-2025 13.47.51
+// Date .........: 28-08-2025 18.48.29
 //
 
 
@@ -8,7 +8,7 @@
 // ---------------------------------
 // --- lnLibrary headers files
 // ---------------------------------
-#define  LOG_MODULE_LEVEL LOG_DEFAULT_LEVEL
+// #define  LOG_MODULE_LEVEL LOG_LEVEL_TRACE
 #include    <lnLogger_Class.h>
 #include    <lnGlobalVars.h>
 #include    <LnTime_Class.h>
@@ -17,7 +17,6 @@
 // ---------------------------------
 // - project headers files
 // ---------------------------------
-// #include "functionPrototypes.h"
 #include "main.h"
 
 
@@ -89,7 +88,6 @@ void chackActionStatus() {
     // static uint32_t lastDisplayTime     = 0;
     uint32_t now                        = millis();
 
-    bool    modulo2minutes = false;
     bool    actionStateChanged;
     uint8_t actionState;
 
@@ -97,8 +95,8 @@ void chackActionStatus() {
     // -----------------------------------
     // --- SEND NTP sync message to Telegram
     // -----------------------------------
-    if (lnTime.atMinuteModulo(2)) {modulo2minutes = true; }
-    if (lnTime.atMinuteModulo(5)) {modulo5minutes = true; }
+    bool modulo2minutes = lnTime.atMinuteModulo(2) ? true : false;
+    bool modulo5minutes = lnTime.atMinuteModulo(5) ? true : false;
 
 
 
@@ -118,7 +116,9 @@ void chackActionStatus() {
 
     if (actionStateChanged) { // facciamo comunque il display ogni 15 secondi
         setTelegramTitle();
-        myBot.addFormattedString("<b>PC relay: </b>%s\n<b>PC status:</b> %s\n<b>PUMP status:</b> %s\n", str_OnOff[relayStatus], str_OnOff[pcStatus], str_OnOff[pumpStatus]);
+        myBot.addFormattedString("<b>PressControl:</b> %s\n", str_OnOff[pcStatus]);
+        myBot.addFormattedString("<b>Relay:</b> %s\n", str_OnOff[relayStatus]);
+        myBot.addFormattedString("<b>PUMP:</b> %s\n", str_OnOff[pumpStatus]);
         myBot.send();
     }
 
@@ -127,7 +127,6 @@ void chackActionStatus() {
     if ( actionStateChanged || modulo2minutes ) { // facciamo comunque il display ogni 15 secondi
         modulo2minutes = false;
         lastActionState=actionState;
-        // lastDisplayTime=now;
 
         LOG_INFO("actionState [%02d]: %7s %16s %5s", actionState, "RELAY", "PRESS-CONTROL", "PUMP");
         LOG_INFO("actionState [%02d]: %7s %16s %5s", actionState, str_OnOff[relayStatus], str_OnOff[pcStatus], str_OnOff[pumpStatus]);

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 09.57.17
+// Date .........: 28-08-2025 18.34.32
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -12,7 +12,7 @@
 // ---------------------------------
 // lnLibrary headers files
 // ---------------------------------
-// #define  NO_MODULE_LOG
+#define  LOG_MODULE_LEVEL LOG_LEVEL_DEFAULT
 #include <lnLogger_Class.h>
 #include "telegramBot_Class.h"
 
@@ -176,15 +176,16 @@ bool TelegramBot_Class::send() {
              "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&parse_mode=%s&text=%s",
              m_token, m_chatId, m_parseMode, encodedMessage);
 
+    LOG_NOTIFY("Sending msg: %s", urlBuffer);
     http.begin(urlBuffer);
     int httpResponseCode = http.GET();
     http.end();
 
     if (httpResponseCode > 0) {
-        Serial.println("Messaggio inviato con successo!");
+        LOG_INFO("Messaggio inviato con successo!");
         return true;
     } else {
-        Serial.println("Invio messaggio fallito.");
+        LOG_ERROR("Invio messaggio fallito.");
         return false;
     }
 }
@@ -199,6 +200,13 @@ void TelegramBot_Class::urlEncode(const char* src, char* dest) {
             *q++ = *p;
         } else if (*p == ' ') {
             *q++ = '+';
+
+            // *q++ = '&'; // Aggiungi la codifica HTML &nbsp;
+            // *q++ = 'n';  non funziona perché non scrive neanche i dati....
+            // *q++ = 'b';
+            // *q++ = 's';
+            // *q++ = 'p';
+            // *q++ = ';';
         } else if (*p == '\n') { // <--- Aggiungi questa condizione
             *q++ = '%';
             *q++ = '0';

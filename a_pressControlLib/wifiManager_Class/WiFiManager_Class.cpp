@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-08-2025 09.13.55
+// Date .........: 28-08-2025 18.30.14
 //
 
 
@@ -9,7 +9,7 @@
 // ---------------------------------
 // lnLibrary headers files
 // ---------------------------------
-#define  LOG_MODULE_LEVEL LOG_LEVEL_TRACE
+#define  LOG_MODULE_LEVEL LOG_LEVEL_DEFAULT
 #include <lnLogger_Class.h>
 
 // #include "wifiManager_ssid_credentials.h" // ssid definition networkd

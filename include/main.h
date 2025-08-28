@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 27-08-2025 14.13.28
+// Date .........: 28-08-2025 18.24.32
 //
 
 
@@ -90,7 +90,7 @@
 
         // Crea un'istanza della classe WiFiManager
         WiFiManager_Class myWiFiManager;
-        LnTime_Class lnTime;
+        // LnTime_Class lnTime; definito in  LnTime_Class.cpp
 
 
 
