@@ -1,15 +1,16 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 27-08-2025 14.13.06
+// Date .........: 28-08-2025 09.39.07
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
-
+#include <WiFi.h>
+// #include <esp_wifi.h>
 // ---------------------------------
 // --- lnLibrary headers files
 // ---------------------------------
 #define  LOG_MODULE_LEVEL LOG_DEFAULT_LEVEL
-#include    <lnLogger_Class.h>
+#include <lnLogger_Class.h>
 #include <LnTime_Class.h> // per functions protoype
 
 
@@ -54,10 +55,13 @@ void wifiConnectedAction() {
     if (fWifiConnected) {
         fWifiConnected = false;
         LOG_NOTIFY("WiFi_connAction Connected!");
-        myBot.startNewMessage("<b>PressControl\nTime: %s</b>\n", lnTime.nowTime());
-        myBot.addFormattedString("WiFi: <b>CONNECTED</b>\n");
+        myBot.startNewMessage("<b>PressControl\nTime:</b> %s\n", lnTime.nowTime());
+        myBot.addFormattedString("<b>WiFi: </b> CONNECTED\n");
+        myBot.addFormattedString("<b>SSID: </b> %s\n", WiFi.SSID().c_str() );
+        myBot.addFormattedString("<b>BSSID:</b> %s\n", WiFi.BSSIDstr().c_str() );
+        myBot.addFormattedString("<b>RSSI: </b> %d\n", WiFi.RSSI() );
+        myBot.addFormattedString("<b>IP:   </b> %s\n", WiFi.localIP().toString().c_str() );
         myBot.send();
-
     }
 
 }

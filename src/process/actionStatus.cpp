@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 27-08-2025 14.12.43
+// Date .........: 28-08-2025 13.47.51
 //
 
 
@@ -32,7 +32,7 @@ enum ActionState : uint8_t {
 } ;
 
 
-uint32_t actionStateDisplayInterval = ACTION_STATUS_DISPLAY_INTERVAL;
+// uint32_t actionStateDisplayInterval = ACTION_STATUS_DISPLAY_INTERVAL;
 
 
 
@@ -57,7 +57,7 @@ void startAlarmActions() {
     pumpLED.blinking(300, 300);
     pressControlLED.blinking(300, 300);
     activeBuzzer.blinking(300, 300);
-    actionStateDisplayInterval=2000; // ogni due secondi
+    // actionStateDisplayInterval=2000; // ogni due secondi
 }
 
 
@@ -70,7 +70,7 @@ void resetAlarmActions() {
         LOG_INFO("Recovery Actions for Alarm Ended."); // NO perchè compare ad ogni giro di loop
         fPUMP_ALARM=false;
     }
-    actionStateDisplayInterval=ACTION_STATUS_DISPLAY_INTERVAL;
+    // actionStateDisplayInterval=ACTION_STATUS_DISPLAY_INTERVAL;
     pressControlLED.blinking(1000, 3000);
     pumpLED.blinking(1000, 3000);
     activeBuzzer.reset();
@@ -86,11 +86,21 @@ void resetAlarmActions() {
 // #############################################################
 void chackActionStatus() {
     static uint8_t  lastActionState     = 1;
-    static uint32_t lastDisplayTime     = 0;
+    // static uint32_t lastDisplayTime     = 0;
     uint32_t now                        = millis();
 
+    bool    modulo2minutes = false;
     bool    actionStateChanged;
     uint8_t actionState;
+
+
+    // -----------------------------------
+    // --- SEND NTP sync message to Telegram
+    // -----------------------------------
+    if (lnTime.atMinuteModulo(2)) {modulo2minutes = true; }
+    if (lnTime.atMinuteModulo(5)) {modulo5minutes = true; }
+
+
 
     // -----------------------------------
     // ------ Action
@@ -107,17 +117,17 @@ void chackActionStatus() {
 
 
     if (actionStateChanged) { // facciamo comunque il display ogni 15 secondi
-        // myBot.clearMessage();
-        // myBot.addFormattedString("<b>pressControl</b> - %s\n", lnTime.nowTime());
         setTelegramTitle();
-        myBot.addFormattedString("PC relay: <b>%s</b>\nPC status: <b>%s</b>\nPUMP status: <b>%s</b>\n", str_OnOff[relayStatus], str_OnOff[pcStatus], str_OnOff[pumpStatus]);
+        myBot.addFormattedString("<b>PC relay: </b>%s\n<b>PC status:</b> %s\n<b>PUMP status:</b> %s\n", str_OnOff[relayStatus], str_OnOff[pcStatus], str_OnOff[pumpStatus]);
         myBot.send();
     }
 
     // if ( (actionState != lastActionState) || (now - lastDisplayTime) > actionStateDisplayInterval) { // facciamo comunque il display ogni 15 secondi
-    if ( actionStateChanged || (now - lastDisplayTime) > actionStateDisplayInterval) { // facciamo comunque il display ogni 15 secondi
+    // if ( actionStateChanged || (now - lastDisplayTime) > actionStateDisplayInterval) { // facciamo comunque il display ogni 15 secondi
+    if ( actionStateChanged || modulo2minutes ) { // facciamo comunque il display ogni 15 secondi
+        modulo2minutes = false;
         lastActionState=actionState;
-        lastDisplayTime=now;
+        // lastDisplayTime=now;
 
         LOG_INFO("actionState [%02d]: %7s %16s %5s", actionState, "RELAY", "PRESS-CONTROL", "PUMP");
         LOG_INFO("actionState [%02d]: %7s %16s %5s", actionState, str_OnOff[relayStatus], str_OnOff[pcStatus], str_OnOff[pumpStatus]);
@@ -156,7 +166,7 @@ void chackActionStatus() {
 
         // status normale in attesa che si accenda la pompa
         case pcON_pumpOFF:
-            actionStateDisplayInterval=ACTION_STATUS_DISPLAY_INTERVAL;
+            // actionStateDisplayInterval=ACTION_STATUS_DISPLAY_INTERVAL;
             pressControlLED.on();         // accendiamo fisso il LED
             pumpLED.off(); // facciamoòp lampeggiare
             break;
@@ -164,7 +174,7 @@ void chackActionStatus() {
 
         // status normale con la pompa accesa
         case pcON_pumpON:
-            actionStateDisplayInterval=ACTION_STATUS_DISPLAY_INTERVAL;
+            // actionStateDisplayInterval=ACTION_STATUS_DISPLAY_INTERVAL;
             pressControlLED.on();
             pumpLED.on();
             break;

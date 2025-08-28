@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 26-08-2025 17.55.34
+// Date .........: 28-08-2025 14.14.03
 */
 
 #include <Arduino.h> // ESP32Time.cpp
@@ -21,13 +21,16 @@
 // ----------------------------------------------------
 // Classe LnTime_Class
 // ----------------------------------------------------
-
+LnTime_Class lnTime;
 
 // ==================   TIME functions ==========================
 
 
-// Inizializzazione del modulo tempo
-void LnTime_Class::setup() {
+// ################################################################
+// # ntpIntervalTimeSync: seconds
+// ################################################################
+void LnTime_Class::setup(uint16_t ntpIntervalTimeSync) {
+    m_NTP_SYNC_INTERVAL = ntpIntervalTimeSync*1000UL;
     if (WiFi.status() == WL_CONNECTED) {
         LOG_INFO("WiFi is connected. Synchronizing time with NTP server...");
         initNTP(); // Imposta il fuso orario e i server NTP
@@ -104,32 +107,6 @@ const char* LnTime_Class::timeStamp(char *buffer, uint8_t buffer_len, uint32_t m
 }
 
 
-#ifdef LN_SCARTATA
-// ################################################################
-// Converte millisecondi in HH:MM:SS (utilizzando gmtime)
-// ################################################################
-const char *LnTime_Class::to_HHMMSS_discarded(uint32_t millisec, char *buffer, uint8_t buffer_len, bool addMilliSec) {
-    uint16_t msec, seconds;
-
-    if (millisec == 0) {
-        msec = rtc.getMillis();  // current mSeconds (0-999)
-        seconds = rtc.getEpoch();
-    }
-    else {
-        msec    = (millisec % 1000UL);
-        seconds = (millisec / 1000UL);
-    }
-
-
-    time_t rawTime = seconds;
-    struct tm *timeInfo = gmtime(&rawTime); // Utilizza gmtime per orario UTC
-    strftime(buffer, buffer_len, "%H:%M:%S", timeInfo);
-    if (addMilliSec) {
-        snprintf(buffer, buffer_len, "%0s:%03lu", buffer, msec);
-    }
-    return buffer;
-}
-#endif
 
 
 
@@ -155,8 +132,8 @@ bool LnTime_Class::atSecond() {
 // Controlla se è iniziato il secondo spicificato
 bool LnTime_Class::atSecond(uint8_t second) {
     m_timeinfo = rtc.getTimeStruct();
-    if (m_timeinfo.tm_sec == second && m_timeinfo.tm_sec != m_last_second) {
-        m_last_second = m_timeinfo.tm_sec;
+    if (m_timeinfo.tm_sec == second && m_timeinfo.tm_sec != m_at_last_second) {
+        m_at_last_second = m_timeinfo.tm_sec;
         return true;
     }
     return false;
@@ -175,43 +152,42 @@ bool LnTime_Class::atMinute() {
 // Controlla se è iniziato il minuto specificato
 bool LnTime_Class::atMinute(uint8_t minute) {
     m_timeinfo = rtc.getTimeStruct();
-    if (m_timeinfo.tm_sec == 0 && m_timeinfo.tm_min == minute && m_timeinfo.tm_min != m_last_minute) {
-        m_last_minute = m_timeinfo.tm_min;
+    if (m_timeinfo.tm_sec == 0 && m_timeinfo.tm_min == minute && m_timeinfo.tm_min != m_at_last_minute) {
+        m_at_last_minute = m_timeinfo.tm_min;
         return true;
     }
     return false;
 }
 
-// Controlla se è iniziato un nuovo quarto d'ora
-// bool LnTime_Class::isQuarterOClock() {
-//     m_timeinfo = rtc.getTimeStruct();
-//     if (m_timeinfo.tm_min % 15 == 0 && m_timeinfo.tm_min != m_last_minute) {
-//         m_last_minute = m_timeinfo.tm_min;
-//         return true;
-//     }
-//     return false;
-// }
+
 
 // Controlla se è iniziato siamo nel modulo richiesto
-bool LnTime_Class::atSecondModulo(uint8_t modulo) {
-    m_timeinfo = rtc.getTimeStruct();
-
-    if (m_timeinfo.tm_sec % modulo == 0 && m_timeinfo.tm_sec != m_last_second) { // ogni 5 secondi
-        m_last_second = m_timeinfo.tm_sec;
+bool LnTime_Class::atSecondModulo(uint16_t modulo) {
+    uint32_t epoch = rtc.getEpoch();
+    if (epoch != m_last_epoch_seconds && epoch % modulo == 0 ) {
+        m_last_epoch_seconds = epoch;
         return true;
     }
     return false;
 }
 
 // Controlla se è iniziato un nuovo quarto d'ora
-bool LnTime_Class::atMinuteModulo(uint8_t modulo) {
-    m_timeinfo = rtc.getTimeStruct();
+bool LnTime_Class::atMinuteModulo(uint16_t modulo) {
+    uint32_t epoch = rtc.getEpoch()/60;
+
+    if (epoch != m_last_epoch_minutes && epoch % modulo == 0 ) {
+        m_last_epoch_minutes = epoch;
+        return true;
+    }
+    return false;
+
+/*    m_timeinfo = rtc.getTimeStruct();
 
     if (m_timeinfo.tm_min % modulo == 0 && m_timeinfo.tm_min != m_last_minute) { // ogni 5 minutei
         m_last_minute = m_timeinfo.tm_min;
         return true;
     }
-    return false;
+    return false; */
 }
 
 

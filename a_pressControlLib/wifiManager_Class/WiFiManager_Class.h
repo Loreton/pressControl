@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 27-08-2025 19.25.27
+// Date .........: 28-08-2025 09.07.45
 //
 
 
@@ -16,7 +16,8 @@
     #include "wifiManager_ssid_credentials.h" // ssid definition networkd
 
 
-
+    #define WIFI_NO_AUTO_RECONNECT 0
+    #define WIFI_AUTO_RECONNECT    1
 
 
     // CallBack per gestire connessione e disconnessione
@@ -33,10 +34,11 @@
             Network*            m_networks;
             int8_t              m_networkCount;
             bool                m_neverConnected=true;
+            bool                m_autoReconnect=true;
 
                 // --- teniamo conto del tempo di disconnessione. S
                 // --- se supera m_maxWifiTimeout allora facciamo il restart dell'ESP32
-            uint32_t            m_disconnectionStartTime = 0;
+            // uint32_t            m_disconnectionStartTime = 0;
             const uint32_t      m_maxWifiTimeout = 1*60*1000UL; // Timeout massimo senza connessione (5 minuti)
             // uint32_t            m_disconnectedTime = 1*60*1000UL; // tempo di disconnessione.... 1 minuto
 
@@ -48,7 +50,6 @@
             uint32_t            m_lastScanTime = 0;
             bool                m_scanning;
             bool                m_starting = true;
-            bool                m_disconnectedMsg = false;
             uint8_t             m_eventCounter = 0;
 
             ConnectCallback     m_onConnectCallback = nullptr;
@@ -62,11 +63,11 @@
             WiFiManager_Class(void);
 
             // Inizializza il WiFi in modalità Station e si connette
-            void init(Network* creds, int8_t count);
+            void init(Network* creds, int8_t count, bool autoReconnect=true);
             void start(void);
             void restart(void);
             void disconnect(void);
-            uint32_t disconnectedElapsed(void) const { return m_disconnectionStartTime; };
+            // uint32_t disconnectedElapsed(void) const { return m_disconnectionStartTime; };
 
             // Funzione da chiamare nel loop principale per monitorare la connessione
             void update();
@@ -79,6 +80,14 @@
             // Imposta la funzione di callback da chiamare in caso di connessione
             void setConnectCallback(ConnectCallback callback) { m_onConnectCallback = callback; }
             void connectToBestNetwork();
+
+            // # --- di comodo
+            const char * ipaddress(void) const {return WiFi.localIP().toString().c_str();}
+            const char * ssid(void)      const {return WiFi.SSID().c_str();}
+            const char * bssid(void)     const {return WiFi.BSSIDstr().c_str();}
+            int8_t       rssi(void)      const {return WiFi.RSSI();}
+
+
 
         private:
             // Scansiona le reti e si connette a quella migliore (RSSI più alto)

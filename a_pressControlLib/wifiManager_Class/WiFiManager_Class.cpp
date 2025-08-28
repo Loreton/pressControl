@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 27-08-2025 20.20.46
+// Date .........: 28-08-2025 09.13.55
 //
 
 
@@ -37,10 +37,10 @@ WiFiManager_Class::WiFiManager_Class() {
 // #####################################################################
 // Inizializza il WiFi in modalità Station e si connette
 // #####################################################################
-void WiFiManager_Class::init(Network* creds, int8_t count) {
+void WiFiManager_Class::init(Network* creds, int8_t count, bool autoReconnect) {
     m_networks     = creds;
     m_networkCount = count;
-
+    m_autoReconnect = autoReconnect;
     start();
 }
 
@@ -74,18 +74,15 @@ void WiFiManager_Class::restart(void) {
         disconnect();
         start();
     }
-    else {
-        if (m_eventCounter == 0) {
-            LOG_TRACE("executing restarting");
-        }
-        else if (m_eventCounter > 0) {
-            LOG_TRACE("Restarting already called, m_eventCounter: %d", m_eventCounter);
-        }
-        else if (m_eventCounter > 20) {
+
+    if (m_eventCounter++ > 0) {
+        LOG_WARN("WiFi already Restarting - m_eventCounter: %d", m_eventCounter);
+        if (m_eventCounter > 20) {
             LOG_ERROR("Restarting  ESP32...");
             ESP.restart();
         }
     }
+
 }
 
 
@@ -107,7 +104,9 @@ void WiFiManager_Class::disconnect() {
 }
 
 
-// ---- valori in secondi
+// #########################################
+// # ---- valori in secondi
+// #########################################
 void WiFiManager_Class::setScanInterval(uint16_t whenConnected, uint16_t whenNotConnected) {
     m_scanIntervalWhenConnected = whenConnected*1000UL;
     m_scanIntervalWhenNotConnected = whenNotConnected*1000UL;
@@ -151,24 +150,6 @@ void WiFiManager_Class::update() {
 
 
 
-
-// #####################################################################
-// Controlla se è trascorso troppo tempo senza connessione e riavvia l'ESP32
-// #####################################################################
-// void WiFiManager_Class::checkOutOfService() {
-    // if (millis() - m_disconnectionStartTime > m_maxWifiTimeout) {
-    // if (m_disconnectedTimer.hasExpired()) {
-    //     LOG_ERROR("disconnection time expired %lu. restarting....", m_maxWifiTimeout);
-    //     LOG_ERROR("RESTARTING ESP");
-    //     LOG_ERROR("RESTARTING ESP");
-    //     LOG_ERROR("RESTARTING ESP");
-    //     LOG_ERROR("RESTARTING ESP");
-    //     restart();
-    //     // ESP.restart();
-    // }
-// }
-
-
 // #####################################################################
 // Avvia una scansione non bloccante
 // #####################################################################
@@ -196,22 +177,7 @@ void WiFiManager_Class::processScanResults(int networks) {
     }
 
     LOG_INFO("reti trovate: %d", networks);
-/*
-    // Cerca la rete migliore tra quelle configurate
-    for (int i = 0; i < networks; ++i) {
-        LOG_INFO("  %d: SSID: %-12s BSSID: %s (%d dBm)", i + 1, WiFi.SSID(i).c_str(), WiFi.BSSIDstr(i).c_str(), WiFi.RSSI(i));
 
-        for (int j = 0; j < m_networkCount; ++j) {
-            if (String(WiFi.SSID(i)) == String(m_networks[j].ssid)) {
-                if (WiFi.RSSI(i) > bestRSSI) {
-                    bestRSSI = WiFi.RSSI(i);
-                    bestNetworkIndex = j;
-                }
-                break;
-            }
-        }
-    }
-*/
     // Cerca la rete migliore tra quelle configurate
     for (int i = 0; i < networks; ++i) {
         LOG_INFO("  %d: SSID: %-12s BSSID: %s (%d dBm)", i + 1, WiFi.SSID(i).c_str(), WiFi.BSSIDstr(i).c_str(), WiFi.RSSI(i));
@@ -227,14 +193,11 @@ void WiFiManager_Class::processScanResults(int networks) {
     }
 
 
-
-
     // --- non cambiamo se il gap di livello è inferiore a 10
     int8_t currRSSI = WiFi.RSSI();
     if ( (currRSSI == 0) || (bestRSSI - currRSSI >= 10) ) {
         connectToSSID(bestNetworkIndex);
     } else {
-        // LOG_NOTIFY("currSSID: %-12s (%d dBm) - newSSID: %-12s (%d dBm)", WiFi.SSID().c_str(), WiFi.RSSI(), WiFi.SSID().c_str(), WiFi.RSSI(bestNetworkIndex), bestRSSI);
         LOG_NOTIFY("currSSID: %-12s (%d dBm)", WiFi.SSID().c_str(), WiFi.RSSI());
         LOG_NOTIFY("newSSID:  %-12s (%d dBm)", WiFi.SSID(bestNetworkIndex), bestRSSI);  // il nome lo prelevo dalla mia struttura che è char*
         LOG_NOTIFY("RSSI gap is less than 10. Mantaining current SSID");
@@ -257,14 +220,14 @@ void WiFiManager_Class::connectToSSID(int8_t networkIndex) {
         LOG_SPEC("best net: [%d] - %s", networkIndex, ssid);
 
         // Controlla se siamo già connessi alla rete migliore
-        if (WiFi.status() == WL_CONNECTED && String(WiFi.SSID()) == String(ssid)) {
+        // if (WiFi.status() == WL_CONNECTED && String(WiFi.SSID()) == String(ssid)) {
+        if (WiFi.status() == WL_CONNECTED && (strcmp(WiFi.SSID().c_str(), ssid) == 0) ) {
             LOG_NOTIFY("Già connesso alla rete migliore: %s - %s.", WiFi.SSID(), WiFi.BSSIDstr().c_str());
             LOG_NOTIFY("...non è necessario cambiare.");
         } else {
             LOG_INFO("Connessione a: %s", ssid);
             WiFi.begin(ssid, password);
         }
-        m_disconnectedMsg = false;
         m_scanning = false;
         m_starting = false;
         m_eventCounter=0;
@@ -287,21 +250,21 @@ void WiFiManager_Class::showCurrentConnection() {
         LOG_SPEC("\tBSSID:          %s", WiFi.BSSIDstr().c_str());
         LOG_SPEC("\tRSSI:           %ld", WiFi.RSSI());
         LOG_SPEC("\tCHANNEL:        %ld", WiFi.channel());
-        LOG_SPEC("\tIP:             %s",   WiFi.localIP().toString().c_str());
+        LOG_SPEC("\tIP:             %s",  WiFi.localIP().toString().c_str());
     }
     else {
         LOG_ERROR("WiFi is not connected!");
     }
     uint32_t scanElapsed = millis() - m_lastScanTime;
 
+    ptr = lnLog.toHHMMSS(buffer, 16, (m_scanInterval-scanElapsed), fMilliSecondsTrue, fstripHoursTrue);
+    LOG_SPEC("\tNext Scan:      %s - %7lu", ptr,  (m_scanInterval-scanElapsed));
+
     ptr = lnLog.toHHMMSS(buffer, 16, m_scanInterval, fMilliSecondsTrue, fstripHoursTrue);
     LOG_SPEC("\tScan interval:  %s - %7lu", ptr, m_scanInterval);
 
     ptr = lnLog.toHHMMSS(buffer, 16, scanElapsed, fMilliSecondsTrue, fstripHoursTrue);
     LOG_SPEC("\tScan elapsed:   %s - %7lu", ptr, scanElapsed);
-
-    ptr = lnLog.toHHMMSS(buffer, 16, (m_scanInterval-scanElapsed), fMilliSecondsTrue, fstripHoursTrue);
-    LOG_SPEC("\tNext Scan:      %s - %7lu", ptr,  (m_scanInterval-scanElapsed));
 
     LOG_SPEC("\tis scanning:    %d", m_scanning);
     LOG_SPEC("\tis starting:    %d", m_starting);
@@ -325,7 +288,9 @@ void WiFiManager_Class::handleEvent(arduino_event_id_t event) {
 
             case ARDUINO_EVENT_WIFI_STA_DISCONNECTED:
                 LOG_ERROR("WiFi - Connessione persa.");
-                s_instance->restart();
+                if (s_instance->m_autoReconnect) {
+                    s_instance->restart();
+                }
                 break;
             // Aggiungi altri eventi se necessario...
         }

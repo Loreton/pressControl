@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 26-08-2025 17.55.45
+// Date .........: 28-08-2025 13.45.00
 */
 
 #include <Arduino.h> // ESP32Time.cpp
@@ -44,9 +44,6 @@ const char* sntp_status[] = {
 // Implementazione del metodo statico (non posso accedere agli attributi della calsse)
 void LnTime_Class::cbSyncTime(struct timeval *tv) {
     uint8_t status = sntp_get_sync_status();
-    // if (s_instance) {
-    //     s_instance->m_NTP_synched = (status != 0) ? true : false;
-    // }
     LOG_NOTIFY("NTP time synched: %d [%s]", status, sntp_status[status]);
 }
 

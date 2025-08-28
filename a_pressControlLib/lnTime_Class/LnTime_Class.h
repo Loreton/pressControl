@@ -1,9 +1,9 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 20.09.28
+// Date .........: 28-08-2025 14.12.26
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 20.09.28
+// Date .........: 28-08-2025 14.12.26
 */
 
 #pragma once
@@ -16,12 +16,43 @@
     #define EUROPE_ROME_TZ "CET-1CEST,M3.5.0,M10.5.0/3"
 
     class LnTime_Class {
+        private:
+            ESP32Time rtc;
+            struct tm      m_timeinfo;
+            int8_t         m_at_last_second     = 99;
+            int8_t         m_at_last_minute     = 99;
+
+            int8_t         m_last_minute        = 99;
+            int8_t         m_last_second        = 99;
+            uint32_t       m_last_epoch_seconds = 0;
+            uint32_t       m_last_epoch_minutes = 0;
+
+            bool           m_ntp_active        = false;
+            uint32_t       m_lastNtpAttempt    = 0;
+            uint32_t       m_NTP_SYNC_INTERVAL = 2*60*1000UL;
+            bool           m_NTP_synched       = false;    // comodo da utilizzare esternamente
+
+            const char*    m_ntpServer1        = "pool.ntp.org";
+            const char*    m_ntpServer2        = "time.google.com";
+            const char*    m_ntpServer3        = "br.pool.ntp.org";
+            const char*    m_ntpServer4        = "time.nist.gov";
+            const char*    m_ntpServer5        = "2.br.pool.ntp.org";
+            const char*    m_ntpServer6        = "time.windows.com";
+
+            // methods
+                    bool checkNtpSynched(void);
+            static  void cbSyncTime(struct timeval *tv) ;
+
+            // static LnTime_Class* s_instance; // Istanza statica per la gestione degli eventi
+
+
+
         public:
             // Costruttore
             LnTime_Class();
 
             // Metodi pubblici
-            void setup();
+            void setup(uint16_t ntpIntervalTimeSync=2*60); // seconds
             void update();
             void initNTP(); // Nuovo metodo pubblico per la sincronizzazione
 
@@ -37,11 +68,11 @@
 
             bool atSecond();                     // on second change
             bool atSecond(uint8_t second);       // on second xx change
-            bool atSecondModulo(uint8_t modulo); // on second xx modulo  (ex.: atSecondModulo(20) return true at second 20, 40, 0)
+            bool atSecondModulo(uint16_t modulo); // on second xx modulo  (ex.: atSecondModulo(20) return true at second 20, 40, 0)
 
             bool atMinute();                     // on minute change
             bool atMinute(uint8_t minute);       // on minute xx change
-            bool atMinuteModulo(uint8_t modulo); // on minute xx modulo  (ex.: atMinuteModulo(20) return true at minute 20, 40, 0)
+            bool atMinuteModulo(uint16_t modulo); // on minute xx modulo  (ex.: atMinuteModulo(20) return true at minute 20, 40, 80, 0)
 
             // bool isQuarterOClock();
             uint32_t millisecOfDay(int offset = 0);
@@ -73,30 +104,6 @@
             */
             char sharedTimeBUFFER[16];
 
-        private:
-            ESP32Time rtc;
-            struct tm      m_timeinfo;
-            int8_t         m_last_minute       = 99;
-            int8_t         m_last_second       = 99;
-
-            bool           m_ntp_active        = false;
-            uint32_t       m_lastNtpAttempt    = 0;
-            const uint32_t m_NTP_SYNC_INTERVAL = 2*60*1000UL;
-            bool           m_NTP_synched       = false;    // comodo da utilizzare esternamente
-
-            const char*    m_ntpServer1        = "pool.ntp.org";
-            const char*    m_ntpServer2        = "time.google.com";
-            const char*    m_ntpServer3        = "br.pool.ntp.org";
-            const char*    m_ntpServer4        = "time.nist.gov";
-            const char*    m_ntpServer5        = "2.br.pool.ntp.org";
-            const char*    m_ntpServer6        = "time.windows.com";
-
-            // methods
-                    bool checkNtpSynched(void);
-            static  void cbSyncTime(struct timeval *tv) ;
-
-            // static LnTime_Class* s_instance; // Istanza statica per la gestione degli eventi
-
 
     };
 
@@ -125,3 +132,5 @@
         extern LnTime_Class lnTime;
     #endif
 */
+
+        extern LnTime_Class lnTime;

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 27-08-2025 14.27.31
+// Date .........: 28-08-2025 13.45.51
 //
 
 
@@ -30,16 +30,10 @@
 #include "wifiProcess.h"
 
 
-// --- creazione istanze classi....
-// LnTime_Class lnTime;
-
 
 uint8_t tgMsgLen=0;
 size_t initialMemory;
 size_t finalMemory;
-
-// OnTime_Class mainOnTime;
-// OnTime_Class wifiOnTime;
 
 
 
@@ -72,7 +66,7 @@ void setup() {
     myWiFiManager.setConnectCallback(wifiConnectedCB);
 
     // ------ set Time
-    lnTime.setup(); // Chiama il metodo setup della tua istanza di LnTime
+    lnTime.setup(10*60); // Chiama il metodo setup della tua istanza di LnTime ed imposta ntpIntervalTimeSync to 10 minuti
 
     // --- "pins_Initialization.cpp"
     pinsInitialization();
@@ -131,6 +125,9 @@ void loop() {
 
 
 
+    // -----------------------------------
+    // --- SEND NTP sync message to Telegram
+    // -----------------------------------
     if (lnTime.atMinuteModulo(2)) {
         sendNtpTelegramMessage();
     }
@@ -181,9 +178,9 @@ void loop() {
     }
 
 
-    /* ------------------------
-        controllo dello stato dei dispositivi
-    ------------------------ */
+    // # ------------------------
+    // # controllo dello stato dei dispositivi
+    // # ------------------------ */
     chackActionStatus();
 
 
