@@ -1,9 +1,9 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-08-2025 16.29.30
+// Date .........: 28-08-2025 16.38.01
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-08-2025 16.29.30
+// Date .........: 28-08-2025 16.38.01
 */
 
 #pragma once
@@ -75,11 +75,11 @@
             int8_t secondsToMinute(); // Restituisce i secondi mancanti al prossimo minuto completo
 
             bool atSecond();                     // on second change
-            bool atSecond(uint8_t second);       // on second xx change
+            bool atSecond(int8_t second);       // on second xx change
             bool atSecondModulo(uint16_t modulo); // on second xx modulo  (ex.: atSecondModulo(20) return true at second 20, 40, 0)
 
             bool atMinute();                     // on minute change
-            bool atMinute(uint8_t minute);       // on minute xx change
+            bool atMinute(int8_t minute);       // on minute xx change
             bool atMinuteModulo(uint16_t modulo); // on minute xx modulo  (ex.: atMinuteModulo(20) return true at minute 20, 40, 80, 0)
 
             // bool isQuarterOClock();

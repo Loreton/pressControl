@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-08-2025 16.30.41
+// Date .........: 28-08-2025 16.36.39
 */
 
 #include <Arduino.h> // ESP32Time.cpp
@@ -131,7 +131,7 @@ bool LnTime_Class::atSecond() {
 }
 
 
-bool LnTime_Class::atSecond(uint8_t second) {
+bool LnTime_Class::atSecond(int8_t second) {
     m_timeinfo = rtc.getTimeStruct();
 
     // Trova l'ultimo secondo registrato per questo valore "second".
@@ -148,17 +148,6 @@ bool LnTime_Class::atSecond(uint8_t second) {
     return false;
 }
 
-/*
-// Controlla se è iniziato il secondo spicificato
-bool LnTime_Class::atSecond(uint8_t second) {
-    m_timeinfo = rtc.getTimeStruct();
-    if (m_timeinfo.tm_sec == second && m_timeinfo.tm_sec != m_at_last_second) {
-        m_at_last_second = m_timeinfo.tm_sec;
-        return true;
-    }
-    return false;
-}
-*/
 
 // Controlla se è iniziato un nuovo minuto
 bool LnTime_Class::atMinute() {
@@ -170,7 +159,7 @@ bool LnTime_Class::atMinute() {
     return false;
 }
 
-bool LnTime_Class::atMinute(uint8_t minute) {
+bool LnTime_Class::atMinute(int8_t minute) {
     m_timeinfo = rtc.getTimeStruct();
 
     // Trova l'ultimo minuto registrato per questo valore "minute".
@@ -187,17 +176,6 @@ bool LnTime_Class::atMinute(uint8_t minute) {
 }
 
 
-/*// Controlla se è iniziato il minuto specificato
-bool LnTime_Class::atMinute(uint8_t minute) {
-    m_timeinfo = rtc.getTimeStruct();
-    if (m_timeinfo.tm_sec == 0 && m_timeinfo.tm_min == minute && m_timeinfo.tm_min != m_at_last_minute) {
-        m_at_last_minute = m_timeinfo.tm_min;
-        return true;
-    }
-    return false;
-}
-
-*/
 // ###############################################################
 // # Controlla se è iniziato siamo nel modulo richiesto
 // # utilizzo di std::map
