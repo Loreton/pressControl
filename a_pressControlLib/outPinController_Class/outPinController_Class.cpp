@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 07.49.07
+// Date .........: 30-08-2025 10.58.21
 //
 
 #include <Arduino.h>     // in testa anche per le definizioni dei type
@@ -9,7 +9,7 @@
 // ---------------------------------
 // lnLibrary headers files
 // ---------------------------------
-#define  LOG_MODULE_LEVEL LOG_DEFAULT_LEVEL
+// #define  LOG_MODULE_LEVEL LOG_LEVEL_DEBUG
 #include <lnLogger_Class.h>
 #include <lnGlobalVars.h> // Assicurati che questi includano ancora i valori necessari
 #include <lnSetPinID.h>

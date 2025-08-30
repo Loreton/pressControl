@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 27-08-2025 20.29.02
+// Date .........: 30-08-2025 10.43.03
 */
 
 #pragma once
@@ -69,7 +69,7 @@ extern ESP32Logger lnLog; // defined in lnLogger.cpp
 
 
     // Set the global log level
-    #ifndef LOG_DEFAULT_LEVEL
+    #ifndef LOG_LEVEL_DEFAULT
         // Log Levels --- definiti come BUILD_FLAGS nel file: /home/loreto/lnProfile/liveProduction/piorun.sh
         #define    LOG_LEVEL_NONE       0
         #define    LOG_LEVEL_ERROR      1
@@ -79,13 +79,13 @@ extern ESP32Logger lnLog; // defined in lnLogger.cpp
         #define    LOG_LEVEL_INFO       5
         #define    LOG_LEVEL_DEBUG      6
         #define    LOG_LEVEL_TRACE      7
-        #pragma message "LOG_DEFAULT_LEVEL not DEFINED. Defaulting to LOG_LEVEL_WARN."
-        #define LOG_DEFAULT_LEVEL LOG_LEVEL_WARN
+        #pragma message "LOG_LEVEL_DEFAULT not DEFINED. Defaulting to LOG_LEVEL_WARN."
+        #define LOG_LEVEL_DEFAULT LOG_LEVEL_WARN
     #endif
 
     // --- per ogni modulo posso decidere il livello di log
     #ifndef LOG_MODULE_LEVEL
-        #define LOG_MODULE_LEVEL LOG_DEFAULT_LEVEL
+        #define LOG_MODULE_LEVEL LOG_LEVEL_DEFAULT
     #endif
     // ---
 

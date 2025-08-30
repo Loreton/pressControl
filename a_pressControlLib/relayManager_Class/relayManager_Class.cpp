@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 27-08-2025 14.29.07
+// Date .........: 30-08-2025 10.58.58
 //
 
 #include <Arduino.h> // Necessario per funzioni come pinMode, digitalWrite, millis
@@ -8,7 +8,7 @@
 // ---------------------------------
 // lnLibrary headers files
 // ---------------------------------
-// #define  NO_MODULE_LOG
+// #define  LOG_MODULE_LEVEL LOG_LEVEL_DEBUG
 #include <lnLogger_Class.h>
 #include <lnSetPinID.h>
 

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 16.09.01
+// Date .........: 30-08-2025 10.58.28
 //
 
 #include <Arduino.h> // in testa anche per le definizioni dei type
@@ -9,7 +9,7 @@
 // ---------------------------------
 // lnLibrary headers files
 // ---------------------------------
-// #define  NO_MODULE_LOG
+// #define  LOG_MODULE_LEVEL LOG_LEVEL_DEBUG
 #include <lnLogger_Class.h> // Assuming these are defined elsewhere
 #include <lnSetPinID.h>   // Assuming this is defined elsewhere
 #include "passiveBuzzer_Class.h"

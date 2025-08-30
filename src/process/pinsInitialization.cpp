@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 27-08-2025 14.14.01
+// Date .........: 30-08-2025 19.41.06
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -71,7 +71,7 @@ void pinsInitialization(void) {
     pressControl.init("pressControl",  pressControl_pin,  LOW, PRESS_CONTROL_STATE_THRESHOLDS, NUM_PRESS_CONTROL_STATE_THRESHOLDS);   // Now an object, not a struct
     LOG_NOTIFY("\t[%s] initialized", pressControl.pinID());
 
-    #if LOG_LEVEL >= LOG_LEVEL_TRACE
+    #if LOG_LEVEL >= LOG_LEVEL_DEBUG
         startButton.showStatus();
         pumpState.showStatus();
         pressControl.showStatus();

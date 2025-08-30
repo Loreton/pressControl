@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 07.47.27
+// Date .........: 30-08-2025 10.57.54
 */
 
 
@@ -10,7 +10,7 @@
 // ---------------------------------
 // lnLibrary headers files
 // ---------------------------------
-#define  LOG_MODULE_LEVEL LOG_DEFAULT_LEVEL
+// #define  LOG_MODULE_LEVEL LOG_LEVEL_DEBUG
 #include <lnLogger_Class.h>
 #include "lnString.h"
 

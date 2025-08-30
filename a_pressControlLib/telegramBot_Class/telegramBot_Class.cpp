@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-08-2025 18.34.32
+// Date .........: 30-08-2025 11.43.06
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -12,7 +12,7 @@
 // ---------------------------------
 // lnLibrary headers files
 // ---------------------------------
-#define  LOG_MODULE_LEVEL LOG_LEVEL_DEFAULT
+// #define  LOG_MODULE_LEVEL LOG_LEVEL_DEBUG
 #include <lnLogger_Class.h>
 #include "telegramBot_Class.h"
 
@@ -176,13 +176,13 @@ bool TelegramBot_Class::send() {
              "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&parse_mode=%s&text=%s",
              m_token, m_chatId, m_parseMode, encodedMessage);
 
-    LOG_NOTIFY("Sending msg: %s", urlBuffer);
+    LOG_DEBUG("Sending msg: %s", urlBuffer);
     http.begin(urlBuffer);
     int httpResponseCode = http.GET();
     http.end();
 
     if (httpResponseCode > 0) {
-        LOG_INFO("Messaggio inviato con successo!");
+        LOG_NOTIFY("Messaggio inviato con successo!");
         return true;
     } else {
         LOG_ERROR("Invio messaggio fallito.");

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-08-2025 18.24.32
+// Date .........: 30-08-2025 19.48.51
 //
 
 
@@ -53,23 +53,28 @@
 
 
         // L'inizializzazione avviene tramite il costruttore.
-        ButtonLongPress_Class startButton; // pulsante per accendre il pressControl tramite Relay del ESP32
-        ButtonLongPress_Class pumpState;   // pin per controllare lo stato della pompa
-        ButtonLongPress_Class pressControl; // pin per controllare lo stato del pressContro
+        ButtonLongPress_Class            startButton; // pulsante per accendre il pressControl tramite Relay del ESP32
+        ButtonLongPress_Class            pumpState;   // pin per controllare lo stato della pompa
+        ButtonLongPress_Class            pressControl; // pin per controllare lo stato del pressContro
 
-        outPinController_Class   activeBuzzer;
-        outPinController_Class   pressControlLED;
-        outPinController_Class   pumpLED;
+        outPinController_Class           activeBuzzer;
+        outPinController_Class           pressControlLED;
+        outPinController_Class           pumpLED;
 
-        PassiveBuzzer_Class   passiveBuzzer;
+        PassiveBuzzer_Class              passiveBuzzer;
 
-        RelayManager_Class    pressControlRelay;
-        RelayManager_Class    magnetoTermicoRelay;
+        RelayManager_Class               pressControlRelay;
+        RelayManager_Class               magnetoTermicoRelay;
 
-        bool                  fPressControlTimeExausted = false; // indica che il pressContro ha terminato il tempo massiomo di ON
-        bool                  fPUMP_ALARM = false;
-        bool                  fAscendent = true;
-        bool                  fDiscendent = false;
+        bool fPressControlTimeExausted = false; // indica che il pressContro ha terminato il tempo massiomo di ON
+        bool fPUMP_ALARM               = false;
+        bool fAscendent                = true;
+        bool fDiscendent               = false;
+
+        bool fModulo10Seconds          = false;
+        bool fModulo30Seconds          = false;
+        bool fModulo2minutes           = false;
+        bool fModulo5minutes           = false;
 
         // Frequenze per una scala Do Maggiore (approssimate)
         int C_major_scale[] = {
@@ -97,33 +102,36 @@
 
 
 
-
-
     #else
-        extern ButtonLongPress_Class startButton; // pulsante per accendre il pressControl tramite Relay del ESP32
-        extern ButtonLongPress_Class pumpState;   // pin per controllare lo stato della pompa
-        extern ButtonLongPress_Class pressControl; // pin per controllare lo stato del pressContro
+        extern ButtonLongPress_Class  startButton;             // pulsante per accendre il pressControl tramite Relay del ESP32
+        extern ButtonLongPress_Class  pumpState;               // pin per controllare lo stato della pompa
+        extern ButtonLongPress_Class  pressControl;            // pin per controllare lo stato del pressContro
 
-        extern outPinController_Class   activeBuzzer;
-        extern outPinController_Class   pressControlLED;
-        extern outPinController_Class   pumpLED;
+        extern outPinController_Class activeBuzzer;
+        extern outPinController_Class pressControlLED;
+        extern outPinController_Class pumpLED;
 
-        extern PassiveBuzzer_Class   passiveBuzzer;
+        extern PassiveBuzzer_Class    passiveBuzzer;
 
-        extern RelayManager_Class    pressControlRelay;
-        extern RelayManager_Class    magnetoTermicoRelay;
+        extern RelayManager_Class     pressControlRelay;
+        extern RelayManager_Class     magnetoTermicoRelay;
 
-        extern bool                fPressControlTimeExausted; // indica che il pressContro ha terminato il tempo massiomo di ON
+        extern bool                   fPressControlTimeExausted; // indica che il pressContro ha terminato il tempo massiomo di ON
         extern int C_major_scale[];
-        extern int C_major_num_notes;
-        extern bool fPUMP_ALARM;
-        extern bool fAscendent;
-        extern bool fDiscendent;
+        extern int                    C_major_num_notes;
+        extern bool                   fPUMP_ALARM;
+        extern bool                   fAscendent;
+        extern bool                   fDiscendent;
+
+        extern bool                   fModulo10Seconds;
+        extern bool                   fModulo30Seconds;
+        extern bool                   fModulo2minutes;
+        extern bool                   fModulo5minutes;
 
 
-        extern TelegramBot_Class myBot;
-        extern WiFiManager_Class myWiFiManager;
-        extern LnTime_Class lnTime;
+        extern TelegramBot_Class      myBot;
+        extern WiFiManager_Class      myWiFiManager;
+        extern LnTime_Class           lnTime;
 
     #endif
 
@@ -136,7 +144,7 @@
     // --- pinsInitialization.cpp
     void pinsInitialization(void);
     void startAlarmActions(void) ;
-    void resetAlarmActions(void) ;
+    void resetAlarmActions(bool synchBlinking=false) ;
 
 
     // --- actionProcess.cpp

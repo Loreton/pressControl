@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-08-2025 18.48.29
+// Date .........: 30-08-2025 18.03.54
 //
 
 
@@ -20,6 +20,11 @@
 #include "main.h"
 
 
+// --- module variables
+uint8_t relayStatus;
+uint8_t pumpStatus;
+uint8_t pcStatus;
+// bool   fidleStatus;
 
 // Definisce i possibili tipi di condizioni
 enum ActionState : uint8_t {
@@ -31,7 +36,14 @@ enum ActionState : uint8_t {
 } ;
 
 
-// uint32_t actionStateDisplayInterval = ACTION_STATUS_DISPLAY_INTERVAL;
+
+void sendStatusToTelegram() {
+    setTelegramTitle();
+    myBot.addFormattedString("<b>Relay:</b> %s\n", str_OnOff[relayStatus]);
+    myBot.addFormattedString("<b>PressControl:</b> %s\n", str_OnOff[pcStatus]);
+    myBot.addFormattedString("<b>PUMP:</b> %s\n", str_OnOff[pumpStatus]);
+    myBot.send();
+}
 
 
 
@@ -47,6 +59,7 @@ void startAlarmActions() {
     }
 
     fPUMP_ALARM=true;
+    // fSyncBlinking=false;
     pressControlRelay.off();
     // tentiamo di togliere corrente al magnetotermico
     if ( (millis() - last_relay_time) > relay_delay ) {
@@ -61,21 +74,27 @@ void startAlarmActions() {
 
 
 
+
 // #############################################################
 // #
 // #############################################################
-void resetAlarmActions() {
+void resetAlarmActions(bool syncBlinking) {
     if (fPUMP_ALARM) {
         LOG_INFO("Recovery Actions for Alarm Ended."); // NO perchè compare ad ogni giro di loop
         fPUMP_ALARM=false;
     }
-    // actionStateDisplayInterval=ACTION_STATUS_DISPLAY_INTERVAL;
-    pressControlLED.blinking(1000, 3000);
-    pumpLED.blinking(1000, 3000);
     activeBuzzer.reset();
     passiveBuzzer.myNoTone();
     pressControlRelay.off();       // spegniamo epr sicurezza il relay interno
     magnetoTermicoRelay.off();
+
+    if (syncBlinking) {
+        LOG_SPEC("Synching LED blinking"); // NO perchè compare ad ogni giro di loop
+        pressControlLED.reset(); // per sincronizzare i led
+        pumpLED.reset(); // per sincronizzare i led
+    }
+    pressControlLED.blinking(1000, 3000);
+    pumpLED.blinking(1000, 3000);
 }
 
 
@@ -84,50 +103,35 @@ void resetAlarmActions() {
 // #
 // #############################################################
 void chackActionStatus() {
-    static uint8_t  lastActionState     = 1;
-    // static uint32_t lastDisplayTime     = 0;
-    uint32_t now                        = millis();
+    static bool fIdleStatus = false;
 
-    bool    actionStateChanged;
-    uint8_t actionState;
+    static  uint8_t  lastActionState = 1;
+            uint32_t now = millis();
 
-
-    // -----------------------------------
-    // --- SEND NTP sync message to Telegram
-    // -----------------------------------
-    bool modulo2minutes = lnTime.atMinuteModulo(2) ? true : false;
-    bool modulo5minutes = lnTime.atMinuteModulo(5) ? true : false;
-
+            bool    actionStateChanged;
+            uint8_t actionState;
 
 
     // -----------------------------------
     // ------ Action
     // -----------------------------------
-    uint8_t relayStatus = pressControlRelay.isActive();
-    uint8_t pumpStatus  = pumpState.isPressed();
-    uint8_t pcStatus    = pressControl.isPressed();
+    relayStatus = pressControlRelay.isActive();
+    pumpStatus  = pumpState.isPressed();
+    pcStatus    = pressControl.isPressed();
 
     actionState = (pcStatus*2) + (pumpStatus*1);
-    actionStateChanged = (actionState == lastActionState) ? false : true;
     if (fPUMP_ALARM) {
         actionState = pumpAlarm;
     }
+    actionStateChanged = (actionState == lastActionState) ? false : true;
 
 
     if (actionStateChanged) { // facciamo comunque il display ogni 15 secondi
-        setTelegramTitle();
-        myBot.addFormattedString("<b>PressControl:</b> %s\n", str_OnOff[pcStatus]);
-        myBot.addFormattedString("<b>Relay:</b> %s\n", str_OnOff[relayStatus]);
-        myBot.addFormattedString("<b>PUMP:</b> %s\n", str_OnOff[pumpStatus]);
-        myBot.send();
+        sendStatusToTelegram();
     }
 
-    // if ( (actionState != lastActionState) || (now - lastDisplayTime) > actionStateDisplayInterval) { // facciamo comunque il display ogni 15 secondi
-    // if ( actionStateChanged || (now - lastDisplayTime) > actionStateDisplayInterval) { // facciamo comunque il display ogni 15 secondi
-    if ( actionStateChanged || modulo2minutes ) { // facciamo comunque il display ogni 15 secondi
-        modulo2minutes = false;
+    if ( actionStateChanged || fModulo2minutes ) { // facciamo comunque il display ogni 15 secondi
         lastActionState=actionState;
-
         LOG_INFO("actionState [%02d]: %7s %16s %5s", actionState, "RELAY", "PRESS-CONTROL", "PUMP");
         LOG_INFO("actionState [%02d]: %7s %16s %5s", actionState, str_OnOff[relayStatus], str_OnOff[pcStatus], str_OnOff[pumpStatus]);
 
@@ -139,7 +143,16 @@ void chackActionStatus() {
 
         // status normale in attesa che si accenda il PC
         case pumpAlarm:
-            LOG_ERROR("Pump Alarm");
+            if ( fModulo10Seconds ) {
+                LOG_ERROR("Pump Alarm");
+                setTelegramTitle();
+                myBot.addFormattedString("<b>Pump Alarm!!!!:</b>\n");
+                myBot.addFormattedString("<b>Relay:</b> %s\n", str_OnOff[relayStatus]);
+                myBot.addFormattedString("<b>PressControl:</b> %s\n", str_OnOff[pcStatus]);
+                myBot.addFormattedString("<b>PUMP:</b> %s\n", str_OnOff[pumpStatus]);
+                myBot.send();
+            }
+            fIdleStatus=false;
             startAlarmActions();
             break;
 
@@ -148,34 +161,40 @@ void chackActionStatus() {
         case pcOFF_pumpOFF:
             if (relayStatus) {
                 // non può essere il rele on ed il PC off
-                LOG_ERROR("Relè OFF quando invece il PC è ON");
+                if ( fModulo10Seconds ) LOG_ERROR("Relè OFF quando invece il PC è ON");
                 startAlarmActions();
+                fIdleStatus=false;
             } else {
-                // LOG_INFO("Situazione normale");
-                resetAlarmActions();
+                if (!fIdleStatus) {
+                    fIdleStatus=true;
+                    resetAlarmActions(fIdleStatus);
+                }
             }
             break;
 
 
         // non può essere la pompa ON ed il PC off
         case pcOFF_pumpON:
-            LOG_ERROR("Pump ON quando il PC è OFF.");
+            if ( fModulo10Seconds ) LOG_ERROR("Pump ON quando il PC è OFF.");
             startAlarmActions();
+            fIdleStatus=false;
             break;
 
         // status normale in attesa che si accenda la pompa
         case pcON_pumpOFF:
-            // actionStateDisplayInterval=ACTION_STATUS_DISPLAY_INTERVAL;
-            pressControlLED.on();         // accendiamo fisso il LED
-            pumpLED.off(); // facciamoòp lampeggiare
+            if ( fModulo5minutes )  sendStatusToTelegram();
+            pressControlLED.on(); // accendiamo fisso il LED
+            pumpLED.off();        // facciamoòp lampeggiare
+            fIdleStatus=false;
             break;
 
 
         // status normale con la pompa accesa
         case pcON_pumpON:
-            // actionStateDisplayInterval=ACTION_STATUS_DISPLAY_INTERVAL;
+            if ( fModulo5minutes )  sendStatusToTelegram();
             pressControlLED.on();
             pumpLED.on();
+            fIdleStatus=false;
             break;
 
         default:

@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-08-2025 16.36.39
+// Date .........: 30-08-2025 19.45.24
 */
 
 #include <Arduino.h> // ESP32Time.cpp
@@ -12,7 +12,7 @@
 // ---------------------------------
 // lnLibrary headers files
 // ---------------------------------
-#define  LOG_MODULE_LEVEL LOG_DEFAULT_LEVEL
+// #define  LOG_MODULE_LEVEL LOG_LEVEL_DEBUG
 #include <lnLogger_Class.h>
 #include <lnTimer_Class.h>
 #include "LnTime_Class.h"
@@ -66,10 +66,10 @@ char *LnTime_Class::nowTime() {
 // Converte millisecondi in HH:MM:SS.ms
 // ritorna il timestamp del giorno
 //    se millisec != 0 allora converte i millisec in timestamp
-//    addMilliSec = true: aggiunge .xxx alla fine della stringa
+//    withMilliSec = true: aggiunge .xxx alla fine della stringa
 //    stripHeader = true: rimuove hour o minutes se == 0
 // ################################################################
-const char* LnTime_Class::timeStamp(char *buffer, uint8_t buffer_len, uint32_t millisec, bool addMilliSec, bool stripHeader) {
+const char* LnTime_Class::timeStamp(char *buffer, uint8_t buffer_len, uint32_t millisec, bool withMilliSec, bool stripHours) {
     uint16_t msec;
     uint32_t seconds;
 
@@ -87,22 +87,17 @@ const char* LnTime_Class::timeStamp(char *buffer, uint8_t buffer_len, uint32_t m
     uint8_t min      = (seconds / 60) % 60;
     uint8_t hour     = (seconds / 3600);
 
-    if (addMilliSec) {
+    if (withMilliSec) {
         snprintf(buffer, buffer_len, "%02d:%02d:%02d.%03lu", hour, min, sec, msec);
     }
     else {
         snprintf(buffer, buffer_len, "%02d:%02d:%02d", hour, min, sec);
     }
 
-    if (stripHeader) {
-        if (hour > 0) {
-            return buffer;
-        } else if (min > 0) {
-            return buffer+3;
-        } else {
-            return buffer+6;
-        }
+    if (stripHours && hour == 0)  {
+        return buffer+3;
     }
+
     return buffer;
 }
 

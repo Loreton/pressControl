@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 27-08-2025 14.28.49
+// Date .........: 30-08-2025 19.40.00
 //
 
 #include <Arduino.h>
@@ -9,7 +9,7 @@
 // ---------------------------------
 // lnLibrary headers files
 // ---------------------------------
-#define  LOG_MODULE_LEVEL LOG_DEFAULT_LEVEL
+// #define  LOG_MODULE_LEVEL LOG_LEVEL_DEBUG
 #include <lnLogger_Class.h>
 #include <lnGlobalVars.h> // Assicurati che questi siano disponibili
 #include <lnSerialRead.h> // Assicurati che questi siano disponibili
@@ -51,16 +51,6 @@ void ButtonLongPress_Class::init(const char* name, uint8_t pin,
     } else {
         pinMode(m_pin, INPUT);
     }
-
-    // calcolo del nextGAP.
-    // for (int8_t i = 0; i < m_numThresholds - 1; i++) {
-    //     m_gapThresholds[i] = m_pressThresholds[i+1] - m_pressThresholds[i];
-    // }
-    // L'ultimo elemento può essere impostato all'ultimo gap per consistenza,
-    // o gestito separatamente se non c'è un "gap successivo" definito.
-    // if (m_numThresholds > 0) {
-    //     m_gapThresholds[m_numThresholds - 1] = 0; // O un valore predefinito
-    // }
 
 
     m_lastButtonState = digitalRead(m_pin) == m_pressedLogicLevel;
@@ -158,8 +148,12 @@ void ButtonLongPress_Class::displayPressedLevel(bool forceDisplay) {
             msToNextLevel = (m_elapsed > nextGAP_ms) ? (m_elapsed - nextGAP_ms) : (nextGAP_ms - m_elapsed);
 
             // * calcola and display elapsed time
-            char elapsedBUFFER[16];   lnTime.timeStamp(elapsedBUFFER,   sizeof(elapsedBUFFER),   m_elapsed, false);
-            char nextLevelBUFFER[16]; lnTime.timeStamp(nextLevelBUFFER, sizeof(nextLevelBUFFER), msToNextLevel, false);
+            // char elapsedBUFFER[16];   lnTime.timeStamp(elapsedBUFFER,   sizeof(elapsedBUFFER),   m_elapsed, false);
+            // char nextLevelBUFFER[16]; lnTime.timeStamp(nextLevelBUFFER, sizeof(nextLevelBUFFER), msToNextLevel, false);
+
+
+            char elapsedBUFFER[16];   lnLog.toHHMMSS(elapsedBUFFER,   sizeof(elapsedBUFFER),   m_elapsed, false);
+            char nextLevelBUFFER[16]; lnLog.toHHMMSS(nextLevelBUFFER, sizeof(nextLevelBUFFER), msToNextLevel, false);
 
             //* display
             LOG_NOTIFY("[%s]:", m_pinID);
@@ -272,6 +266,19 @@ void ButtonLongPress_Class::pressingLevelNotification(ButtonLongPressCallback on
         m_lastPressedLevel = NO_PRESS; // Reset per il prossimo ciclo di pressione
     }
 }
+
+
+//###########################################################################
+//#
+//###########################################################################
+uint32_t ButtonLongPress_Class::thresholdLevelValue(uint8_t level) {
+    uint32_t value = m_pressThresholds[level-1];
+    // if (level >= m_numThresholds) {
+    //     value = m_pressThresholds[m_numThresholds-1];
+    // }
+    return value;
+}
+
 
 //###########################################################################
 //#

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 27-08-2025 14.12.55
+// Date .........: 30-08-2025 13.45.05
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -10,11 +10,13 @@
 // ---------------------------------
 // --- lnLibrary headers files
 // ---------------------------------
-#define  LOG_MODULE_LEVEL LOG_DEFAULT_LEVEL
+// #define  LOG_MODULE_LEVEL LOG_LEVEL_DEBUG
 #include <lnLogger_Class.h>
 #include <LnTime_Class.h>
 
 #include "main.h" // per functions protoype
+
+
 
 //###########################################################################
 //# richiamata quando il pulsante viene rilasciato
@@ -31,8 +33,6 @@ void pumpHandler(ButtonLongPress_Class *p) {
 
         case PRESSED_LEVEL_3:
             LOG_DEBUG("PRESSED_LEVEL_3");
-            // pressControlRelay.toggle();
-
             break;
 
         case PRESSED_LEVEL_4:
@@ -55,7 +55,11 @@ void pumpHandler(ButtonLongPress_Class *p) {
 
 
 
+
+
+
 void pumpNotificationCB(ButtonLongPress_Class *p) {
+    static bool firstAlarmTime = true;
     static uint32_t lastBeepTime;
     uint32_t phase_beep_duration;
 
@@ -80,17 +84,10 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
 
                 LOG_INFO("%s beeping. duration: %lu ms", p->pinID(),  phase_beep_duration);
                 setTelegramTitle();
-                // myBot.startNewMessage("<b>PressControl\nTime: %s</b>\n", lnTime.nowTime());
-                myBot.addFormattedString("pump level: <b>%d</b>\nduration ms: <b>%lu</b>\n", p->currentPressLevel(), phase_beep_duration);
+                myBot.addFormattedString("<b>pump level:</b> %d/%d\n<b>duration ms:</b> %lu\n", p->currentPressLevel(),  p->maxLevels(), phase_beep_duration);
                 myBot.send();
 
                 activeBuzzer.pulse(phase_beep_duration);
-                // char dateStr[16];
-                // lnTime.timeStamp(dateStr, sizeof(dateStr));
-                // snprintf(tgMessageBuffer, TG_MSG_MAX_SIZE, "<b>ESP32</b> - %s%%aPump is stiil ON%%alevel: <b>%d/5d</b>",
-                //           dateStr, p->currentPressLevel(), p->maxLevels());
-                // sendMessageToTelegram(tgMessageBuffer, modeHTML);
-
                 break;
 
             default:
@@ -104,11 +101,21 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
     if (p->maxLevelReached() ) {
         if (millis() - lastBeepTime >= ALARM_BEEP_INTERVAL) {
             activeBuzzer.pulse(1000); // NON serve per questo pulstante
-            LOG_WARN("[%s] ALARM! max pressed level %d reached", p->pinID(), p->currentPressLevel());
             lastBeepTime = millis();
             fPUMP_ALARM = true;
         }
+        if (fModulo30Seconds || firstAlarmTime) {
+            LOG_WARN("[%s] ALARM! max pressed level %d reached", p->pinID(), p->currentPressLevel());
+            setTelegramTitle();
+            myBot.addFormattedString("<b>pump ALARM!:</b> max pressed level %d reached", p->currentPressLevel());
+            myBot.send();
+            firstAlarmTime=false;
+        }
     }
+    else {
+        firstAlarmTime=true;
+    }
+
 
 }
 

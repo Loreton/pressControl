@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-08-2025 13.45.51
+// Date .........: 30-08-2025 13.35.08
 //
 
 
@@ -15,7 +15,7 @@
 // ---------------------------------
 // --- lnLibrary headers files
 // ---------------------------------
-#define  LOG_MODULE_LEVEL LOG_DEFAULT_LEVEL
+// #define  LOG_MODULE_LEVEL LOG_LEVEL_DEBUG
 #include <lnLogger_Class.h>
 #include <lnGlobalVars.h>
 #include <lnSerialRead.h>
@@ -66,7 +66,6 @@ void setup() {
     myWiFiManager.setConnectCallback(wifiConnectedCB);
 
     // ------ set Time
-    lnTime.setup(10*60); // Chiama il metodo setup della tua istanza di LnTime ed imposta ntpIntervalTimeSync to 10 minuti
 
     // --- "pins_Initialization.cpp"
     pinsInitialization();
@@ -79,6 +78,7 @@ void setup() {
     finalMemory = ESP.getFreeHeap();
     LOG_TRACE("memoria (bytes): initial=%ld - final=%ld - occupied=%ld", initialMemory, finalMemory, (initialMemory - finalMemory)); // Stima RAM allocata
 
+    lnTime.setup(2*60); // Chiama il metodo setup della tua istanza di LnTime ed imposta ntpIntervalTimeSync to 10 minuti
 }
 
 
@@ -105,6 +105,10 @@ void loop() {
         LOG_INFO("processing started....");
     }
 
+    fModulo2minutes = lnTime.atMinuteModulo(2);
+    fModulo5minutes = lnTime.atMinuteModulo(5);
+    fModulo10Seconds = lnTime.atSecondModulo(10);
+    fModulo30Seconds = lnTime.atSecondModulo(30);
 
     // -----------------------------------
     // ------ refresh dei vari oggetti
@@ -119,29 +123,19 @@ void loop() {
     lnTime.update();
 
     // --- impostati dalla callback
-    if (fWifiConnected)    {wifiConnectedAction(); }
-    if (fWifiDisconnected) {wifiDisconnectedAction(); }
-
-
 
 
     // -----------------------------------
     // --- SEND NTP sync message to Telegram
     // -----------------------------------
-    if (lnTime.atMinuteModulo(2)) {
-        sendNtpTelegramMessage();
-    }
+    if (fWifiConnected)    {wifiConnectedAction(); }
+    if (fWifiDisconnected) {wifiDisconnectedAction(); }
 
 
-    if (lnTime.atMinuteModulo(5)) { // ogni xx minuti...
-        // LOG_INFO("controllo della connessione WiFi");
-        // if (!myWiFiManager.isConnected()) {
-        //     myWiFiManager.restart();
-        // }
-        // else {
-        //     myWiFiManager.connectToBestNetwork(); // rescanning
-        // }
+    if (fModulo2minutes) {
+        sendNtpSynchedTelegramMessage();
     }
+
 
 
     /**

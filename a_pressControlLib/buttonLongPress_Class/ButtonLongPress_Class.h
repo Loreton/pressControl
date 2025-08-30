@@ -57,6 +57,8 @@
             inline uint8_t  maxLevels(void) const { return m_numThresholds; }
             inline const char* pinID(void) const { return m_pinID; }
 
+            uint32_t thresholdLevelValue(uint8_t level);
+
             // Membri pubblici che potrebbero essere consultati esternamente (es. per debug o display)
             // Considera se questi debbano essere `private` con getter specifici.
             uint8_t           m_pin = 0;

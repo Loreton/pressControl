@@ -1,13 +1,13 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 07.49.02
+// Date .........: 30-08-2025 10.58.13
 //
 
 
 // ---------------------------------
 // lnLibrary headers files
 // ---------------------------------
-#define  LOG_MODULE_LEVEL LOG_DEFAULT_LEVEL
+// #define  LOG_MODULE_LEVEL LOG_LEVEL_DEBUG
 #include <lnLogger_Class.h> // Assicurati che questo sia disponibile nel tuo ambiente
 #include "lnTimer_Class.h" // Includi il tuo nuovo file header della classe
 

@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-08-2025 13.45.00
+// Date .........: 30-08-2025 10.56.54
 */
 
 #include <Arduino.h> // ESP32Time.cpp
@@ -12,9 +12,8 @@
 // ---------------------------------
 // lnLibrary headers files
 // ---------------------------------
-#define  LOG_MODULE_LEVEL LOG_DEFAULT_LEVEL
+// #define  LOG_MODULE_LEVEL LOG_LEVEL_DEBUG
 #include <lnLogger_Class.h>
-// #include <lnTimer_Class.h>
 #include "LnTime_Class.h"
 
 

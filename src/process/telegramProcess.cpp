@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-08-2025 09.39.55
+// Date .........: 30-08-2025 11.57.43
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -23,16 +23,14 @@
 // #
 // ######################################################
 void setTelegramTitle() {
-    // myBot.clearMessage();
-    // myBot.addFormattedString("<b>pressControl</b> - %s\n", lnTime.nowTime());
-    myBot.startNewMessage("<b>PressControl\nTime:</b> %s\n", lnTime.nowTime());
+    myBot.startNewMessage("<b>ESP32-PressControl\nTime:</b> %s\n", lnTime.nowTime());
 }
 
 
 // ######################################################
 // #
 // ######################################################
-void sendNtpTelegramMessage() {
+void sendNtpSynchedTelegramMessage() {
     static bool ntpSynchedMessage = false;
     if (lnTime.isNtpSynched()) {
         if (!ntpSynchedMessage) {
