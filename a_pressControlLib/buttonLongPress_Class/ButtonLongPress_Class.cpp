@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 30-08-2025 19.40.00
+// Date .........: 01-09-2025 08.33.45
 //
 
 #include <Arduino.h>
@@ -14,8 +14,7 @@
 #include <lnGlobalVars.h> // Assicurati che questi siano disponibili
 #include <lnSerialRead.h> // Assicurati che questi siano disponibili
 #include <lnSetPinID.h>   // Assicurati che questi siano disponibili
-#include <LnTime_Class.h>
-extern LnTime_Class lnTime;
+
 
 #include "ButtonLongPress_Class.h" // Includi il nuovo header della classe
 
@@ -117,8 +116,67 @@ bool ButtonLongPress_Class::pressedLevelHasChanged(void) {
 
 
 
+//###########################################################################
+//# Ritorna i millis al prossion threshold level
+//###########################################################################
+uint32_t ButtonLongPress_Class::timeToNextThresholdLevel(void) {
+    uint32_t nextGAP_ms;
+    uint32_t msToNextLevel = 0;
+    uint8_t level = m_currentPressLevel; // per comodità
+
+    m_elapsed = millis() - m_pressStartTime; // update continuo
+    // Controlla l'indice prima di accedere all'array m_gapThresholds
+    if (level > 0 && level < m_numThresholds) {
+        if (level<m_numThresholds-1) {
+            nextGAP_ms = m_pressThresholds[level+1]-m_pressThresholds[level];
+        } else if (level>=m_numThresholds-1) {
+            nextGAP_ms = m_pressThresholds[level]-m_pressThresholds[level-1]; // calcoliamo sempre l'ultimo
+        }
+
+        // * calcola next pressing level GAP
+        msToNextLevel = (m_elapsed > nextGAP_ms) ? (m_elapsed - nextGAP_ms) : (nextGAP_ms - m_elapsed);
+    }
+    return msToNextLevel;
+}
 
 
+
+//###########################################################################
+//#
+//###########################################################################
+void ButtonLongPress_Class::displayPressedLevel(bool forceDisplay) {
+
+    // per aggiornare alcuni valori
+    uint32_t msToNextLevel = timeToNextThresholdLevel();
+
+
+    #define PRESSING_DISPLAY_TIME 60*1000
+    if (forceDisplay || m_levelHasChanged || (m_elapsed - m_lastDisplayTime > PRESSING_DISPLAY_TIME) ) {
+
+
+
+        m_lastDisplayTime = m_elapsed;
+
+        if (msToNextLevel != 0) {
+            char elapsedBUFFER[16];   lnLog.toHHMMSS(elapsedBUFFER,   sizeof(elapsedBUFFER),   m_elapsed, false);
+            char nextLevelBUFFER[16]; lnLog.toHHMMSS(nextLevelBUFFER, sizeof(nextLevelBUFFER), msToNextLevel, false);
+
+            //* display
+            LOG_NOTIFY("[%s]:", m_pinID);
+            LOG_NOTIFY("\tpressed Level   %d/%d", m_currentPressLevel, m_numThresholds);
+            LOG_TRACE( "\tthreshold[%d]:  %8lu", m_currentPressLevel,  m_pressThresholds[m_currentPressLevel]);
+            LOG_TRACE( "\tthreshold[%d]:  %8lu", m_currentPressLevel+1,  m_pressThresholds[m_currentPressLevel+1] );
+            // LOG_TRACE( "\tGAP:            %8lu", nextGAP_ms );
+            LOG_NOTIFY("\telapsed:        %8lu - [hms]: %s", m_elapsed, elapsedBUFFER);
+            LOG_NOTIFY("\tnext threshold: %8lu - [hms]: %s", msToNextLevel, nextLevelBUFFER);
+
+        }
+    }
+
+}
+
+
+/*
 //###########################################################################
 //#
 //###########################################################################
@@ -127,8 +185,8 @@ void ButtonLongPress_Class::displayPressedLevel(bool forceDisplay) {
     m_elapsed = millis() - m_pressStartTime; // update continuo
 
 
-    #define PRESSING_DISPLAY_TIME 60*1000
-    if (forceDisplay || m_levelHasChanged || (m_elapsed - m_lastDisplayTime > PRESSING_DISPLAY_TIME) ) {
+    #define BUTTON_PRESSING_DISPLAY_TIME 60*1000
+    if (forceDisplay || m_levelHasChanged || (m_elapsed - m_lastDisplayTime > BUTTON_PRESSING_DISPLAY_TIME) ) {
         uint32_t nextGAP_ms;
         uint32_t msToNextLevel;
 
@@ -169,7 +227,7 @@ void ButtonLongPress_Class::displayPressedLevel(bool forceDisplay) {
 
 }
 
-
+*/
 
 
 
@@ -285,24 +343,24 @@ uint32_t ButtonLongPress_Class::thresholdLevelValue(uint8_t level) {
 //###########################################################################
 void ButtonLongPress_Class::showStatus(void) {
     // ext_showStatus(this);
-    LOG_INFO("%s", m_pinID);
+    LOG_SPEC("%s", m_pinID);
     const char *TAB="    ";
-    LOG_INFO("%s%-18s: %2d - %s", TAB, "m_pressedLogicLevel", m_pressedLogicLevel, str_pinLevel[m_pressedLogicLevel]);
-    LOG_INFO("%s%-18s: %2d - %s", TAB, "m_buttonPressed", m_buttonPressed, str_TrueFalse[m_buttonPressed]);
-    LOG_INFO("%s%-18s: %2d - %s", TAB, "m_maxLevelReachedAndNotified", m_maxLevelReachedAndNotified, str_TrueFalse[m_maxLevelReachedAndNotified]);
-    LOG_INFO("%s%-18s: %2d - %s", TAB, "m_lastButtonState", m_lastButtonState, str_OnOff[m_lastButtonState]);
-    LOG_INFO("%s%-18s: %2d - %s", TAB, "m_lastPressedLevel", m_lastPressedLevel, str_OnOff[m_lastPressedLevel]);
+    LOG_SPEC("%s%-30s: %d - %s", TAB, "m_pressedLogicLevel", m_pressedLogicLevel, str_pinLevel[m_pressedLogicLevel]);
+    LOG_SPEC("%s%-30s: %d - %s", TAB, "m_buttonPressed", m_buttonPressed, str_TrueFalse[m_buttonPressed]);
+    LOG_SPEC("%s%-30s: %d - %s", TAB, "m_maxLevelReachedAndNotified", m_maxLevelReachedAndNotified, str_TrueFalse[m_maxLevelReachedAndNotified]);
+    LOG_SPEC("%s%-30s: %d - %s", TAB, "m_lastButtonState", m_lastButtonState, str_OnOff[m_lastButtonState]);
+    LOG_SPEC("%s%-30s: %d - %s", TAB, "m_lastPressedLevel", m_lastPressedLevel, str_OnOff[m_lastPressedLevel]);
 
-    LOG_INFO("%s%-18s: %2d", TAB, "m_currentPressLevel", m_currentPressLevel);
-    LOG_INFO("%s%-18s: %lu", TAB, "m_pressStartTime", m_pressStartTime);
-    LOG_INFO("%s%-18s: %lu", TAB, "m_elapsed", m_elapsed);
+    LOG_SPEC("%s%-30s: %d", TAB, "m_currentPressLevel", m_currentPressLevel);
+    LOG_SPEC("%s%-30s: %lu", TAB, "m_pressStartTime", m_pressStartTime);
+    LOG_SPEC("%s%-30s: %lu", TAB, "m_elapsed", m_elapsed);
 
-    LOG_INFO("%snum_thresholds: %2d", TAB, m_numThresholds);
+    LOG_SPEC("%snum_thresholds: %2d", TAB, m_numThresholds);
     for (int8_t j = 0; j < m_numThresholds; j++) {
         uint32_t next_gap = (j < m_numThresholds-1) ? (m_pressThresholds[j+1]-m_pressThresholds[j]) : 0;
-        LOG_INFO("%sthreshold[%d]: %-lu - next GAP: %-ld", TAB, j, m_pressThresholds[j], next_gap );
+        LOG_SPEC("%sthreshold[%d]: %-lu - next GAP: %-ld", TAB, j, m_pressThresholds[j], next_gap );
     }
-    LOG_INFO(""); // blank line
+    LOG_SPEC(""); // blank line
 }
 
 //######################################################

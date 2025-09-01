@@ -1,7 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-07-2025
-// Converted from ButtonLongPress_Struct to ButtonLongPress_Class
+// Date .........: 01-09-2025 08.41.03
 */
 
 #pragma once
@@ -58,6 +57,7 @@
             inline const char* pinID(void) const { return m_pinID; }
 
             uint32_t thresholdLevelValue(uint8_t level);
+            uint32_t timeToNextThresholdLevel(void);
 
             // Membri pubblici che potrebbero essere consultati esternamente (es. per debug o display)
             // Considera se questi debbano essere `private` con getter specifici.

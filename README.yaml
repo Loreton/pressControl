@@ -1,4 +1,34 @@
 # pressControl
+
+TEST:
+    test01:
+        - premere startButton
+        - si deve attivare il relè
+        - dopo 1 minuto si deve spegnere
+
+    ripetere test01:
+        - premere startButton
+        - si deve attivare il relè
+        - dopo 1 minuto si deve spegnere
+
+    test02:
+        - portare a massa il pressControlPin
+        - si deve attivare lo status del PressControl
+        - dopo 1 minuto deve andare in allarme e fare il toggling del magnetotermico per tentare di spegnere il PressControl.
+        - rimuovere il pressControl_pin da massa
+
+    test03:
+        - premere startButton
+        - si deve attivare il relè
+        - portare a massa il pumpState_pin
+        - ci saranno i vari livelli di beep per la pompa
+        - dopo 1 minuto si deve spegenre il rele ma deve andare in allarme e fare il toggling del magnetotermico
+           per tentare di spegnere il PressControl in quanto la pompa risulta ancora accesa
+        - rimuovere il pumpState_pin da massa
+
+
+
+
 ESP32:
     Gestione pompa ed allarme in caso di lunga apertura
     devo controllare una pompa provvista di un pressControl.

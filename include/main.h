@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 30-08-2025 19.48.51
+// Date .........: 01-09-2025 08.02.16
 //
 
 
@@ -22,9 +22,9 @@
 
     // ---  TEST
     #if ln_RELEASE_TYPE == ln_DEVEL
-        #define ACTION_STATUS_DISPLAY_INTERVAL 5*60*1000  // xx minuti
-        #define PRESS_CONTROL_PIN_MAX_TIME     3*60*1000 // xx minuti
-        #define PRESS_CONTROL_RELAY_MAX_TIME   3*60*1000 // xx minuti
+        #define ACTION_STATUS_DISPLAY_INTERVAL 2*60*1000  // xx minuti
+        #define PRESS_CONTROL_PIN_MAX_TIME     1*60*1000 // xx minuti
+        #define PRESS_CONTROL_RELAY_MAX_TIME   2*60*1000 // xx minuti
         #define MAGNETOTERMIC_RELAY_PULSETIME      5*1000  // tempo magnetotermico relay sarà off
 
         #define PUMP_PHASE_01                     5*1000  // milliSeconds
