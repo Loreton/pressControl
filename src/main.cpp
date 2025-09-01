@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 01-09-2025 14.55.09
+// Date .........: 01-09-2025 19.34.28
 //
 
 
@@ -105,8 +105,10 @@ void loop() {
         LOG_INFO("processing started....");
     }
 
-    fModulo2minutes = lnTime.atMinuteModulo(2);
-    fModulo5minutes = lnTime.atMinuteModulo(5);
+    fModulo2minutes  = lnTime.atMinuteModulo(2);
+    fModulo5minutes  = lnTime.atMinuteModulo(5);
+    fModulo60minutes = lnTime.atMinuteModulo(60);
+
     fModulo10Seconds = lnTime.atSecondModulo(10);
     fModulo15Seconds = lnTime.atSecondModulo(15);
     fModulo30Seconds = lnTime.atSecondModulo(30);
@@ -123,7 +125,6 @@ void loop() {
     myWiFiManager.update();
     lnTime.update();
 
-    // --- impostati dalla callback
 
 
     // -----------------------------------
@@ -138,15 +139,20 @@ void loop() {
     }
 
 
+    if (fModulo60minutes) {
+        wifiConnectedMessage();
+    }
+
+
 
     /**
      * Leggi lo stato dello startButton
      * Se è stato rilasciato
     */
     startButton.pressingLevelNotification(startButtonNotificationCB);
-    if (startButton.released()) {
-        startButtonHandler(startButton.currentPressLevel());
-        startButton.reset();
+    if (startButton.read()) {
+        startButtonHandler(&startButton);
+        // startButton.reset();
     }
 
 
@@ -157,9 +163,9 @@ void loop() {
      * Se è stato rilasciato
     */
     pumpState.pressingLevelNotification(pumpNotificationCB);
-    if (pumpState.released()) {
+    if (pumpState.read()) {
         pumpHandler(&pumpState);
-        pumpState.reset();
+        // pumpState.reset();
     }
 
 
@@ -168,8 +174,8 @@ void loop() {
      * Se è stato rilasciato
     */
     pressControl.pressingLevelNotification(pressControlNotificationCB);
-    if (pressControl.released()) {
-        pressControl.reset();
+    if (pressControl.read()) {
+        pressControlHandler(&pressControl);
     }
 
 

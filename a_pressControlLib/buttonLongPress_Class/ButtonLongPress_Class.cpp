@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 01-09-2025 11.38.38
+// Date .........: 01-09-2025 18.43.35
 //
 
 #include <Arduino.h>
@@ -179,70 +179,10 @@ void ButtonLongPress_Class::displayPressedLevel(bool forceDisplay) {
 }
 
 
-/*
-//###########################################################################
-//#
-//###########################################################################
-void ButtonLongPress_Class::displayPressedLevel(bool forceDisplay) {
-
-    m_elapsed = millis() - m_pressStartTime; // update continuo
 
 
-    #define BUTTON_PRESSING_DISPLAY_TIME 60*1000
-    if (forceDisplay || m_levelHasChanged || (m_elapsed - m_lastDisplayTime > BUTTON_PRESSING_DISPLAY_TIME) ) {
-        uint32_t nextGAP_ms;
-        uint32_t msToNextLevel;
-
-        m_lastDisplayTime = m_elapsed;
-
-        // Controlla l'indice prima di accedere all'array m_gapThresholds
-        if (m_currentPressLevel > 0 && m_currentPressLevel < m_numThresholds) {
-            uint8_t level = m_currentPressLevel;
-
-            if (level<m_numThresholds-1) {
-                nextGAP_ms = m_pressThresholds[level+1]-m_pressThresholds[level];
-            } else if (level>=m_numThresholds-1) {
-                nextGAP_ms = m_pressThresholds[level]-m_pressThresholds[level-1]; // calcoliamo sempre l'ultimo
-            }
-
-            // * calcola next pressing level GAP
-            msToNextLevel = (m_elapsed > nextGAP_ms) ? (m_elapsed - nextGAP_ms) : (nextGAP_ms - m_elapsed);
-
-            // * calcola and display elapsed time
-            // char elapsedBUFFER[16];   lnTime.timeStamp(elapsedBUFFER,   sizeof(elapsedBUFFER),   m_elapsed, false);
-            // char nextLevelBUFFER[16]; lnTime.timeStamp(nextLevelBUFFER, sizeof(nextLevelBUFFER), msToNextLevel, false);
-
-
-            char elapsedBUFFER[16];   lnLog.toHHMMSS(elapsedBUFFER,   sizeof(elapsedBUFFER),   m_elapsed, false);
-            char nextLevelBUFFER[16]; lnLog.toHHMMSS(nextLevelBUFFER, sizeof(nextLevelBUFFER), msToNextLevel, false);
-
-            //* display
-            LOG_NOTIFY("[%s]:", m_pinID);
-            LOG_NOTIFY("\tpressed Level   %d/%d", m_currentPressLevel, m_numThresholds);
-            LOG_TRACE( "\tthreshold[%d]:  %8lu", level,  m_pressThresholds[level]);
-            LOG_TRACE( "\tthreshold[%d]:  %8lu", level+1,  m_pressThresholds[level+1] );
-            LOG_TRACE( "\tGAP:            %8lu", nextGAP_ms );
-            LOG_NOTIFY("\telapsed:        %8lu - [hms]: %s", m_elapsed, elapsedBUFFER);
-            LOG_NOTIFY("\tnext threshold: %8lu - [hms]: %s", msToNextLevel, nextLevelBUFFER);
-
-        }
-    }
-
-}
-
-*/
-
-
-
-
-
-/* NO bouncing extra, usa il primo livello di threshold come tale */
+/*return true if button has been released*/
 bool ButtonLongPress_Class::read(ButtonLongPressCallback onPressCallback) {
-    return released(onPressCallback);
-}
-
-/* NO bouncing extra, usa il primo livello di threshold come tale */
-bool ButtonLongPress_Class::released(ButtonLongPressCallback onPressCallback) {
     bool currentState = digitalRead(m_pin);
 
     // State change detection (simple edge detection)

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 01-09-2025 15.17.24
+// Date .........: 01-09-2025 18.48.17
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -54,7 +54,7 @@ void pumpHandler(ButtonLongPress_Class *p) {
 }
 
 
-#define BEEP_DURATION_FACTORY
+// #define BEEP_DURATION_FACTORY
 
 
 

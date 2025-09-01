@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 01-09-2025 09.28.43
+// Date .........: 01-09-2025 19.34.03
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -52,7 +52,16 @@ void wifiConnectedCB(arduino_event_id_t event) {
 // #
 // ##########################################################################
 void wifiConnectedAction() {
-    // passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 300, fAscendent); // Scala ascendente, 150ms per nota)
+    wifiConnectedMessage();
+}
+
+
+
+
+// ##########################################################################
+// #
+// ##########################################################################
+void wifiConnectedMessage() {
     if (fWifiConnected) {
         fWifiConnected = false;
         LOG_NOTIFY("WiFi_connAction Connected!");

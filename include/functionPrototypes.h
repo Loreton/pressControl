@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 30-08-2025 11.22.40
+// Date .........: 01-09-2025 18.47.22
 //
 
 #pragma once
@@ -14,7 +14,8 @@
     #include <passiveBuzzer_Class.h>
 
     //* - startButtonHandlers
-    void startButtonHandler(uint8_t pressedLevel);
+    // void startButtonHandler(uint8_t pressedLevel);
+    void startButtonHandler(ButtonLongPress_Class *p);
     void startButtonNotificationCB(ButtonLongPress_Class* p);
 
     //* - pumpHndlers
@@ -24,6 +25,7 @@
 
     //* - pressControl
     void pressControlNotificationCB(ButtonLongPress_Class* p);
+    void pressControlHandler(ButtonLongPress_Class *p);
 
     //* - common CallBacks
     void beepNotification(ButtonLongPress_Class *p, uint32_t beep_duration);

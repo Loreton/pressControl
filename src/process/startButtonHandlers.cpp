@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 30-08-2025 11.00.11
+// Date .........: 01-09-2025 19.36.11
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -20,9 +20,13 @@
 //###########################################################################
 //# richiamata quando il pulsante viene rilasciato
 //###########################################################################
-void startButtonHandler(uint8_t pressedLevel) {
+// void startButtonHandler(uint8_t pressedLevel) {
+void startButtonHandler(ButtonLongPress_Class *p) {
+    uint8_t pressedLevel = p->currentPressLevel();
     LOG_NOTIFY("[%s] - PRESSED_LEVEL: %d", startButton.pinID(), pressedLevel);
+
     switch (pressedLevel) {
+
         case PRESSED_LEVEL_1:
             LOG_INFO("[%s] toggling....", pressControlRelay.pinID());
             pressControlRelay.toggle();
@@ -39,6 +43,7 @@ void startButtonHandler(uint8_t pressedLevel) {
             break;
     }
 
+    p->reset();
 }
 
 

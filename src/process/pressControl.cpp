@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 30-08-2025 19.45.45
+// Date .........: 01-09-2025 18.47.06
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -13,6 +13,45 @@
 // #define  LOG_MODULE_LEVEL LOG_LEVEL_DEBUG
 #include    <lnLogger_Class.h>
 #include "main.h" // per functions protoype
+
+
+
+
+//###########################################################################
+//# richiamata quando il pulsante viene rilasciato
+//###########################################################################
+void pressControlHandler(ButtonLongPress_Class *p) {
+    switch (p->currentPressLevel()) {
+        case PRESSED_LEVEL_1:
+            LOG_DEBUG("PRESSED_LEVEL_1");
+            break;
+
+        case PRESSED_LEVEL_2:
+            LOG_DEBUG("PRESSED_LEVEL_2");
+            break;
+
+        case PRESSED_LEVEL_3:
+            LOG_DEBUG("PRESSED_LEVEL_3");
+            break;
+
+        case PRESSED_LEVEL_4:
+            LOG_DEBUG("PRESSED_LEVEL_4");
+            break;
+
+        default:
+            LOG_DEBUG("Sconosciuto/Non Qualificato");
+            break;
+    }
+
+
+    // Dopo aver processato i dati, li resettiamo per la prossima pressione.
+    p->reset();
+    // passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 150, fDiscendent); // Scala ascendente, 150ms per nota)
+    // waitForPulseEnding(&passiveBuzzer, 3000);
+    // fPUMP_ALARM = false;
+}
+
+
 
 
 void pressControlNotificationCB(ButtonLongPress_Class *p) {

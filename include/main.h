@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 01-09-2025 15.16.45
+// Date .........: 01-09-2025 18.51.24
 //
 
 
@@ -78,6 +78,7 @@
         bool fModulo30Seconds          = false;
         bool fModulo2minutes           = false;
         bool fModulo5minutes           = false;
+        bool fModulo60minutes          = false;
 
         // Frequenze per una scala Do Maggiore (approssimate)
         int C_major_scale[] = {
@@ -131,6 +132,7 @@
         extern bool fModulo30Seconds;
         extern bool fModulo2minutes;
         extern bool fModulo5minutes;
+        extern bool fModulo60minutes;
 
 
         extern TelegramBot_Class      myBot;
