@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 30-08-2025 13.45.05
+// Date .........: 01-09-2025 15.17.24
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -54,7 +54,7 @@ void pumpHandler(ButtonLongPress_Class *p) {
 }
 
 
-
+#define BEEP_DURATION_FACTORY
 
 
 
@@ -65,8 +65,7 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
 
 
     if (p->pressedLevelHasChanged()) {
-        // phase_beep_duration = 300 * p->currentPressLevel() / 30; // arbitrario....
-        phase_beep_duration = p->currentPressLevel() * 3 * 1000; // arbitrario....
+        phase_beep_duration = p->currentPressLevel() * BEEP_DURATION_FACTORY; // arbitrario....
         switch (p->currentPressLevel()) {
             case PRESSED_LEVEL_1:
                 LOG_NOTIFY("%s has been detected ON", p->pinID());

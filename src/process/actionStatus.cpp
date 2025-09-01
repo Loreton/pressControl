@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 30-08-2025 18.03.54
+// Date .........: 01-09-2025 15.10.38
 //
 
 
@@ -24,7 +24,7 @@
 uint8_t relayStatus;
 uint8_t pumpStatus;
 uint8_t pcStatus;
-// bool   fidleStatus;
+const bool fForce = true;
 
 // Definisce i possibili tipi di condizioni
 enum ActionState : uint8_t {
@@ -37,12 +37,36 @@ enum ActionState : uint8_t {
 
 
 
-void sendStatusToTelegram() {
-    setTelegramTitle();
-    myBot.addFormattedString("<b>Relay:</b> %s\n", str_OnOff[relayStatus]);
-    myBot.addFormattedString("<b>PressControl:</b> %s\n", str_OnOff[pcStatus]);
-    myBot.addFormattedString("<b>PUMP:</b> %s\n", str_OnOff[pumpStatus]);
-    myBot.send();
+void sendStatusToTelegram(bool force=false) {
+    if ( fModulo15Seconds || force) {
+        LOG_INFO("invio dello status su Telegram");
+        #define TIME_STAMP_LENGTH 16
+        static char buffer[TIME_STAMP_LENGTH+1];
+        uint32_t pressControl_remaining = pressControl.timeToNextThresholdLevel();
+        uint32_t pump_remaining         = pumpState.timeToNextThresholdLevel();
+        uint32_t relay_remainig         = pressControlRelay.getRemainingPulseTime();
+
+        setTelegramTitle();
+        myBot.addFormattedString("<b>Relay:</b> %s\n", str_OnOff[relayStatus]);
+        if (relay_remainig) {
+            lnTime.timeStamp(buffer, TIME_STAMP_LENGTH, relay_remainig, false);
+            myBot.addFormattedString("\t\t<i>remainig:</i> %s\n", buffer);
+        }
+
+        myBot.addFormattedString("<b>PressControl:</b> %s\n", str_OnOff[pcStatus]);
+        if (pressControl_remaining) {
+            lnTime.timeStamp(buffer, TIME_STAMP_LENGTH, pressControl_remaining, false);
+            myBot.addFormattedString("\t\t<i>remainig:</i> %s\n", buffer);
+        }
+
+        myBot.addFormattedString("<b>PUMP:</b> %s\n", str_OnOff[pumpStatus]);
+        if (pump_remaining) {
+            lnTime.timeStamp(buffer, TIME_STAMP_LENGTH, pump_remaining, false);
+            myBot.addFormattedString("\t\t<i>remainig:</i> %s\n", buffer);
+        }
+
+        myBot.send();
+    }
 }
 
 
@@ -127,7 +151,7 @@ void chackActionStatus() {
 
 
     if (actionStateChanged) { // facciamo comunque il display ogni 15 secondi
-        sendStatusToTelegram();
+        sendStatusToTelegram(fForce);
     }
 
     if ( actionStateChanged || fModulo2minutes ) { // facciamo comunque il display ogni 15 secondi
@@ -182,7 +206,8 @@ void chackActionStatus() {
 
         // status normale in attesa che si accenda la pompa
         case pcON_pumpOFF:
-            if ( fModulo5minutes )  sendStatusToTelegram();
+            // if ( fModulo15Seconds )  sendStatusToTelegram();
+            sendStatusToTelegram();
             pressControlLED.on(); // accendiamo fisso il LED
             pumpLED.off();        // facciamoòp lampeggiare
             fIdleStatus=false;
@@ -191,7 +216,8 @@ void chackActionStatus() {
 
         // status normale con la pompa accesa
         case pcON_pumpON:
-            if ( fModulo5minutes )  sendStatusToTelegram();
+            // if ( fModulo15Seconds )  sendStatusToTelegram();
+            sendStatusToTelegram();
             pressControlLED.on();
             pumpLED.on();
             fIdleStatus=false;

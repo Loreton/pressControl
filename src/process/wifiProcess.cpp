@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 30-08-2025 11.00.05
+// Date .........: 01-09-2025 09.28.43
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -32,7 +32,8 @@ void wifiConnectedCB(arduino_event_id_t event) {
         LOG_NOTIFY("WiFi_callBack - Connected");
         if (!fWifiConnected) {
             fWifiConnected=true;
-            activeBuzzer.pulse(1000);
+            // activeBuzzer.pulse(1000);
+            activeBuzzer.blinking(300, 200, 3);
         }
     }
 

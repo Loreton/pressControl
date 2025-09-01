@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 01-09-2025 08.33.45
+// Date .........: 01-09-2025 11.38.38
 //
 
 #include <Arduino.h>
@@ -124,8 +124,12 @@ uint32_t ButtonLongPress_Class::timeToNextThresholdLevel(void) {
     uint32_t msToNextLevel = 0;
     uint8_t level = m_currentPressLevel; // per comodità
 
-    m_elapsed = millis() - m_pressStartTime; // update continuo
-    // Controlla l'indice prima di accedere all'array m_gapThresholds
+    // ------------------------
+    // siccome il metodo è richiamato dall'esterno,
+    // non utilizzare m_elapsed perché falserebbe il funzionameno
+    // ------------------------
+    uint32_t elapsed = millis() - m_pressStartTime;
+    // --- Controlla l'indice prima di accedere all'array m_gapThresholds
     if (level > 0 && level < m_numThresholds) {
         if (level<m_numThresholds-1) {
             nextGAP_ms = m_pressThresholds[level+1]-m_pressThresholds[level];
@@ -134,7 +138,7 @@ uint32_t ButtonLongPress_Class::timeToNextThresholdLevel(void) {
         }
 
         // * calcola next pressing level GAP
-        msToNextLevel = (m_elapsed > nextGAP_ms) ? (m_elapsed - nextGAP_ms) : (nextGAP_ms - m_elapsed);
+        msToNextLevel = (elapsed > nextGAP_ms) ? (elapsed - nextGAP_ms) : (nextGAP_ms - elapsed);
     }
     return msToNextLevel;
 }
@@ -148,12 +152,11 @@ void ButtonLongPress_Class::displayPressedLevel(bool forceDisplay) {
 
     // per aggiornare alcuni valori
     uint32_t msToNextLevel = timeToNextThresholdLevel();
+    m_elapsed = millis() - m_pressStartTime; // update continuo
 
 
     #define PRESSING_DISPLAY_TIME 60*1000
     if (forceDisplay || m_levelHasChanged || (m_elapsed - m_lastDisplayTime > PRESSING_DISPLAY_TIME) ) {
-
-
 
         m_lastDisplayTime = m_elapsed;
 

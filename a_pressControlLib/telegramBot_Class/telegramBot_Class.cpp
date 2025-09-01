@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 30-08-2025 11.43.06
+// Date .........: 01-09-2025 11.40.43
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -162,6 +162,7 @@ void TelegramBot_Class::setParseMode(const char* mode) {
 // #######################################################################
 bool TelegramBot_Class::send() {
     if (WiFi.status() != WL_CONNECTED) {
+        LOG_ERROR("WiFi non connected. Message non sent.");
         return false;
     }
 
@@ -176,20 +177,34 @@ bool TelegramBot_Class::send() {
              "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&parse_mode=%s&text=%s",
              m_token, m_chatId, m_parseMode, encodedMessage);
 
-    LOG_DEBUG("Sending msg: %s", urlBuffer);
+    LOG_TRACE("Sending msg: %s", urlBuffer);
     http.begin(urlBuffer);
     int httpResponseCode = http.GET();
     http.end();
 
     if (httpResponseCode > 0) {
-        LOG_NOTIFY("Messaggio inviato con successo!");
+        LOG_NOTIFY("Messaggio inviato con successo: %s", urlBuffer);
         return true;
     } else {
-        LOG_ERROR("Invio messaggio fallito.");
+        LOG_ERROR("Invio messaggio fallito! %s", urlBuffer);
         return false;
     }
 }
 
+
+
+
+// | Carattere                   | Escape C/C++ | Decimale | Esadecimale | URL encoding                                                     |
+// | --------------------------- | ------------ | -------- | ----------- | ---------------------------------------------------------------- |
+// | **NUL**                     | `\0`         | 0        | 00          | `%00`                                                            |
+// | **TAB**                     | `\t`         | 9        | 09          | `%09`                                                            |
+// | **LF** (line feed, newline) | `\n`         | 10       | 0A          | `%0A`                                                            |
+// | **CR** (carriage return)    | `\r`         | 13       | 0D          | `%0D`                                                            |
+// | **SPACE**                   | `' '`        | 32       | 20          | `%20` *(oppure `+` solo in `application/x-www-form-urlencoded`)* |
+// | **"** (doppio apice)        | `\"`         | 34       | 22          | `%22`                                                            |
+// | **'** (apice singolo)       | `'`          | 39       | 27          | `%27`                                                            |
+// | **/** (slash)               | `/`          | 47       | 2F          | `%2F`                                                            |
+// | **\\** (backslash)          | `\\`         | 92       | 5C          | `%5C`                                                            |
 
 
 void TelegramBot_Class::urlEncode(const char* src, char* dest) {
@@ -200,17 +215,14 @@ void TelegramBot_Class::urlEncode(const char* src, char* dest) {
             *q++ = *p;
         } else if (*p == ' ') {
             *q++ = '+';
-
-            // *q++ = '&'; // Aggiungi la codifica HTML &nbsp;
-            // *q++ = 'n';  non funziona perché non scrive neanche i dati....
-            // *q++ = 'b';
-            // *q++ = 's';
-            // *q++ = 'p';
-            // *q++ = ';';
         } else if (*p == '\n') { // <--- Aggiungi questa condizione
             *q++ = '%';
             *q++ = '0';
             *q++ = 'A';
+        } else if (*p == '\t') { // <--- Aggiungi questa condizione
+            *q++ = '%';
+            *q++ = '0';
+            *q++ = '9';
         } else {
             // Codifica i caratteri speciali in formato esadecimale %XX
             sprintf(q, "%%%02X", (unsigned char)*p);

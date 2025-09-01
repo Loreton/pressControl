@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 30-08-2025 13.35.08
+// Date .........: 01-09-2025 14.55.09
 //
 
 
@@ -108,6 +108,7 @@ void loop() {
     fModulo2minutes = lnTime.atMinuteModulo(2);
     fModulo5minutes = lnTime.atMinuteModulo(5);
     fModulo10Seconds = lnTime.atSecondModulo(10);
+    fModulo15Seconds = lnTime.atSecondModulo(15);
     fModulo30Seconds = lnTime.atSecondModulo(30);
 
     // -----------------------------------

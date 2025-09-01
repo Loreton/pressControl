@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 01-09-2025 08.02.16
+// Date .........: 01-09-2025 15.16.45
 //
 
 
@@ -22,26 +22,28 @@
 
     // ---  TEST
     #if ln_RELEASE_TYPE == ln_DEVEL
-        #define ACTION_STATUS_DISPLAY_INTERVAL 2*60*1000  // xx minuti
-        #define PRESS_CONTROL_PIN_MAX_TIME     1*60*1000 // xx minuti
-        #define PRESS_CONTROL_RELAY_MAX_TIME   2*60*1000 // xx minuti
-        #define MAGNETOTERMIC_RELAY_PULSETIME      5*1000  // tempo magnetotermico relay sarà off
+        #define ACTION_STATUS_DISPLAY_INTERVAL 2*60*1000UL  // xx minuti
+        #define PRESS_CONTROL_PIN_MAX_TIME     1*60*1000UL // xx minuti
+        #define PRESS_CONTROL_RELAY_MAX_TIME   2*60*1000UL // xx minuti
+        #define MAGNETOTERMIC_RELAY_PULSETIME     5*1000UL  // tempo magnetotermico relay sarà off
 
-        #define PUMP_PHASE_01                     5*1000  // milliSeconds
-        #define PUMP_PHASE_02                     15*1000 // milliSeconds
-        #define PUMP_PHASE_03                     20*1000 // milliSeconds
-        #define PUMP_PHASE_04                     25*1000 // milliSeconds
+        #define PUMP_PHASE_01                      5*1000UL  // milliSeconds
+        #define PUMP_PHASE_02                     15*1000UL // milliSeconds
+        #define PUMP_PHASE_03                     20*1000UL // milliSeconds
+        #define PUMP_PHASE_04                     25*1000UL // milliSeconds
+        #define BEEP_DURATION_FACTORY             1*1000UL  // milliSeconds
 
     #elif ln_RELEASE_TYPE == ln_PRODUCTION
-        #define ACTION_STATUS_DISPLAY_INTERVAL  5*60*1000  // xx minuti
-        #define PRESS_CONTROL_PIN_MAX_TIME     30*60*1000  // tempo in cui il pressControl starà acceso.
-        #define PRESS_CONTROL_RELAY_MAX_TIME   30*60*1000  // tempo in cui il relay interno starà acceso.
-        #define MAGNETOTERMIC_RELAY_PULSETIME      5*1000  // tempo magnetotermico relay sarà off
+        #define ACTION_STATUS_DISPLAY_INTERVAL  5*60*1000UL  // xx minuti
+        #define PRESS_CONTROL_PIN_MAX_TIME     30*60*1000UL  // tempo in cui il pressControl starà acceso.
+        #define PRESS_CONTROL_RELAY_MAX_TIME   30*60*1000UL  // tempo in cui il relay interno starà acceso.
+        #define MAGNETOTERMIC_RELAY_PULSETIME      5*1000UL  // tempo magnetotermico relay sarà off
 
-        #define PUMP_PHASE_01                   1*60*1000   // milliSeconds
-        #define PUMP_PHASE_02                   2*60*1000  // milliSeconds
-        #define PUMP_PHASE_03                   3*60*1000  // milliSeconds
-        #define PUMP_PHASE_04                   4*60*1000  // milliSeconds
+        #define PUMP_PHASE_01                   1*60*1000UL   // milliSeconds
+        #define PUMP_PHASE_02                   2*60*1000UL  // milliSeconds
+        #define PUMP_PHASE_03                   3*60*1000UL  // milliSeconds
+        #define PUMP_PHASE_04                   4*60*1000UL  // milliSeconds
+        #define BEEP_DURATION_FACTORY           3*1000UL  // milliSeconds
     #endif
 
 
@@ -72,6 +74,7 @@
         bool fDiscendent               = false;
 
         bool fModulo10Seconds          = false;
+        bool fModulo15Seconds          = false;
         bool fModulo30Seconds          = false;
         bool fModulo2minutes           = false;
         bool fModulo5minutes           = false;
@@ -118,15 +121,16 @@
 
         extern bool                   fPressControlTimeExausted; // indica che il pressContro ha terminato il tempo massiomo di ON
         extern int C_major_scale[];
-        extern int                    C_major_num_notes;
-        extern bool                   fPUMP_ALARM;
-        extern bool                   fAscendent;
-        extern bool                   fDiscendent;
+        extern int  C_major_num_notes;
+        extern bool fPUMP_ALARM;
+        extern bool fAscendent;
+        extern bool fDiscendent;
 
-        extern bool                   fModulo10Seconds;
-        extern bool                   fModulo30Seconds;
-        extern bool                   fModulo2minutes;
-        extern bool                   fModulo5minutes;
+        extern bool fModulo10Seconds;
+        extern bool fModulo15Seconds;
+        extern bool fModulo30Seconds;
+        extern bool fModulo2minutes;
+        extern bool fModulo5minutes;
 
 
         extern TelegramBot_Class      myBot;
