@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 30-08-2025 10.59.26
+// Date .........: 02-09-2025 11.59.23
 //
 
 
@@ -257,13 +257,13 @@ void WiFiManager_Class::showCurrentConnection() {
     }
     uint32_t scanElapsed = millis() - m_lastScanTime;
 
-    ptr = lnLog.toHHMMSS(buffer, 16, (m_scanInterval-scanElapsed), fMilliSecondsTrue, fstripHoursTrue);
+    ptr = lnLog.toHMS(buffer, 16, (m_scanInterval-scanElapsed), fMilliSecondsTrue, fstripHoursTrue);
     LOG_SPEC("\tNext Scan:      %s - %7lu", ptr,  (m_scanInterval-scanElapsed));
 
-    ptr = lnLog.toHHMMSS(buffer, 16, m_scanInterval, fMilliSecondsTrue, fstripHoursTrue);
+    ptr = lnLog.toHMS(buffer, 16, m_scanInterval, fMilliSecondsTrue, fstripHoursTrue);
     LOG_SPEC("\tScan interval:  %s - %7lu", ptr, m_scanInterval);
 
-    ptr = lnLog.toHHMMSS(buffer, 16, scanElapsed, fMilliSecondsTrue, fstripHoursTrue);
+    ptr = lnLog.toHMS(buffer, 16, scanElapsed, fMilliSecondsTrue, fstripHoursTrue);
     LOG_SPEC("\tScan elapsed:   %s - %7lu", ptr, scanElapsed);
 
     LOG_SPEC("\tis scanning:    %d", m_scanning);

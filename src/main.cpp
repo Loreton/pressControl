@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 01-09-2025 19.34.28
+// Date .........: 02-09-2025 09.11.51
 //
 
 
@@ -100,18 +100,14 @@ void loop() {
     uint32_t duration;
     uint32_t now=millis();
     bool    actionStatusChanged;
-    if (first_run) {
-        first_run=false;
-        LOG_INFO("processing started....");
-    }
 
-    fModulo2minutes  = lnTime.atMinuteModulo(2);
-    fModulo5minutes  = lnTime.atMinuteModulo(5);
-    fModulo60minutes = lnTime.atMinuteModulo(60);
+    f2MinutesModulo  = lnTime.onMinuteModulo(2, true);
+    f5MinutesModulo  = lnTime.onMinuteModulo(5, true);
+    f60MinutesModulo = lnTime.onMinuteModulo(60, true);
 
-    fModulo10Seconds = lnTime.atSecondModulo(10);
-    fModulo15Seconds = lnTime.atSecondModulo(15);
-    fModulo30Seconds = lnTime.atSecondModulo(30);
+    f10SecondsModulo = lnTime.onSecondModulo(10, true);
+    f15SecondsModulo = lnTime.onSecondModulo(15, true);
+    f30SecondsModulo = lnTime.onSecondModulo(30, true);
 
     // -----------------------------------
     // ------ refresh dei vari oggetti
@@ -134,12 +130,14 @@ void loop() {
     if (fWifiDisconnected) {wifiDisconnectedAction(); }
 
 
-    if (fModulo2minutes) {
+    if (f2MinutesModulo) {
+        LOG_NOTIFY("Invio del NTP status su Telegram.");
         sendNtpSynchedTelegramMessage();
     }
 
 
-    if (fModulo60minutes) {
+    if (f60MinutesModulo) {
+        LOG_NOTIFY("Invio del WiFi status su Telegram.");
         wifiConnectedMessage();
     }
 
@@ -184,6 +182,10 @@ void loop() {
     // # ------------------------ */
     chackActionStatus();
 
+    if (first_run) {
+        first_run=false;
+        LOG_INFO("fine primo loop....");
+    }
 
 }
 

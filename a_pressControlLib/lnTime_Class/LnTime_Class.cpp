@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 30-08-2025 19.45.24
+// Date .........: 02-09-2025 12.02.27
 */
 
 #include <Arduino.h> // ESP32Time.cpp
@@ -69,7 +69,7 @@ char *LnTime_Class::nowTime() {
 //    withMilliSec = true: aggiunge .xxx alla fine della stringa
 //    stripHeader = true: rimuove hour o minutes se == 0
 // ################################################################
-const char* LnTime_Class::timeStamp(char *buffer, uint8_t buffer_len, uint32_t millisec, bool withMilliSec, bool stripHours) {
+const char* LnTime_Class::toHMS(char *buffer, uint8_t buffer_len, uint32_t millisec, bool withMilliSec, bool stripHours) {
     uint16_t msec;
     uint32_t seconds;
 
@@ -171,44 +171,57 @@ bool LnTime_Class::atMinute(int8_t minute) {
 }
 
 
+
 // ###############################################################
 // # Controlla se è iniziato siamo nel modulo richiesto
 // # utilizzo di std::map
 // ###############################################################
-bool LnTime_Class::atSecondModulo(uint16_t modulo) {
+bool LnTime_Class::onSecondModulo(uint16_t modulo, bool trueOnCreate) {
+    bool created = true;
+    bool retStatus = false;
     uint32_t current_epoch = rtc.getEpoch();
 
     // Controlla se il modulo esiste già nella mappa. Se no, usa 0 come valore iniziale.
     uint32_t last_epoch = 0;
     if (m_last_epoch_seconds_map.count(modulo)) {
         last_epoch = m_last_epoch_seconds_map[modulo];
+        created = false;
     }
 
     if (current_epoch != last_epoch && current_epoch % modulo == 0) {
         m_last_epoch_seconds_map[modulo] = current_epoch; // Aggiorna la mappa per questo modulo
-        return true;
+        retStatus = true;
     }
-    return false;
+
+    if (!trueOnCreate) {created=false; }
+    return (retStatus || created) ? true : false;
 }
 
 
 // ###############################################################
 // # Controlla se è iniziato siamo nel modulo richiesto
 // # utilizzo di std::map
+// # ritorna true allo scadere del modulo e la prima volta che viene creato
 // ###############################################################
-bool LnTime_Class::atMinuteModulo(uint16_t modulo) {
+bool LnTime_Class::onMinuteModulo(uint16_t modulo, bool trueOnCreate) {
+    bool created = true;
+    bool retStatus = false;
     uint32_t current_epoch_minutes = rtc.getEpoch() / 60;
 
     uint32_t last_epoch_minutes = 0;
-    if (m_last_epoch_minutes_map.count(modulo)) {
-        last_epoch_minutes = m_last_epoch_minutes_map[modulo];
+    if (m_last_epoch_minutes_map.count(modulo)) { // se esiste la entry
+        last_epoch_minutes = m_last_epoch_minutes_map[modulo]; // prelevane il valore
+        created = false;
     }
 
     if (current_epoch_minutes != last_epoch_minutes && current_epoch_minutes % modulo == 0) {
         m_last_epoch_minutes_map[modulo] = current_epoch_minutes; // Aggiorna la mappa
-        return true;
+        retStatus = true;
     }
-    return false;
+
+    if (!trueOnCreate) {created=false; }
+
+    return (retStatus || created) ? true : false;
 }
 
 

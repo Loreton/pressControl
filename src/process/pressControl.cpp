@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 01-09-2025 18.47.06
+// Date .........: 02-09-2025 12.01.18
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -66,6 +66,8 @@ void pressControlNotificationCB(ButtonLongPress_Class *p) {
         switch (currentPressedLevel) {
             case PRESSED_LEVEL_1:
                 LOG_NOTIFY("%s has been detected ON", p->pinID());
+                activeBuzzer.blinking(300, 200, 3);
+                activeBuzzer.waitForPulseEnding(2000);
                 break;
 
             case PRESSED_LEVEL_2:
@@ -89,6 +91,7 @@ void pressControlNotificationCB(ButtonLongPress_Class *p) {
 
     // --- un BEEP OGNI 2 SECONDI quando si raggiunge il MAX-LEVEL---
     #define ALARM_BEEP_INTERVAL 2000
+    #define TIME_BUFFER_LENGTH 16
     if (p->maxLevelReached() ) {
         uint32_t currentPressedTime = p->thresholdLevelValue(currentPressedLevel);
         if (millis() - lastBeepTime >= ALARM_BEEP_INTERVAL) {
@@ -97,11 +100,11 @@ void pressControlNotificationCB(ButtonLongPress_Class *p) {
             LOG_WARN("[%s] ALARM! max pressing level %d (time %lu) has been reached", p->pinID(), currentPressedLevel, currentPressedTime);
             lastBeepTime = millis();
 
-            if (fModulo30Seconds || firstAlarmTime) {
+            if (f30SecondsModulo || firstAlarmTime) {
                 LOG_WARN("[%s] ALARM! max pressing levela %d (time %lu) has been reached", p->pinID(), currentPressedLevel, currentPressedTime);
                 setTelegramTitle();
-                char buffer[16];
-                myBot.addFormattedString("<b>PressControl ALARM!:</b>\n\t pressing time %s expired", lnTime.timeStamp(buffer, sizeof(buffer), currentPressedTime) );
+                char buffer[TIME_BUFFER_LENGTH+1];
+                myBot.addFormattedString("<b>PressControl ALARM!:</b>\n\t pressing time %s expired", lnTime.toHMS(buffer, TIME_BUFFER_LENGTH, currentPressedTime) );
                 myBot.send();
                 firstAlarmTime=false;
             }

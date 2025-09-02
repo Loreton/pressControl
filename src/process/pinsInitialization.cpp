@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 30-08-2025 19.41.06
+// Date .........: 02-09-2025 09.45.02
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -83,7 +83,7 @@ void pinsInitialization(void) {
     //====================================================
     passiveBuzzer.init("passiveBuzzer", passiveBuzzer_pin, HIGH, 0, 10);
     passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 150, true); // Scala ascendente, 150ms per nota)
-    waitForPulseEnding(&passiveBuzzer);
+    passiveBuzzer.waitForPulseEnding(2000);
     LOG_NOTIFY("\t[%s] initialized", passiveBuzzer.pinID());
 
 
@@ -91,19 +91,19 @@ void pinsInitialization(void) {
     delay(500);
     activeBuzzer.init("Buzzer", activeBuzzer_pin, HIGH);
     activeBuzzer.pulse(500);
-    waitForPulseEnding(&activeBuzzer);
+    activeBuzzer.waitForPulseEnding(2000);
     LOG_NOTIFY("\t[%s] initialized", activeBuzzer.pinID());
 
 
 
     pressControlLED.init("pressControlLED", pressControlLED_pin, HIGH);
     pressControlLED.pulse(1000);
-    waitForPulseEnding(&pressControlLED);
+    pressControlLED.waitForPulseEnding(1000);
     LOG_NOTIFY("\t[%s] initialized", pressControlLED.pinID());
 
     pumpLED.init("pumpLED", pumpLED_pin, HIGH);
     pumpLED.pulse(1000);
-    waitForPulseEnding(&pumpLED);
+    pumpLED.waitForPulseEnding(1000);
     LOG_NOTIFY("\t[%s] initialized", pumpLED.pinID());
 
 
@@ -114,7 +114,7 @@ void pinsInitialization(void) {
     LOG_NOTIFY("\t[%s] initialized", magnetoTermicoRelay.pinID());
 
     passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 150, false); // Scala discendente, 150ms per nota)
-    waitForPulseEnding(&passiveBuzzer);
+    passiveBuzzer.waitForPulseEnding(1000);
 
 
 }

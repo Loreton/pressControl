@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 01-09-2025 18.48.17
+// Date .........: 02-09-2025 12.09.17
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -48,7 +48,7 @@ void pumpHandler(ButtonLongPress_Class *p) {
     // Dopo aver processato i dati, li resettiamo per la prossima pressione.
     p->reset();
     passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 150, fDiscendent); // Scala ascendente, 150ms per nota)
-    waitForPulseEnding(&passiveBuzzer, 3000);
+    passiveBuzzer.waitForPulseEnding(3000);
     fPUMP_ALARM = false;
 
 }
@@ -62,11 +62,11 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
     static bool firstAlarmTime = true;
     static uint32_t lastBeepTime;
     uint32_t phase_beep_duration;
-
+    uint8_t cpLevel = p->currentPressLevel();
 
     if (p->pressedLevelHasChanged()) {
-        phase_beep_duration = p->currentPressLevel() * BEEP_DURATION_FACTORY; // arbitrario....
-        switch (p->currentPressLevel()) {
+        phase_beep_duration = cpLevel * BEEP_MULTIPLICATION_FACTOR; // arbitrario....
+        switch (cpLevel) {
             case PRESSED_LEVEL_1:
                 LOG_NOTIFY("%s has been detected ON", p->pinID());
                 passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 150, fAscendent); // Scala ascendente, 150ms per nota)
@@ -83,7 +83,7 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
 
                 LOG_INFO("%s beeping. duration: %lu ms", p->pinID(),  phase_beep_duration);
                 setTelegramTitle();
-                myBot.addFormattedString("<b>pump level:</b> %d/%d\n<b>duration ms:</b> %lu\n", p->currentPressLevel(),  p->maxLevels(), phase_beep_duration);
+                myBot.addFormattedString("<b>pump level:</b> %d/%d\n<b>duration ms:</b> %lu\n", cpLevel,  p->maxLevels(), phase_beep_duration);
                 myBot.send();
 
                 activeBuzzer.pulse(phase_beep_duration);
@@ -98,15 +98,20 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
     // --- un BEEP OGNI 2 SECONDI quando si raggiunge il MAX-LEVEL---
     #define ALARM_BEEP_INTERVAL 2000
     if (p->maxLevelReached() ) {
+        char buffer[16+1];
+        const char *levelMS = lnTime.toHMS(buffer, 16, p->thresholdLevelValue(cpLevel));
+
         if (millis() - lastBeepTime >= ALARM_BEEP_INTERVAL) {
             activeBuzzer.pulse(1000); // NON serve per questo pulstante
             lastBeepTime = millis();
             fPUMP_ALARM = true;
         }
-        if (fModulo30Seconds || firstAlarmTime) {
-            LOG_WARN("[%s] ALARM! max pressed level %d reached", p->pinID(), p->currentPressLevel());
+        if (f30SecondsModulo || firstAlarmTime) {
+            // LOG_WARN("[%s] ALARM! max pressed level %d reached", p->pinID(), cpLevel);
+            LOG_WARN("[%s] ALARM! Pump is ON for too much time: %s (level %d reached)", p->pinID(), levelMS, cpLevel);
             setTelegramTitle();
-            myBot.addFormattedString("<b>pump ALARM!:</b> max pressed level %d reached", p->currentPressLevel());
+            // myBot.addFormattedString("<b>pump ALARM!:</b> max pressed level %d reached", cpLevel);
+            myBot.addFormattedString("<b>pump ALARM!:</b>\nPump ON for too much time:\n<b>reached level:</b> %d\n<b>ON time:</b> %s", cpLevel, levelMS);
             myBot.send();
             firstAlarmTime=false;
         }

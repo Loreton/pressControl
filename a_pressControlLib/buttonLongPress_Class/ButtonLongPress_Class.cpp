@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 01-09-2025 18.43.35
+// Date .........: 02-09-2025 11.59.33
 //
 
 #include <Arduino.h>
@@ -161,8 +161,8 @@ void ButtonLongPress_Class::displayPressedLevel(bool forceDisplay) {
         m_lastDisplayTime = m_elapsed;
 
         if (msToNextLevel != 0) {
-            char elapsedBUFFER[16];   lnLog.toHHMMSS(elapsedBUFFER,   sizeof(elapsedBUFFER),   m_elapsed, false);
-            char nextLevelBUFFER[16]; lnLog.toHHMMSS(nextLevelBUFFER, sizeof(nextLevelBUFFER), msToNextLevel, false);
+            char elapsedBUFFER[16];   lnLog.toHMS(elapsedBUFFER,   sizeof(elapsedBUFFER),   m_elapsed, false);
+            char nextLevelBUFFER[16]; lnLog.toHMS(nextLevelBUFFER, sizeof(nextLevelBUFFER), msToNextLevel, false);
 
             //* display
             LOG_NOTIFY("[%s]:", m_pinID);

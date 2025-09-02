@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 01-09-2025 15.10.38
+// Date .........: 02-09-2025 12.00.44
 //
 
 
@@ -38,7 +38,7 @@ enum ActionState : uint8_t {
 
 
 void sendStatusToTelegram(bool force=false) {
-    if ( fModulo15Seconds || force) {
+    if ( f2MinutesModulo || force) {
         LOG_INFO("invio dello status su Telegram");
         #define TIME_STAMP_LENGTH 16
         static char buffer[TIME_STAMP_LENGTH+1];
@@ -49,19 +49,19 @@ void sendStatusToTelegram(bool force=false) {
         setTelegramTitle();
         myBot.addFormattedString("<b>Relay:</b> %s\n", str_OnOff[relayStatus]);
         if (relay_remainig) {
-            lnTime.timeStamp(buffer, TIME_STAMP_LENGTH, relay_remainig, false);
+            lnTime.toHMS(buffer, TIME_STAMP_LENGTH, relay_remainig, false);
             myBot.addFormattedString("\t\t<i>remainig:</i> %s\n", buffer);
         }
 
         myBot.addFormattedString("<b>PressControl:</b> %s\n", str_OnOff[pcStatus]);
         if (pressControl_remaining) {
-            lnTime.timeStamp(buffer, TIME_STAMP_LENGTH, pressControl_remaining, false);
+            lnTime.toHMS(buffer, TIME_STAMP_LENGTH, pressControl_remaining, false);
             myBot.addFormattedString("\t\t<i>remainig:</i> %s\n", buffer);
         }
 
         myBot.addFormattedString("<b>PUMP:</b> %s\n", str_OnOff[pumpStatus]);
         if (pump_remaining) {
-            lnTime.timeStamp(buffer, TIME_STAMP_LENGTH, pump_remaining, false);
+            lnTime.toHMS(buffer, TIME_STAMP_LENGTH, pump_remaining, false);
             myBot.addFormattedString("\t\t<i>remainig:</i> %s\n", buffer);
         }
 
@@ -116,6 +116,9 @@ void resetAlarmActions(bool syncBlinking) {
         LOG_SPEC("Synching LED blinking"); // NO perchè compare ad ogni giro di loop
         pressControlLED.reset(); // per sincronizzare i led
         pumpLED.reset(); // per sincronizzare i led
+        activeBuzzer.blinking(100, 100, 3);
+        activeBuzzer.waitForPulseEnding(1000);
+
     }
     pressControlLED.blinking(1000, 3000);
     pumpLED.blinking(1000, 3000);
@@ -154,7 +157,7 @@ void chackActionStatus() {
         sendStatusToTelegram(fForce);
     }
 
-    if ( actionStateChanged || fModulo2minutes ) { // facciamo comunque il display ogni 15 secondi
+    if ( actionStateChanged || f2MinutesModulo ) { // facciamo comunque il display ogni 15 secondi
         lastActionState=actionState;
         LOG_INFO("actionState [%02d]: %7s %16s %5s", actionState, "RELAY", "PRESS-CONTROL", "PUMP");
         LOG_INFO("actionState [%02d]: %7s %16s %5s", actionState, str_OnOff[relayStatus], str_OnOff[pcStatus], str_OnOff[pumpStatus]);
@@ -167,7 +170,7 @@ void chackActionStatus() {
 
         // status normale in attesa che si accenda il PC
         case pumpAlarm:
-            if ( fModulo10Seconds ) {
+            if ( f10SecondsModulo ) {
                 LOG_ERROR("Pump Alarm");
                 setTelegramTitle();
                 myBot.addFormattedString("<b>Pump Alarm!!!!:</b>\n");
@@ -185,7 +188,7 @@ void chackActionStatus() {
         case pcOFF_pumpOFF:
             if (relayStatus) {
                 // non può essere il rele on ed il PC off
-                if ( fModulo10Seconds ) LOG_ERROR("Relè OFF quando invece il PC è ON");
+                if ( f10SecondsModulo ) LOG_ERROR("Relè OFF quando invece il PC è ON");
                 startAlarmActions();
                 fIdleStatus=false;
             } else {
@@ -199,7 +202,7 @@ void chackActionStatus() {
 
         // non può essere la pompa ON ed il PC off
         case pcOFF_pumpON:
-            if ( fModulo10Seconds ) LOG_ERROR("Pump ON quando il PC è OFF.");
+            if ( f10SecondsModulo ) LOG_ERROR("Pump ON quando il PC è OFF.");
             startAlarmActions();
             fIdleStatus=false;
             break;

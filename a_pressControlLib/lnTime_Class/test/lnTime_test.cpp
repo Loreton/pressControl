@@ -1,10 +1,10 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-08-2025 16.32.58
+// Date .........: 02-09-2025 08.56.12
 //
 
 
-#define  LOG_MODULE_LEVEL LOG_DEFAULT_LEVEL
+// #define  LOG_MODULE_LEVEL LOG_DEFAULT_TRACE
 #include "lnLogger_Class.h"
 
 #include "LnTime_Class.h"
@@ -18,76 +18,120 @@ void setup() {
     lnLog.init();
 
     lnTime.setup(2*60); // Chiama il metodo setup della tua istanza di LnTime
+    Serial.println("Sono lnTime TEST");
 }
 
+
+
+bool    first_run=true;
+
+
+// #############################################################
+// #
+// #############################################################
 void loop() {
-    // Esempi di utilizzo dei metodi della classe:
+
+    uint16_t minute;
+    uint16_t second;
+    lnTime.update();
+
     if (lnTime.atSecond()) {
-        // LOG_INFO("Current time: %s", lnTime.nowTime());
+        // {;i("Current time: %s", lnTime.nowTime());
         // Stampa il tempo completo usando la funzione dedicata
         // struct tm current_time_info = lnTime.getTimeStruct();
         // printLocalTime(&current_time_info); // Chiamata alla funzione esterna
-        LOG_INFO("It's a new second!");
-        print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
+        // LOG_INFO("It's a new second!");
+        // print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
     }
+    // LOG_INFO("It's a loop!");
 
-    if (lnTime.atMinute()) {
-        LOG_WARN("It's a new minute!");
-        print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
-    }
-
-    if (lnTime.atMinute(5)) {
-        LOG_WARN("It's a minute 5!");
-        print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
-    }
-
-    if (lnTime.atSecond(14)) {
-        LOG_WARN("It's a second 5!");
-        print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
-    }
-
-    if (lnTime.atSecond(44)) {
-        LOG_WARN("It's a second 44!");
-        print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
-    }
-
-    if (lnTime.atMinute(12)) {
-        LOG_WARN("It's a minute 12!");
-        print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
-    }
-
-    if (lnTime.atMinuteModulo(2)) {
-        LOG_WARN("It's a 2 minute modulo!");
-        print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
-    }
-
-    if (lnTime.atMinuteModulo(3)) {
-        LOG_WARN("It's a 3 minute modulo!");
-        print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
-    }
-
-    if (lnTime.atSecondModulo(10)) {
-        LOG_WARN("It's a 10 second modulo!");
+    // --- AT
+    second=5;
+    if (lnTime.atSecond(second)) {
+        LOG_WARN("It's at %ld second!", second);
         print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
     }
 
 
-    if (lnTime.atSecondModulo(15)) {
-        LOG_WARN("It's a 15 second modulo!");
-        print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
-    }
-
-    if (lnTime.atSecondModulo(20)) {
-        LOG_WARN("It's a 20 second modulo!");
-        print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
-    }
-
-    if (lnTime.atSecondModulo(25)) {
-        LOG_WARN("It's a 25 second modulo!");
+    second=12;
+    if (lnTime.atSecond(second)) {
+        LOG_WARN("It's at %ld second!", second);
         print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
     }
 
 
+
+    // --- MODULO
+    second=5;
+    if (lnTime.onSecondModulo(second)) {
+        LOG_WARN("It's on %ld second modulo!", second);
+        print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
+    }
+
+    second=10;
+    if (lnTime.onSecondModulo(second)) {
+        LOG_WARN("It's on %ld second modulo!", second);
+        print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
+    }
+
+    second=15;
+    if (lnTime.onSecondModulo(second)) {
+        LOG_WARN("It's on %ld second modulo!", second);
+        print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
+    }
+
+    second=20;
+    if (lnTime.onSecondModulo(second)) {
+        LOG_WARN("It's on %ld second modulo!", second);
+        print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
+    }
+
+
+
+    // --- AT
+    minute=1;
+    if (lnTime.atMinute(minute)) {
+        LOG_WARN("It's at %ld minute!", minute);
+        print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
+    }
+
+    minute=3;
+    if (lnTime.atMinute(minute)) {
+        LOG_WARN("It's at %ld minute!", minute);
+        print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
+    }
+
+    minute=5;
+    if (lnTime.atMinute(minute)) {
+        LOG_WARN("It's at %ld minute!", minute);
+        print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
+    }
+
+
+    // --- MODULO
+    minute=2;
+    if (lnTime.onMinuteModulo(minute)) {
+        LOG_WARN("It's on %ld minute modulo!", minute);
+        print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
+    }
+
+    minute=4;
+    if (lnTime.onMinuteModulo(minute)) {
+        LOG_WARN("It's on %ld minute modulo!", minute);
+        print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
+    }
+
+    minute=6;
+    if (lnTime.onMinuteModulo(minute)) {
+        LOG_WARN("It's on %ld minute modulo!", minute);
+        print_rtc_time(&lnTime); // Chiamata alla funzione esterna, passando il puntatore
+    }
+
+
+    if (first_run) {
+        first_run=false;
+        LOG_INFO("fine primo loop....\n\n");
+    }
     delay(100); // Piccolo ritardo per non sovraccaricare la CPU
 }
 

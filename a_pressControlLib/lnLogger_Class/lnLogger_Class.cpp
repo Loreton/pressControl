@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 27-08-2025 19.42.20
+// Date .........: 02-09-2025 11.59.19
 */
 
 #include <Arduino.h>
@@ -44,7 +44,7 @@ void ESP32Logger::init() { // Changed class name
 //    stripHeader = true: rimuove hour o minutes se == 0
 // ################################################################
 
-const char* ESP32Logger::toHHMMSS(char *buffer, uint8_t buffer_len, uint32_t millisec, bool addMilliSec, bool stripHours) {
+const char* ESP32Logger::toHMS(char *buffer, uint8_t buffer_len, uint32_t millisec, bool addMilliSec, bool stripHours) {
     uint16_t msec;
     uint32_t seconds;
 

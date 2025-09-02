@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-08-2025 08.42.46
+// Date .........: 02-09-2025 12.01.07
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -115,12 +115,12 @@ void loop() {
         // last_second = curr_second;
         LOG_NOTIFY("-----------");
         LOG_INFO("nowTime:                %s",         LnTime.nowTime());
-        LOG_INFO("nowTime:         0      %s",         LnTime.timeStamp(nowTimeBUFFER, sizeof(nowTimeBUFFER)) );
-        LOG_INFO("nowTime:         0      %s",         LnTime.timeStamp(nowTimeBUFFER, sizeof(nowTimeBUFFER), 0, fMilliSecondsTrue) );
+        LOG_INFO("nowTime:         0      %s",         LnTime.toHMS(nowTimeBUFFER, sizeof(nowTimeBUFFER)) );
+        LOG_INFO("nowTime:         0      %s",         LnTime.toHMS(nowTimeBUFFER, sizeof(nowTimeBUFFER), 0, fMilliSecondsTrue) );
 
-        LOG_INFO("msecToTimeStamp: millis %s",         LnTime.timeStamp(nowTimeBUFFER, sizeof(nowTimeBUFFER), millis(), fMilliSecondsTrue));
+        LOG_INFO("msecToTimeStamp: millis %s",         LnTime.toHMS(nowTimeBUFFER, sizeof(nowTimeBUFFER), millis(), fMilliSecondsTrue));
 
-        LOG_INFO("msecToTimeStamp: mymsec %s",        LnTime.timeStamp(nowTimeBUFFER, sizeof(nowTimeBUFFER), LnTime.millisecOfDay(), fMilliSecondsTrue));
+        LOG_INFO("msecToTimeStamp: mymsec %s",        LnTime.toHMS(nowTimeBUFFER, sizeof(nowTimeBUFFER), LnTime.millisecOfDay(), fMilliSecondsTrue));
         LOG_NOTIFY("------------");
 
         myWiFiManager.showCurrentConnection();

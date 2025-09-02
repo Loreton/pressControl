@@ -1,9 +1,9 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-08-2025 16.38.01
+// Date .........: 02-09-2025 12.02.23
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-08-2025 16.38.01
+// Date .........: 02-09-2025 12.02.23
 */
 
 #pragma once
@@ -27,13 +27,9 @@
 
             ESP32Time rtc;
             struct tm      m_timeinfo;
-            // int8_t         m_at_last_second     = 99;
-            // int8_t         m_at_last_minute     = 99;
 
             int8_t         m_last_minute        = 99;
             int8_t         m_last_second        = 99;
-            // uint32_t       m_last_epoch_seconds = 0;
-            // uint32_t       m_last_epoch_minutes = 0;
 
             bool           m_ntp_active        = false;
             uint32_t       m_lastNtpAttempt    = 0;
@@ -47,11 +43,11 @@
             const char*    m_ntpServer5        = "2.br.pool.ntp.org";
             const char*    m_ntpServer6        = "time.windows.com";
 
-            // methods
+
+            // --- methods
                     bool checkNtpSynched(void);
             static  void cbSyncTime(struct timeval *tv) ;
 
-            // static LnTime_Class* s_instance; // Istanza statica per la gestione degli eventi
 
 
 
@@ -65,36 +61,23 @@
             void initNTP(); // Nuovo metodo pubblico per la sincronizzazione
 
             char *nowTime();
-            // const char* timeStamp(char *buffer, uint8_t buffer_len, uint32_t millisec=0, bool stripHeader=false);
-            const char* timeStamp(char *buffer, uint8_t buffer_len, uint32_t millisec=0, bool addMilliSec=false, bool stripHeader=false); // msec from boot (or millisec) HH:MM:SS.msec
-            // const char *to_HHMMSS(uint32_t mseconds, char *buffer, uint8_t buffer_len, bool addMilliSec=false); // un po dupllicato di msecToTimeStamp()
+            const char* toHMS(char *buffer, uint8_t buffer_len, uint32_t millisec=0, bool addMilliSec=false, bool stripHeader=false); // msec from boot (or millisec) HH:MM:SS.msec
 
-
-            // void alignToMinute();                // Attende il cambio di minuto
-            // int8_t waitForSecond();              // Attende il cambio di secondo
             int8_t secondsToMinute(); // Restituisce i secondi mancanti al prossimo minuto completo
 
             bool atSecond();                     // on second change
             bool atSecond(int8_t second);       // on second xx change
-            bool atSecondModulo(uint16_t modulo); // on second xx modulo  (ex.: atSecondModulo(20) return true at second 20, 40, 0)
+            bool onSecondModulo(uint16_t modulo, bool trueOnCreate=false); // on second xx modulo  (ex.: atSecondModulo(20) return true at second 20, 40, 0)
 
             bool atMinute();                     // on minute change
             bool atMinute(int8_t minute);       // on minute xx change
-            bool atMinuteModulo(uint16_t modulo); // on minute xx modulo  (ex.: atMinuteModulo(20) return true at minute 20, 40, 80, 0)
+            bool onMinuteModulo(uint16_t modulo, bool trueOnCreate=false); // on minute xx modulo  (ex.: atMinuteModulo(20) return true at minute 20, 40, 80, 0)
 
-            // bool isQuarterOClock();
             uint32_t millisecOfDay(int offset = 0);
             uint32_t secondsOfDay(int offset = 0);
             uint32_t minutesOfDay(int offset = 0);
             uint32_t getEpoch(unsigned long offset = 0);
 
-            // bool     everyXseconds(uint8_t seconds);
-            // bool     everyXminutes(uint8_t minutes);
-
-
-
-            // bool ntpActive(void) const {return m_ntp_active;};
-            // void setNtpInactive(void) {m_ntp_active=false; }
             bool isNtpSynched(void) const { return m_NTP_synched; }
 
 

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 16.09.33
+// Date .........: 02-09-2025 09.42.38
 //
 
 #pragma once
@@ -24,6 +24,7 @@ class PassiveBuzzer_Class {
         void myNoTone();
         void update();
         bool isPlayingSomething();
+        void waitForPulseEnding(int32_t timeOut);
 
         inline const char* pinID(void) const { return m_pinID; }
 

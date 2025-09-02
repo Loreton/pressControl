@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 30-08-2025 10.59.38
+// Date .........: 02-09-2025 09.45.41
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -24,24 +24,26 @@ void beepNotification(ButtonLongPress_Class *p, uint32_t beep_duration) {
 }
 
 
+// #############################################################
+// # il timeout non è vincolante, se il suono finisce prima si esce...
+// #############################################################
+// void waitForPulseEnding(outPinController_Class *p, int32_t timeOut) {
+//     while (p->isPlayingSomething() && timeOut > 0) {
+//         delay(10);
+//         timeOut -= 10;
+//         p->update();
+//         LOG_TRACE("\t[%s] waiting for the end of pulse", p->pinID());
+//     }
+// }
 
-void waitForPulseEnding(outPinController_Class *p, int32_t timeOut) {
-    while (p->isPlayingSomething() && timeOut > 0) {
-        delay(10);
-        timeOut -= 10;
-        p->update();
-        LOG_TRACE("\t[%s] waiting", p->pinID());
-    }
-}
-
-void waitForPulseEnding(PassiveBuzzer_Class *p, int32_t timeOut) {
-    while (p->isPlayingSomething() && timeOut > 0) {
-        delay(10);
-        timeOut -= 10;
-        p->update();
-        LOG_TRACE("\t[%s] waiting", p->pinID());
-    }
-}
+// void waitForPulseEnding(PassiveBuzzer_Class *p, int32_t timeOut) {
+//     while (p->isPlayingSomething() && timeOut > 0) {
+//         delay(10);
+//         timeOut -= 10;
+//         p->update();
+//         LOG_TRACE("\t[%s] waiting", p->pinID());
+//     }
+// }
 
 
 

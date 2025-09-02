@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 30-08-2025 10.58.28
+// Date .........: 02-09-2025 09.42.16
 //
 
 #include <Arduino.h> // in testa anche per le definizioni dei type
@@ -204,4 +204,17 @@ void PassiveBuzzer_Class::update() {
 // Metodo per verificare se il buzzer sta suonando (sia tono singolo che scala)
 bool PassiveBuzzer_Class::isPlayingSomething() {
     return m_isPlaying || m_isPlayingScale;
+}
+
+
+// #############################################################
+// # il timeout non è vincolante, se il suono finisce prima si esce...
+// #############################################################
+void PassiveBuzzer_Class::waitForPulseEnding(int32_t timeOut) {
+    while (isPlayingSomething() && timeOut > 0) {
+        delay(10);
+        timeOut -= 10;
+        update();
+        LOG_TRACE("\t[%s] waiting for the end of pulse", m_pinID);
+    }
 }

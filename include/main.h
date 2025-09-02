@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 01-09-2025 18.51.24
+// Date .........: 02-09-2025 10.05.00
 //
 
 
@@ -20,30 +20,32 @@
     #include    <WiFiManager_Class.h>
     #include    <LnTime_Class.h>
 
+
     // ---  TEST
     #if ln_RELEASE_TYPE == ln_DEVEL
+        #define PUMP_PHASE_01                      5*1000UL  // milliSeconds
+        #define PUMP_PHASE_02                     15*1000UL // milliSeconds
+        #define PUMP_PHASE_03                     20*1000UL // milliSeconds
+        #define PUMP_PHASE_04                     25*1000UL // milliSeconds
+        #define BEEP_MULTIPLICATION_FACTOR         1*1000UL  // milliSeconds
+
         #define ACTION_STATUS_DISPLAY_INTERVAL 2*60*1000UL  // xx minuti
         #define PRESS_CONTROL_PIN_MAX_TIME     1*60*1000UL // xx minuti
         #define PRESS_CONTROL_RELAY_MAX_TIME   2*60*1000UL // xx minuti
         #define MAGNETOTERMIC_RELAY_PULSETIME     5*1000UL  // tempo magnetotermico relay sarà off
 
-        #define PUMP_PHASE_01                      5*1000UL  // milliSeconds
-        #define PUMP_PHASE_02                     15*1000UL // milliSeconds
-        #define PUMP_PHASE_03                     20*1000UL // milliSeconds
-        #define PUMP_PHASE_04                     25*1000UL // milliSeconds
-        #define BEEP_DURATION_FACTORY             1*1000UL  // milliSeconds
 
     #elif ln_RELEASE_TYPE == ln_PRODUCTION
-        #define ACTION_STATUS_DISPLAY_INTERVAL  5*60*1000UL  // xx minuti
-        #define PRESS_CONTROL_PIN_MAX_TIME     30*60*1000UL  // tempo in cui il pressControl starà acceso.
-        #define PRESS_CONTROL_RELAY_MAX_TIME   30*60*1000UL  // tempo in cui il relay interno starà acceso.
-        #define MAGNETOTERMIC_RELAY_PULSETIME      5*1000UL  // tempo magnetotermico relay sarà off
-
         #define PUMP_PHASE_01                   1*60*1000UL   // milliSeconds
         #define PUMP_PHASE_02                   2*60*1000UL  // milliSeconds
         #define PUMP_PHASE_03                   3*60*1000UL  // milliSeconds
         #define PUMP_PHASE_04                   4*60*1000UL  // milliSeconds
-        #define BEEP_DURATION_FACTORY           3*1000UL  // milliSeconds
+        #define BEEP_MULTIPLICATION_FACTOR        3*1000UL  // milliSeconds
+
+        #define ACTION_STATUS_DISPLAY_INTERVAL  5*60*1000UL  // xx minuti
+        #define PRESS_CONTROL_PIN_MAX_TIME     30*60*1000UL  // tempo in cui il pressControl starà acceso.
+        #define PRESS_CONTROL_RELAY_MAX_TIME   30*60*1000UL  // tempo in cui il relay interno starà acceso.
+        #define MAGNETOTERMIC_RELAY_PULSETIME      5*1000UL  // tempo magnetotermico relay sarà off
     #endif
 
 
@@ -73,12 +75,12 @@
         bool fAscendent                = true;
         bool fDiscendent               = false;
 
-        bool fModulo10Seconds          = false;
-        bool fModulo15Seconds          = false;
-        bool fModulo30Seconds          = false;
-        bool fModulo2minutes           = false;
-        bool fModulo5minutes           = false;
-        bool fModulo60minutes          = false;
+        bool f10SecondsModulo          = false;
+        bool f15SecondsModulo          = false;
+        bool f30SecondsModulo          = false;
+        bool f2MinutesModulo           = false;
+        bool f5MinutesModulo           = false;
+        bool f60MinutesModulo          = false;
 
         // Frequenze per una scala Do Maggiore (approssimate)
         int C_major_scale[] = {
@@ -127,12 +129,12 @@
         extern bool fAscendent;
         extern bool fDiscendent;
 
-        extern bool fModulo10Seconds;
-        extern bool fModulo15Seconds;
-        extern bool fModulo30Seconds;
-        extern bool fModulo2minutes;
-        extern bool fModulo5minutes;
-        extern bool fModulo60minutes;
+        extern bool f10SecondsModulo;
+        extern bool f15SecondsModulo;
+        extern bool f30SecondsModulo;
+        extern bool f2MinutesModulo;
+        extern bool f5MinutesModulo;
+        extern bool f60MinutesModulo;
 
 
         extern TelegramBot_Class      myBot;

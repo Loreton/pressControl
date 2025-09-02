@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 05-08-2025 18.08.29
+// Date .........: 02-09-2025 09.46.51
 //
 #pragma once
 #include <Arduino.h> // in testa anche per le definizioni dei type
@@ -57,6 +57,7 @@ public:
     inline void off() { _set(false); };
     inline const char* pinID(void) const { return m_pinID; }
     bool isPlayingSomething(void);
+    void waitForPulseEnding(int32_t timeOut);
 
 
 
