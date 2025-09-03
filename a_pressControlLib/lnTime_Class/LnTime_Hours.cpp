@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 03-09-2025 15.18.18
+// Date .........: 03-09-2025 16.55.28
 */
 
 #include <Arduino.h> // ESP32Time.cpp
@@ -23,12 +23,23 @@
 // ######################################################################
 // # true se ci troviamo al nuovo minuto)
 // ######################################################################
+// bool LnTime_Class::onHour() {
+//     m_timeinfo = rtc.getTimeStruct();
+//     if (m_timeinfo.tm_sec == 0 && m_timeinfo.tm_min == 0 && m_timeinfo.tm_hour != m_last_hour) {
+//         m_last_hour = m_timeinfo.tm_hour;
+//         return true;
+//     }
+//     return false;
+// }
+
 bool LnTime_Class::onHour() {
     m_timeinfo = rtc.getTimeStruct();
-    if (m_timeinfo.tm_sec == 0 && m_timeinfo.tm_min == 0 && m_timeinfo.tm_hour != m_last_hour) {
+    if (m_timeinfo.tm_hour != m_last_hour) {
         m_last_hour = m_timeinfo.tm_hour;
+
+        // Reset della mappa dei minuti per riattivare i flag
+        m_at_last_minute_map.clear();
         return true;
     }
     return false;
 }
-

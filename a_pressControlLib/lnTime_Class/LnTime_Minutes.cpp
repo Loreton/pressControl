@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 03-09-2025 15.26.48
+// Date .........: 03-09-2025 16.58.55
 */
 
 #include <Arduino.h> // ESP32Time.cpp
@@ -35,6 +35,17 @@ bool LnTime_Class::onMinute() {
 }
 
 
+
+bool LnTime_Class::atMinute(int8_t minute) {
+    m_timeinfo = rtc.getTimeStruct();
+
+    // Controlla se il minuto corrente è quello desiderato e se non è già stato registrato per quest'ora
+    if (m_timeinfo.tm_min == minute && m_at_last_minute_map.find(minute) == m_at_last_minute_map.end()) {
+        m_at_last_minute_map[minute] = m_timeinfo.tm_min; // Registra il minuto
+        return true;
+    }
+    return false;
+}
 
 
 // ######################################################################

@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 03-09-2025 15.34.54
+// Date .........: 03-09-2025 16.57.10
 */
 
 
@@ -54,6 +54,11 @@ void LnTime_Class::setup(uint16_t ntpIntervalTimeSync) {
 
 
 void LnTime_Class::update(void) {
+
+    if (onHour()) {
+        // La mappa dei minuti è stata resettata.
+    }
+
 
     // Controlla e gestisci il cambio di minuto prima di tutto
     if (onMinute()) {
