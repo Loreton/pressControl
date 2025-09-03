@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 30-08-2025 10.56.54
+// Date .........: 03-09-2025 14.21.05
 */
 
 #include <Arduino.h> // ESP32Time.cpp
@@ -140,33 +140,6 @@ void LnTime_Class::initNTP(void) {
  *          SNTP_SYNC_STATUS_COMPLETED: Time is synchronized.
  *          SNTP_SYNC_STATUS_IN_PROGRESS: Smooth time sync in progress.
  */
-
-
-void LnTime_Class::update(void) {
-
-    if (WiFi.status() == WL_CONNECTED ) {
-        if (!m_ntp_active) {
-            LOG_INFO("WiFi is connected. Starting NTP client...");
-            initNTP(); // Imposta il fuso orario e i server NTP
-        } else if (! checkNtpSynched() ) {
-            LOG_ERROR("NTP sync failed or timed out. Restarting NTP client.");
-            sntp_stop();
-            initNTP(); // Avvia un nuovo tentativo
-        } else {
-            m_lastNtpAttempt = millis(); // Resetta il timer per un nuovo tentativo al prossimo reconnect
-        }
-
-
-    }
-    else {
-        // Se il WiFi è disconnesso, disattiva l'NTP per evitare tentativi inutili
-        if (m_ntp_active) {
-            sntp_stop();
-            m_ntp_active = false;
-            LOG_WARN("No WiFi available. NTP stopped.");
-        }
-    }
-}
 
 
 

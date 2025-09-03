@@ -1,0 +1,94 @@
+
+
+Q: Come mai con il codice di sopra i flag scattano solo nel primo minuto e poi sono ignorati?
+
+
+La causa del problema è nella logica della funzione `atSecond()`. La tua implementazione, come era stata modificata in precedenza, è progettata per attivarsi **solo al primo passaggio** per un dato secondo e non si resetta al cambio di minuto.
+
+L'errore sta nel fatto che la variabile di stato `last_at_second` non viene mai aggiornata per riflettere il cambio di minuto. Pertanto, dopo che `atSecond(0)` si è attivato a `10:00:00`, `m_at_last_second_map[0]` viene impostato a `0` e non cambierà più, rendendo impossibile che la condizione si verifichi di nuovo. Il tuo codice continua a funzionare per gli altri secondi perché la mappa `m_at_last_second_map` ha valori diversi per ogni chiave.
+
+-----
+
+### Soluzione: Reset dello Stato
+
+Per risolvere il problema, devi modificare la funzione `atSecond()` in modo che il suo stato (`m_at_last_second_map`) venga resettato a ogni cambio di minuto, consentendo ai flag di attivarsi nuovamente.
+
+Ecco come potresti riscrivere le funzioni `atSecond()` e `onMinute()` per ottenere il comportamento desiderato:
+
+#### 1\. Rivedi `onMinute()`
+
+La funzione `onMinute()` dovrebbe ora occuparsi di due cose:
+
+1.  Controllare se c'è stato un cambio di minuto.
+2.  Se c'è stato un cambio, **resettare la mappa `m_at_last_second_map`**.
+
+**`LnTime_Minuti.cpp`**
+
+```cpp
+// ######################################################################
+// # Controlla se è iniziato un nuovo minuto e resetta i flag dei secondi
+// ######################################################################
+bool LnTime_Class::onMinute() {
+    m_timeinfo = rtc.getTimeStruct();
+    if (m_timeinfo.tm_min != m_last_minute) {
+        m_last_minute = m_timeinfo.tm_min;
+
+        // Reset della mappa dei secondi per riattivare i flag
+        m_at_last_second_map.clear();
+        return true;
+    }
+    return false;
+}
+```
+
+#### 2\. Rivedi `atSecond()`
+
+La funzione `atSecond()` può rimanere come prima, ma il suo corretto funzionamento dipenderà dal reset che avviene nella funzione `onMinute()`. Dovresti rimuovere la logica di `last_at_second = -1` perché ora il reset della mappa gestisce questo stato.
+
+**`LnTime_Secondi.cpp`**
+
+```cpp
+bool LnTime_Class::atSecond(uint8_t second) {
+    m_timeinfo = rtc.getTimeStruct();
+
+    // Controlla se il secondo corrente è quello desiderato e se non è già stato registrato per questo minuto
+    if (m_timeinfo.tm_sec == second && m_at_last_second_map.find(second) == m_at_last_second_map.end()) {
+        m_at_last_second_map[second] = m_timeinfo.tm_sec; // Registra il secondo
+        return true;
+    }
+    return false;
+}
+```
+
+L'uso di `m_at_last_second_map.find(second) == m_at_last_second_map.end()` è un modo più pulito e corretto per verificare se una chiave esiste nella mappa. L'espressione restituisce `true` se la chiave non viene trovata.
+
+#### 3\. Rivedi `updateAtSecondFlags()`
+
+Per garantire che la logica di reset funzioni correttamente, devi chiamare `onMinute()` all'interno del tuo loop principale. Un buon approccio è chiamare una funzione `update()` generica che si occupi di tutta la logica di aggiornamento.
+
+**`LnTime_Class.cpp`**
+
+```cpp
+void LnTime_Class::update() {
+    // ... (la tua logica di NTP/WiFi)
+
+    // Controlla e gestisci il cambio di minuto prima di tutto
+    if (onMinute()) {
+        // La mappa dei secondi è già stata resettata
+    }
+
+    // Esegui l'aggiornamento dei flag dei secondi e dei minuti
+    updateAtSecondFlags();
+    updateAtMinuteFlags(); // Se hai una funzione simile per i minuti
+}
+```
+
+-----
+
+### Riassunto della Soluzione
+
+Il problema non era nella gestione dei flag, ma nella logica di stato di `atSecond()`. La variabile `m_at_last_second_map` deve essere resettata a ogni nuovo minuto per permettere ai flag di attivarsi di nuovo.
+
+  - **`onMinute()`** si occupa di rilevare il cambio di minuto e di resettare la mappa di stato dei secondi (`m_at_last_second_map.clear()`).
+  - **`atSecond()`** si attiva solo se il secondo corrente non è ancora stato registrato **per il minuto attuale**.
+  - **`update()`** nel `loop()` si occupa di chiamare `onMinute()` per innescare il reset e poi `updateAtSecondFlags()` per aggiornare i flag.

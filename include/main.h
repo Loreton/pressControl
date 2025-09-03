@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 03-09-2025 12.07.57
+// Date .........: 03-09-2025 13.49.16
 //
 
 
@@ -28,6 +28,13 @@
         on_15 = 15,
         on_30 = 20,
     };
+
+    enum onMINUTES : uint32_t {
+        on_10 = 10,
+        on_15 = 15,
+        on_30 = 20,
+    };
+
 
 
     // ---  TEST

@@ -1,36 +1,80 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 03-09-2025 12.13.05
-/*
-// updated by ...: Loreto Notarantonio
-// Date .........: 03-09-2025 12.13.05
-*/
+// Date .........: 03-09-2025 15.21.41
+//
 
+// LnTime_Class.h
 #pragma once
 
     #include "Arduino.h"
     #include <ESP32Time.h> // ESP32Time.cpp
     #include <map>
-    // #include "lnLogger_Class.h" // Assicurati che lnLogger.h sia disponibile nel tuo progetto
+    #include <vector> // Use std::vector for flexible arrays
 
     // #define TIME_BUFFER_LENGTH 16
     #define EUROPE_ROME_TZ "CET-1CEST,M3.5.0,M10.5.0/3"
 
     class LnTime_Class {
+        // -------------------------------
+        // - LnTime_Secondi
+        // -------------------------------
         private:
             std::map<uint32_t, uint32_t> m_last_epoch_seconds_map;  // LnTime_Class_StdMap.txt
-            std::map<uint32_t, uint32_t> m_last_epoch_minutes_map;   // LnTime_Class_StdMap.txt
-
-            // Con queste:
             std::map<uint8_t, int8_t> m_at_last_second_map;
+            std::map<uint8_t, bool> m_at_second_flags;  // bool getSecondFlag(uint8_t second);
+            std::vector<uint8_t> m_at_seconds_to_monitor;
+            int8_t         m_last_second        = 99;
+
+
+        public:
+            bool onSecond();                     // on second change
+            bool atSecond(uint8_t second);       // on second xx change
+            bool onSecondModulo(uint32_t modulo, bool trueOnFirstRun=false); // on second xx modulo  (ex.: atSecondModulo(20) return true at second 20, 40, 0)
+            bool getAtSecondFlag(uint8_t second);
+            void setAtSecondFlag(const std::vector<uint8_t>& seconds);
+            void updateAtSecondFlags(void);
+
+
+
+
+
+
+        // -------------------------------
+        // - LnTime_Minuti .....
+        // -------------------------------
+        private:
+            std::map<uint32_t, uint32_t> m_last_epoch_minutes_map;
             std::map<uint8_t, int8_t> m_at_last_minute_map;
+            std::map<uint8_t, bool> m_at_minute_flags;  // bool getMinuteFlag(uint8_t minute);
+            std::vector<uint8_t> m_at_minutes_to_monitor;
+            int8_t         m_last_minute        = 99;
+
+        public:
+            bool onMinute();                     // on minute change
+            bool atMinute(int8_t minute);       // on minute xx change
+            bool onMinuteModulo(uint32_t modulo, bool trueOnFirstRun=false); // on minute xx modulo  (ex.: atMinuteModulo(20) return true at minute 20, 40, 80, 0)
+            bool getAtMinuteFlag(uint8_t minute);
+            void setAtMinuteFlag(const std::vector<uint8_t>& minutes);
+            void updateAtMinuteFlags(void);
+
+
+        // -------------------------------
+        // - LnTime_Hours .....
+        // -------------------------------
+        private:
+            int8_t         m_last_hour          = 99;
+
+        public:
+            bool onHour();                     // on hour change
+
+
+        private:
+            // LnTime_Hours .....
+
 
             ESP32Time rtc;
             struct tm      m_timeinfo;
 
-            int8_t         m_last_minute        = 99;
-            int8_t         m_last_second        = 99;
-            int8_t         m_last_hour          = 99;
 
             bool           m_ntp_active        = false;
             uint32_t       m_lastNtpAttempt    = 0;
@@ -58,6 +102,8 @@
 
             // Metodi pubblici
             void setup(uint16_t ntpIntervalTimeSync=2*60); // seconds
+            // void setup(uint16_t ntpIntervalTimeSync, const std::vector<uint8_t>& seconds, const std::vector<uint8_t>& minutes);
+            void updateFlags();
             void update();
             void initNTP(); // Nuovo metodo pubblico per la sincronizzazione
 
@@ -66,15 +112,10 @@
 
             int8_t secondsToMinute(); // Restituisce i secondi mancanti al prossimo minuto completo
 
-            bool onSecond();                     // on second change
-            bool atSecond(int8_t second);       // on second xx change
-            bool onSecondModulo(uint32_t modulo, bool trueOnFirstRun=false); // on second xx modulo  (ex.: atSecondModulo(20) return true at second 20, 40, 0)
 
-            bool onMinute();                     // on minute change
-            bool atMinute(int8_t minute);       // on minute xx change
-            bool onMinuteModulo(uint32_t modulo, bool trueOnFirstRun=false); // on minute xx modulo  (ex.: atMinuteModulo(20) return true at minute 20, 40, 80, 0)
 
-            bool onHour();                     // on hour change
+
+
 
             uint32_t millisecOfDay(int offset = 0);
             uint32_t secondsOfDay(int offset = 0);
