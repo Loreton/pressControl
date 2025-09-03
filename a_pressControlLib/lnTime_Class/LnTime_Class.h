@@ -1,9 +1,9 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 02-09-2025 12.02.23
+// Date .........: 03-09-2025 12.13.05
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 02-09-2025 12.02.23
+// Date .........: 03-09-2025 12.13.05
 */
 
 #pragma once
@@ -18,8 +18,8 @@
 
     class LnTime_Class {
         private:
-            std::map<uint16_t, uint32_t> m_last_epoch_seconds_map;  // LnTime_Class_StdMap.txt
-            std::map<uint16_t, uint32_t> m_last_epoch_minutes_map;   // LnTime_Class_StdMap.txt
+            std::map<uint32_t, uint32_t> m_last_epoch_seconds_map;  // LnTime_Class_StdMap.txt
+            std::map<uint32_t, uint32_t> m_last_epoch_minutes_map;   // LnTime_Class_StdMap.txt
 
             // Con queste:
             std::map<uint8_t, int8_t> m_at_last_second_map;
@@ -30,6 +30,7 @@
 
             int8_t         m_last_minute        = 99;
             int8_t         m_last_second        = 99;
+            int8_t         m_last_hour          = 99;
 
             bool           m_ntp_active        = false;
             uint32_t       m_lastNtpAttempt    = 0;
@@ -65,13 +66,15 @@
 
             int8_t secondsToMinute(); // Restituisce i secondi mancanti al prossimo minuto completo
 
-            bool atSecond();                     // on second change
+            bool onSecond();                     // on second change
             bool atSecond(int8_t second);       // on second xx change
-            bool onSecondModulo(uint16_t modulo, bool trueOnCreate=false); // on second xx modulo  (ex.: atSecondModulo(20) return true at second 20, 40, 0)
+            bool onSecondModulo(uint32_t modulo, bool trueOnFirstRun=false); // on second xx modulo  (ex.: atSecondModulo(20) return true at second 20, 40, 0)
 
-            bool atMinute();                     // on minute change
+            bool onMinute();                     // on minute change
             bool atMinute(int8_t minute);       // on minute xx change
-            bool onMinuteModulo(uint16_t modulo, bool trueOnCreate=false); // on minute xx modulo  (ex.: atMinuteModulo(20) return true at minute 20, 40, 80, 0)
+            bool onMinuteModulo(uint32_t modulo, bool trueOnFirstRun=false); // on minute xx modulo  (ex.: atMinuteModulo(20) return true at minute 20, 40, 80, 0)
+
+            bool onHour();                     // on hour change
 
             uint32_t millisecOfDay(int offset = 0);
             uint32_t secondsOfDay(int offset = 0);

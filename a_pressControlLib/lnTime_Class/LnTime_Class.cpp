@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 02-09-2025 12.02.27
+// Date .........: 03-09-2025 12.11.41
 */
 
 #include <Arduino.h> // ESP32Time.cpp
@@ -115,8 +115,10 @@ const char* LnTime_Class::toHMS(char *buffer, uint8_t buffer_len, uint32_t milli
 //     }
 // }
 
-// Controlla se è iniziato un nuovo secondo
-bool LnTime_Class::atSecond() {
+// ######################################################################
+// # Controlla se è iniziato un nuovo secondo
+// ######################################################################
+bool LnTime_Class::onSecond() {
     m_timeinfo = rtc.getTimeStruct();
     if (m_timeinfo.tm_sec != m_last_second) {
         m_last_second = m_timeinfo.tm_sec;
@@ -126,6 +128,10 @@ bool LnTime_Class::atSecond() {
 }
 
 
+// ######################################################################
+// # true se ci troviamo al secondo x
+// # lavorando sull'epoch time possiamo superare anche il 60
+// ######################################################################
 bool LnTime_Class::atSecond(int8_t second) {
     m_timeinfo = rtc.getTimeStruct();
 
@@ -144,8 +150,66 @@ bool LnTime_Class::atSecond(int8_t second) {
 }
 
 
-// Controlla se è iniziato un nuovo minuto
-bool LnTime_Class::atMinute() {
+
+
+
+// ######################################################################
+// # true se ci troviamo al minuto mod (x)
+// # lavorando sull'epoch time possiamo superare anche il 60
+// ###############################################################
+bool LnTime_Class::onSecondModulo(uint32_t modulo, bool trueOnFirstRun) {
+    bool firstRun = true;
+    bool isTime = false;
+    if (modulo == 0) {modulo = 60; }
+
+
+    uint32_t last_epoch_seconds = 0;
+    if (m_last_epoch_seconds_map.count(modulo)) { // se esiste la entry
+        last_epoch_seconds = m_last_epoch_seconds_map[modulo]; // prelevane il valore
+        firstRun = false;
+    }
+
+    uint32_t current_epoch_seconds = rtc.getEpoch();
+
+    if (current_epoch_seconds != last_epoch_seconds && current_epoch_seconds % modulo == 0) {
+        m_last_epoch_seconds_map[modulo] = current_epoch_seconds; // Aggiorna la mappa
+        isTime = true;
+    }
+
+    if (!trueOnFirstRun) {firstRun=false; } // se non è stato richiesto il trueOnFirstRun
+
+    return (isTime || firstRun) ? true : false;
+}
+
+
+// // ######################################################################
+// // # true se ci troviamo al secondo mod (x)
+// // # lavorando sull'epoch time possiamo superare anche il 60
+// // ######################################################################
+// bool LnTime_Class::onSecondModulo(uint32_t modulo) {
+//     uint32_t current_epoch = rtc.getEpoch();
+//     uint32_t last_epoch = 0;
+
+//     if (modulo == 0) {modulo = 60; }
+
+//     // Controlla se il modulo esiste già nella mappa. Se no, usa 0 come valore iniziale.
+//     if (m_last_epoch_seconds_map.count(modulo)) {
+//         last_epoch = m_last_epoch_seconds_map[modulo];
+//     }
+
+//     if (current_epoch != last_epoch && current_epoch % modulo == 0) {
+//         m_last_epoch_seconds_map[modulo] = current_epoch; // Aggiorna la mappa per questo modulo
+//         return true;
+//     }
+//     return false;
+// }
+
+
+
+// ######################################################################
+// # true se ci troviamo al nuovo minuto)
+// ######################################################################
+bool LnTime_Class::onMinute() {
     m_timeinfo = rtc.getTimeStruct();
     if (m_timeinfo.tm_sec == 0 && m_timeinfo.tm_min != m_last_minute) {
         m_last_minute = m_timeinfo.tm_min;
@@ -154,6 +218,9 @@ bool LnTime_Class::atMinute() {
     return false;
 }
 
+// ######################################################################
+// # true se ci troviamo al minuto (x)
+// ######################################################################
 bool LnTime_Class::atMinute(int8_t minute) {
     m_timeinfo = rtc.getTimeStruct();
 
@@ -172,59 +239,49 @@ bool LnTime_Class::atMinute(int8_t minute) {
 
 
 
+
+// ######################################################################
+// # true se ci troviamo al minuto mod (x)
+// # lavorando sull'epoch time possiamo superare anche il 60
 // ###############################################################
-// # Controlla se è iniziato siamo nel modulo richiesto
-// # utilizzo di std::map
-// ###############################################################
-bool LnTime_Class::onSecondModulo(uint16_t modulo, bool trueOnCreate) {
-    bool created = true;
-    bool retStatus = false;
-    uint32_t current_epoch = rtc.getEpoch();
+bool LnTime_Class::onMinuteModulo(uint32_t modulo, bool trueOnFirstRun) {
+    bool firstRun = true;
+    bool isTime = false;
+    if (modulo == 0) {modulo = 60; }
 
-    // Controlla se il modulo esiste già nella mappa. Se no, usa 0 come valore iniziale.
-    uint32_t last_epoch = 0;
-    if (m_last_epoch_seconds_map.count(modulo)) {
-        last_epoch = m_last_epoch_seconds_map[modulo];
-        created = false;
-    }
-
-    if (current_epoch != last_epoch && current_epoch % modulo == 0) {
-        m_last_epoch_seconds_map[modulo] = current_epoch; // Aggiorna la mappa per questo modulo
-        retStatus = true;
-    }
-
-    if (!trueOnCreate) {created=false; }
-    return (retStatus || created) ? true : false;
-}
-
-
-// ###############################################################
-// # Controlla se è iniziato siamo nel modulo richiesto
-// # utilizzo di std::map
-// # ritorna true allo scadere del modulo e la prima volta che viene creato
-// ###############################################################
-bool LnTime_Class::onMinuteModulo(uint16_t modulo, bool trueOnCreate) {
-    bool created = true;
-    bool retStatus = false;
     uint32_t current_epoch_minutes = rtc.getEpoch() / 60;
 
     uint32_t last_epoch_minutes = 0;
     if (m_last_epoch_minutes_map.count(modulo)) { // se esiste la entry
         last_epoch_minutes = m_last_epoch_minutes_map[modulo]; // prelevane il valore
-        created = false;
+        firstRun = false;
     }
+
 
     if (current_epoch_minutes != last_epoch_minutes && current_epoch_minutes % modulo == 0) {
         m_last_epoch_minutes_map[modulo] = current_epoch_minutes; // Aggiorna la mappa
-        retStatus = true;
+        isTime = true;
     }
 
-    if (!trueOnCreate) {created=false; }
+    if (!trueOnFirstRun) {firstRun=false; } // se non è stato richiesto il trueOnFirstRun
 
-    return (retStatus || created) ? true : false;
+    return (isTime || firstRun) ? true : false;
 }
 
 
+
+
+// ######################################################################
+// # true se ci troviamo al nuovo minuto)
+// ######################################################################
+bool LnTime_Class::onHour() {
+    m_timeinfo = rtc.getTimeStruct();
+    if (m_timeinfo.tm_sec == 0 && m_timeinfo.tm_min == 0 && m_timeinfo.tm_hour != m_last_hour) {
+        m_last_hour = m_timeinfo.tm_hour;
+        return true;
+    }
+    return false;
+}
 
 
 

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 01-09-2025 19.34.03
+// Date .........: 02-09-2025 20.21.39
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -52,7 +52,10 @@ void wifiConnectedCB(arduino_event_id_t event) {
 // #
 // ##########################################################################
 void wifiConnectedAction() {
-    wifiConnectedMessage();
+    if (fWifiConnected) {
+        fWifiConnected = false;
+        wifiConnectedMessage();
+    }
 }
 
 
@@ -62,17 +65,16 @@ void wifiConnectedAction() {
 // #
 // ##########################################################################
 void wifiConnectedMessage() {
-    if (fWifiConnected) {
-        fWifiConnected = false;
-        LOG_NOTIFY("WiFi_connAction Connected!");
-        myBot.startNewMessage("<b>PressControl\nTime:</b> %s\n", lnTime.nowTime());
-        myBot.addFormattedString("<b>WiFi: </b> CONNECTED\n");
-        myBot.addFormattedString("<b>SSID: </b> %s\n", WiFi.SSID().c_str() );
-        myBot.addFormattedString("<b>BSSID:</b> %s\n", WiFi.BSSIDstr().c_str() );
-        myBot.addFormattedString("<b>RSSI: </b> %d\n", WiFi.RSSI() );
-        myBot.addFormattedString("<b>IP:   </b> %s\n", WiFi.localIP().toString().c_str() );
-        myBot.send();
-    }
+    // if (myWiFiManager.isConnected()) {
+    LOG_NOTIFY("WiFi_connAction Connected!");
+    myBot.startNewMessage("<b>PressControl\nTime:</b> %s\n", lnTime.nowTime());
+    myBot.addFormattedString("<b>WiFi: </b> CONNECTED\n");
+    myBot.addFormattedString("<b>SSID: </b> %s\n", WiFi.SSID().c_str() );
+    myBot.addFormattedString("<b>BSSID:</b> %s\n", WiFi.BSSIDstr().c_str() );
+    myBot.addFormattedString("<b>RSSI: </b> %d\n", WiFi.RSSI() );
+    myBot.addFormattedString("<b>IP:   </b> %s\n", WiFi.localIP().toString().c_str() );
+    myBot.send();
+    // }
 
 }
 
