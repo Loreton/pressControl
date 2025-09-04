@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 04-09-2025 08.17.53
+// Date .........: 04-09-2025 12.26.06
 */
 
 #include <Arduino.h>
@@ -48,7 +48,8 @@ void OnTime_Class::update() {
 
     // // Controlla e gestisci il cambio di minuto prima di tutto
     if (onMinute()) {
-        m_at_last_second_map.clear(); // Reset della mappa dei secondi per riattivare i flag
+        m_at_last_second_map.clear();           // Reset della mappa dei secondi per riattivare i flag
+        m_at_last_second_vector_map.clear();    // Reset della mappa dei secondi per riattivare i flag
     }
 
     // Esegui l'aggiornamento dei flag dei secondi e dei minuti

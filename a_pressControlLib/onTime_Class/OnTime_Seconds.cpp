@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 04-09-2025 09.46.50
+// Date .........: 04-09-2025 12.22.44
 */
 
 #include <Arduino.h> // ESP32Time.cpp
@@ -32,15 +32,15 @@ bool OnTime_Class::onSecond() {
 
 
 
+
+
 // ######################################################################
-// # true se ci troviamo al minuto mod (x)
-// # lavorando sull'epoch time possiamo superare anche il 60
-// ###############################################################
+// #
+// ######################################################################
 bool OnTime_Class::onSecondModulo(uint32_t modulo, bool trueOnFirstRun) {
     bool firstRun = true;
     bool isTime = false;
     if (modulo == 0) {modulo = 60; }
-
 
     uint32_t last_epoch_seconds = 0;
     if (m_last_epoch_seconds_map.count(modulo)) { // se esiste la entry
@@ -68,115 +68,63 @@ bool OnTime_Class::onSecondModulo(uint32_t modulo, bool trueOnFirstRun) {
 
 
 
+
+
 // ######################################################################
+// # std::map<uint8_t, int8_t> m_at_last_second_map;
 // # true se ci troviamo al secondo x
 // # Questa soluzione funziona solo se lo si chiama una volta perché
 // # la volta successiva ritorna false
+// #
+// # Se chiami atSecond(30), la funzione aggiornerà solo
+// #    l'entry m_at_last_second_map[30], senza influenzare un'eventuale
+// #    successiva chiamata a atSecond(45).
 // ######################################################################
-// bool OnTime_Class::atSecond(uint8_t second) {
-//     // m_timeinfo = rtc.getTimeStruct();
-//     // uint8_t current_second = m_timeinfo.tm_sec;
-//     uint8_t current_second = rtc.getSecond();
-
-
-//     if (current_second != m_at_last_second) {
-//         m_at_last_second = current_second; // Aggiorna il flag solo al cambio di secondo
-
-//         // Poiché il flag viene aggiornato a ogni secondo, questa condizione si attiverà solo una volta per ogni minuto.
-//         if (current_second == second) {
-//             return true;
-//         }
-//     }
-//     return false;
-// }
-
-
 bool OnTime_Class::atSecond(uint8_t second) {
     uint8_t current_second = m_timeinfo.tm_sec;
-    // Usa una mappa per gestire i flag per ogni secondo desiderato.
-    // L'istanza della mappa deve essere un membro della classe.
-    if (current_second == second) {
-        // if (m_at_last_second_map.count(second)) {return true; }
-        bool exists = (m_at_last_second_map.find(second) != m_at_last_second_map.end());
-        if (!exists) {
-            m_at_last_second_map[second] = current_second; // Registra che questo secondo è stato attivato in questo minuto
-        }
-        return true;
 
-        // if (m_at_last_second_map.find(second) != m_at_last_second_map.end()) {
-            // return true;
-        // }
-
+    // Se non esiste, prendiamo il valore dallo stato
+    if (m_at_last_second_map.count(second)) {
+        m_at_last_second = m_at_last_second_map[second];
     }
 
-    // Va gestito il reset della mappa a ogni nuovo minuto,
+    if (current_second == second && current_second != m_at_last_second) {
+        m_at_last_second_map[second] = current_second; // aggiorniamo il valore
+        return true;
+    }
     return false;
 }
 
 
-// bool OnTime_Class::atSecond(uint8_t second) {
-//     uint8_t current_second = m_timeinfo.tm_sec;
-//     // Usa una mappa per gestire i flag per ogni secondo desiderato.
-//     // L'istanza della mappa deve essere un membro della classe.
-//     if (current_second == second && m_at_last_second_map.find(second) == m_at_last_second_map.end()) {
-//         m_at_last_second_map[second] = current_second; // Registra che questo secondo è stato attivato in questo minuto
-//         return true;
-//     }
-
-//     // Va gestito il reset della mappa a ogni nuovo minuto,
-//     return false;
-// }
-
-
-// bool LnTime_Class::atSecond(uint8_t second) {
-//     m_timeinfo = rtc.getTimeStruct();
-
-//     // Trova l'ultimo secondo registrato per questo valore "second".
-//     // Se non esiste, il valore di default è -1 (o un valore che non si ripete mai) per la prima esecuzione.
-//     int8_t last_at_second = -1;
-//     if (m_at_last_second_map.count(second)) {
-//         last_at_second = m_at_last_second_map[second];
-//     }
-
-//     if (m_timeinfo.tm_sec == second && m_timeinfo.tm_sec != last_at_second) {
-//         m_at_last_second_map[second] = m_timeinfo.tm_sec;
-//         return true;
-//     }
-//     return false;
-// }
 
 
 
 
-
-
+// ===============================================================
+// =   V E C T O R   - V E C T O R   - V E C T O R   - V E C T O R   -
+// ===============================================================
 
 // ######################################################################
-// # true se ci troviamo al secondo x
-// # Questa funzione la dedichoamo al vector altrimenti non potrei chiamare
-// # atSecond() dall'esterno perché falsata....
+// # identia a atSecond(uint8_t sec) ma dedicata alla parte con i vector
 // ######################################################################
 // bool OnTime_Class::atSecondVectorDedicated(uint8_t second) {
-//     uint8_t current_second = m_timeinfo.tm_sec;
+bool OnTime_Class::atSecondFlag(uint8_t second) {
+    uint8_t current_second = m_timeinfo.tm_sec;
 
-//     if (current_second != m_at_last_vector_second) {
-//         m_at_last_vector_second = current_second; // Aggiorna il flag solo al cambio di secondo
+    // Se non esiste, prendiamo il valore dallo stato
+    if (m_at_last_second_vector_map.count(second)) {
+        m_at_last_second_vector = m_at_last_second_vector_map[second];
+    }
 
-//         // Poiché il flag viene aggiornato a ogni secondo, questa condizione si attiverà solo una volta per ogni minuto.
-//         if (current_second == second) {
-//             return true;
-//         }
-//     }
-//     return false;
-// }
-
-
-
-
+    if (current_second == second && current_second != m_at_last_second_vector) {
+        m_at_last_second_vector_map[second] = current_second; // aggiorniamo il valore
+        return true;
+    }
+    return false;
+}
 
 
 // ######################################################################
-// # per ovviare al problema di atSecond(uint8_t second)
 // # possiamo fare uso dei vector.
 // # quindi impostiamo tutti i valori che vogliamo controllare
 // # e la classe provvede a salvare lo stato in una map
@@ -212,7 +160,7 @@ void OnTime_Class::updateAtSecondFlags() {
         // LOG_SPEC("second: %d %d", sec, m_at_second_flags[sec]);
 
 
-        if (atSecond(sec)) {
+        if (atSecondFlag(sec)) {
             m_at_second_flags[sec] = true;
             // LOG_INFO("------------second true: %d %d", sec, m_at_second_flags[sec]);
         } else {

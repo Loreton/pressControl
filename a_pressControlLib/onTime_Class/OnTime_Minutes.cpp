@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 04-09-2025 07.29.24
+// Date .........: 04-09-2025 12.24.50
 */
 
 #include <Arduino.h> // ESP32Time.cpp
@@ -26,7 +26,7 @@ bool OnTime_Class::onMinute() {
         m_last_minute = m_timeinfo.tm_min;
 
         // Reset della mappa dei secondi per riattivare i flag
-        m_at_last_second_map.clear();
+        // m_at_last_second_map.clear();
         return true;
     }
     return false;

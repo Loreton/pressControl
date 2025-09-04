@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 04-09-2025 09.09.21
+// Date .........: 04-09-2025 12.23.25
 */
 
 #pragma once
@@ -34,22 +34,28 @@
         private:
             int8_t m_last_second = -1;
             int8_t m_at_last_second = -1;
-            int8_t m_at_last_vector_second = -1;
 
             // --- per atSecond(uint8_t sec)
             std::map<uint32_t, uint32_t> m_last_epoch_seconds_map;  // LnTime_Class_StdMap.txt
-            std::map<uint8_t, int8_t> m_at_last_second_map;
+            std::map<uint8_t,  uint8_t>  m_at_last_second_map;
 
             // --- per i vector
             std::vector<uint8_t> m_at_seconds_to_monitor; // array dei secondi da controllare
             std::map<uint8_t, bool> m_at_second_flags;    // map contenente lo stato dei secondi
+            // std::map<uint8_t, int8_t> m_at_last_second2_map; // per atSecondFlag()
+            std::map<uint8_t, int8_t> m_at_last_second_vector_map; // per atSecondFlag()
+            // int8_t m_at_last_second2 = -1;
+            // int8_t m_at_last_vector_second = -1;
+            int8_t m_at_last_second_vector = -1;
+
+
+            bool atSecondFlag(uint8_t second);
 
 
         public:
             bool onSecond();                     // on second change
             bool atSecond(uint8_t second);
             bool onSecondModulo(uint32_t modulo, bool trueOnFirstRun=false); // on second xx modulo  (ex.: atSecondModulo(20) return true at second 20, 40, 0)
-            bool atSecondVectorDedicated(uint8_t second);
 
             // --- dedicata alla versione con i vector...
             bool getAtSecondFlag(uint8_t second);
