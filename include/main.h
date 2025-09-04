@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 03-09-2025 13.49.16
+// Date .........: 04-09-2025 07.28.39
 //
 
 
@@ -22,18 +22,18 @@
 
 
 
-    // Definisce i possibili tipi di pressione del pulsante.
-    enum onSECONDS : uint32_t {
-        on_10 = 10,
-        on_15 = 15,
-        on_30 = 20,
-    };
+    // // Definisce i possibili tipi di pressione del pulsante.
+    // enum onSECONDS : uint32_t {
+    //     on_10 = 10,
+    //     on_15 = 15,
+    //     on_30 = 20,
+    // };
 
-    enum onMINUTES : uint32_t {
-        on_10 = 10,
-        on_15 = 15,
-        on_30 = 20,
-    };
+    // enum onMINUTES : uint32_t {
+    //     on_10 = 10,
+    //     on_15 = 15,
+    //     on_30 = 20,
+    // };
 
 
 
