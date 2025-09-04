@@ -1,8 +1,8 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 04-09-2025 12.24.50
+// Date .........: 04-09-2025 14.19.09
 */
-
+#ifdef xxxxxxxxxxxxxxxxxxxxxx
 #include <Arduino.h> // ESP32Time.cpp
 #include <ESP32Time.h> // ESP32Time.cpp
 
@@ -73,3 +73,4 @@ bool OnTime_Class::atMinute(uint8_t minute) {
 
 
 
+#endif
