@@ -1,15 +1,16 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 04-09-2025 17.00.43
+// Date .........: 07-09-2025 08.56.14
 //
 
 
 // #define  LOG_MODULE_LEVEL LOG_DEFAULT_TRACE
 #include <lnLogger_Class.h>
+#include <LnTime_Class.h>
 
 
 
-#define ON_TIME_CLASS_SECONDS_VECTORx
+#define ON_TIME_CLASS_SECONDS_VECTOR
 #define ON_TIME_CLASS_MINUTES_VECTORx
 #define ON_TIME_CLASS_HOURS_VECTORx
 #include "OnTime_Class.h"
@@ -36,8 +37,8 @@ void onSecondModulo(void) {
     for (int i = 0; i < sizeof(array); i++) {
         int8_t value = array[i];
 
-        if (onTime.onSecondModulo(value)) {
-            LOG_SPEC("onSecondModulo: %d", value);
+        if (onTime.onModulo(0,0,value)) {
+            LOG_SPEC("onModulo: %d (%s)", value, lnTime.toHMS(value));
         }
     }
 }
@@ -62,8 +63,8 @@ void onMinuteModulo(void) {
     for (int i = 0; i < sizeof(array); i++) {
         int8_t value = array[i];
 
-        if (onTime.onMinuteModulo(value)) {
-            LOG_SPEC("onMinuteModulo: %d", value);
+        if (onTime.onModulo(0, value, 0)) {
+            LOG_SPEC("onModulo: %d", value);
         }
     }
 }
@@ -137,7 +138,7 @@ void loop() {
     onTime.update();
 
 
-    if (onTime.onSecondModulo(10)) {
+    if (onTime.onModulo(10, false)) {
         LOG_INFO("!");
     }
 

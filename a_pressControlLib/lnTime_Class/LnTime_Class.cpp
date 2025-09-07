@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 03-09-2025 16.57.10
+// Date .........: 07-09-2025 08.56.49
 */
 
 
@@ -55,19 +55,19 @@ void LnTime_Class::setup(uint16_t ntpIntervalTimeSync) {
 
 void LnTime_Class::update(void) {
 
-    if (onHour()) {
-        // La mappa dei minuti è stata resettata.
-    }
+    // if (onHour()) {
+    //     // La mappa dei minuti è stata resettata.
+    // }
 
 
-    // Controlla e gestisci il cambio di minuto prima di tutto
-    if (onMinute()) {
-        // La mappa dei secondi è già stata resettata
-    }
+    // // Controlla e gestisci il cambio di minuto prima di tutto
+    // if (onMinute()) {
+    //     // La mappa dei secondi è già stata resettata
+    // }
 
-    // Esegui l'aggiornamento dei flag dei secondi e dei minuti
-    updateAtSecondFlags();
-    updateAtMinuteFlags(); // Se hai una funzione simile per i minuti
+    // // Esegui l'aggiornamento dei flag dei secondi e dei minuti
+    // updateAtSecondFlags();
+    // updateAtMinuteFlags(); // Se hai una funzione simile per i minuti
 
 
 
@@ -154,6 +154,10 @@ const char* LnTime_Class::toHMS(char *buffer, uint8_t buffer_len, uint32_t milli
 
 
 
+const char* LnTime_Class::toHMS(uint32_t millisec, bool withMilliSec, bool stripHours) {
+    char buffer[16];
+    return toHMS(buffer, 16, millisec, withMilliSec, stripHours);
+}
 
 
 // // Allinea l'esecuzione all'inizio del minuto

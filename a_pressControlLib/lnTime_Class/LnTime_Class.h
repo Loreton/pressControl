@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 03-09-2025 15.21.41
+// Date .........: 07-09-2025 08.55.55
 //
 
 // LnTime_Class.h
@@ -18,21 +18,21 @@
         // -------------------------------
         // - LnTime_Secondi
         // -------------------------------
-        private:
-            std::map<uint32_t, uint32_t> m_last_epoch_seconds_map;  // LnTime_Class_StdMap.txt
-            std::map<uint8_t, int8_t> m_at_last_second_map;
-            std::map<uint8_t, bool> m_at_second_flags;  // bool getSecondFlag(uint8_t second);
-            std::vector<uint8_t> m_at_seconds_to_monitor;
-            int8_t         m_last_second        = 99;
+        // private:
+        //     std::map<uint32_t, uint32_t> m_last_epoch_seconds_map;  // LnTime_Class_StdMap.txt
+        //     std::map<uint8_t, int8_t> m_at_last_second_map;
+        //     std::map<uint8_t, bool> m_at_second_flags;  // bool getSecondFlag(uint8_t second);
+        //     std::vector<uint8_t> m_at_seconds_to_monitor;
+        //     int8_t         m_last_second        = 99;
 
 
-        public:
-            bool onSecond();                     // on second change
-            bool atSecond(uint8_t second);       // on second xx change
-            bool onSecondModulo(uint32_t modulo, bool trueOnFirstRun=false); // on second xx modulo  (ex.: atSecondModulo(20) return true at second 20, 40, 0)
-            bool getAtSecondFlag(uint8_t second);
-            void setAtSecondFlag(const std::vector<uint8_t>& seconds);
-            void updateAtSecondFlags(void);
+        // public:
+        //     bool onSecond();                     // on second change
+        //     bool atSecond(uint8_t second);       // on second xx change
+        //     bool onSecondModulo(uint32_t modulo, bool trueOnFirstRun=false); // on second xx modulo  (ex.: atSecondModulo(20) return true at second 20, 40, 0)
+        //     bool getAtSecondFlag(uint8_t second);
+        //     void setAtSecondFlag(const std::vector<uint8_t>& seconds);
+        //     void updateAtSecondFlags(void);
 
 
 
@@ -42,30 +42,30 @@
         // -------------------------------
         // - LnTime_Minuti .....
         // -------------------------------
-        private:
-            std::map<uint32_t, uint32_t> m_last_epoch_minutes_map;
-            std::map<uint8_t, int8_t> m_at_last_minute_map;
-            std::map<uint8_t, bool> m_at_minute_flags;  // bool getMinuteFlag(uint8_t minute);
-            std::vector<uint8_t> m_at_minutes_to_monitor;
-            int8_t         m_last_minute        = 99;
+        // private:
+        //     std::map<uint32_t, uint32_t> m_last_epoch_minutes_map;
+        //     std::map<uint8_t, int8_t> m_at_last_minute_map;
+        //     std::map<uint8_t, bool> m_at_minute_flags;  // bool getMinuteFlag(uint8_t minute);
+        //     std::vector<uint8_t> m_at_minutes_to_monitor;
+        //     int8_t         m_last_minute        = 99;
 
-        public:
-            bool onMinute();                     // on minute change
-            bool atMinute(int8_t minute);       // on minute xx change
-            bool onMinuteModulo(uint32_t modulo, bool trueOnFirstRun=false); // on minute xx modulo  (ex.: atMinuteModulo(20) return true at minute 20, 40, 80, 0)
-            bool getAtMinuteFlag(uint8_t minute);
-            void setAtMinuteFlag(const std::vector<uint8_t>& minutes);
-            void updateAtMinuteFlags(void);
+        // public:
+        //     bool onMinute();                     // on minute change
+        //     bool atMinute(int8_t minute);       // on minute xx change
+        //     bool onMinuteModulo(uint32_t modulo, bool trueOnFirstRun=false); // on minute xx modulo  (ex.: atMinuteModulo(20) return true at minute 20, 40, 80, 0)
+        //     bool getAtMinuteFlag(uint8_t minute);
+        //     void setAtMinuteFlag(const std::vector<uint8_t>& minutes);
+        //     void updateAtMinuteFlags(void);
 
 
         // -------------------------------
         // - LnTime_Hours .....
         // -------------------------------
         private:
-            int8_t         m_last_hour          = 99;
+            // int8_t         m_last_hour          = 99;
 
         public:
-            bool onHour();                     // on hour change
+            // bool onHour();                     // on hour change
 
 
         private:
@@ -109,7 +109,7 @@
 
             char *nowTime();
             const char* toHMS(char *buffer, uint8_t buffer_len, uint32_t millisec=0, bool addMilliSec=false, bool stripHeader=false); // msec from boot (or millisec) HH:MM:SS.msec
-
+            const char* toHMS(uint32_t millisec, bool withMilliSec=false, bool stripHours=false); // usa un buffer interno
             int8_t secondsToMinute(); // Restituisce i secondi mancanti al prossimo minuto completo
 
 
