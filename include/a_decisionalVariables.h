@@ -1,13 +1,13 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 01-09-2025 09.04.44
+// Date .........: 08-09-2025 18.28.38
 //
 #pragma once
 
 
-    #define ln_ESP32_WROOM_32E_MODULE         1
-    #define ln_ESP32_WROOM_32E_MODULE_2RELAY  2
-    #define ln_ESP32_BOARD_TYPE               ln_ESP32_WROOM_32E_MODULE
+    // #define ln_ESP32_WROOM_32E_MODULE         1
+    // #define ln_ESP32_WROOM_32E_MODULE_2RELAY  2
+    // #define ln_ESP32_BOARD_TYPE               ln_ESP32_WROOM_32E_MODULE
     // #define ln_ESP32_BOARD_TYPE               ln_ESP32_WROOM_32E_MODULE_2RELAY
 
     // #define ln_DEVEL                          1
@@ -15,8 +15,8 @@
     // #define ln_RELEASE_TYPE                   ln_DEVEL
     // #define ln_RELEASE_TYPE                   ln_PRODUCTION definito in piorun.sh
 
-    #define __USE_DUMMY_NOW_TIME__
-    #define __TYPEDEF_STRUCT__
+    // #define __USE_DUMMY_NOW_TIME__
+    // #define __TYPEDEF_STRUCT__
 
 
     // definiti in piorun.sh
