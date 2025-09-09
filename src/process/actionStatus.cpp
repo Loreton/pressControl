@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 09-09-2025 18.15.51
+// Date .........: 09-09-2025 20.14.20
 //
 
 
@@ -47,23 +47,24 @@ void sendStatusToTelegram(bool force) {
         // uint32_t pump_remaining         = pumpState.timeToNextThresholdLevel();
         uint32_t pressControl_remaining = pressControl.timeToMaxThresholdLevel();
         uint32_t pump_remaining         = pumpState.timeToMaxThresholdLevel();
-        uint32_t relay_remainig         = pressControlRelay.getRemainingPulseTime();
+        uint32_t relay_remainig         = pressControlRelay.remainingPulseTime();
 
         setTelegramTitle();
         myBot.addFormattedString("<b>Relay:</b> %s\n", str_OnOff[relayStatus]);
-        if (relay_remainig) {
+        if (relayStatus) {
             lnTime.msecToHMS(buffer, TIME_STAMP_LENGTH, relay_remainig, false);
             myBot.addFormattedString("\t\t<i>remainig:</i> %s\n", buffer);
+            myBot.addFormattedString("\t\t<i>remainig:</i> %lu\n", relay_remainig);
         }
 
         myBot.addFormattedString("<b>PressControl:</b> %s\n", str_OnOff[pcStatus]);
-        if (pressControl_remaining) {
+        if (pcStatus) {
             lnTime.msecToHMS(buffer, TIME_STAMP_LENGTH, pressControl_remaining, false);
             myBot.addFormattedString("\t\t<i>remainig:</i> %s\n", buffer);
         }
 
         myBot.addFormattedString("<b>PUMP:</b> %s\n", str_OnOff[pumpStatus]);
-        if (pump_remaining) {
+        if (pumpStatus) {
             lnTime.msecToHMS(buffer, TIME_STAMP_LENGTH, pump_remaining, false);
             myBot.addFormattedString("\t\t<i>remainig:</i> %s\n", buffer);
         }
@@ -155,9 +156,9 @@ void chackActionStatus() {
     actionStateChanged = (actionState == lastActionState) ? false : true;
 
 
-    if (actionStateChanged) { // facciamo comunque il display ogni 15 secondi
-        sendStatusToTelegram(fForce);
-    }
+    // if (actionStateChanged) { // facciamo comunque il display ogni 15 secondi
+    //     sendStatusToTelegram(fForce);
+    // }
 
     if ( actionStateChanged || f2MinutesModulo ) { // facciamo comunque il display ogni 15 secondi
         lastActionState=actionState;
@@ -168,6 +169,7 @@ void chackActionStatus() {
 
 
 
+    bool forceSend = actionStateChanged ? true : false;
     switch (actionState) {
 
         // status normale in attesa che si accenda il PC
@@ -212,7 +214,7 @@ void chackActionStatus() {
         // status normale in attesa che si accenda la pompa
         case pcON_pumpOFF:
             // if ( fModulo15Seconds )  sendStatusToTelegram();
-            sendStatusToTelegram();
+            sendStatusToTelegram(forceSend);
             pressControlLED.on(); // accendiamo fisso il LED
             pumpLED.off();        // facciamoòp lampeggiare
             fIdleStatus=false;
@@ -222,7 +224,7 @@ void chackActionStatus() {
         // status normale con la pompa accesa
         case pcON_pumpON:
             // if ( fModulo15Seconds )  sendStatusToTelegram();
-            sendStatusToTelegram();
+            sendStatusToTelegram(forceSend);
             pressControlLED.on();
             pumpLED.on();
             fIdleStatus=false;

@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 07-09-2025 20.06.16
+// Date .........: 09-09-2025 20.19.20
 */
 
 
@@ -27,15 +27,17 @@ const char* LnTime_Class::msecToHMS(char *buffer, uint8_t buffer_len, uint32_t m
     uint16_t msec;
     uint32_t seconds;
 
-    if (millisec == 0) {
-        m_timeinfo = rtc.getTimeStruct();
-        seconds = (m_timeinfo.tm_hour * 3600) + (m_timeinfo.tm_min * 60) + m_timeinfo.tm_sec;
-        msec = rtc.getMillis();  // current mSeconds (0-999)
-    }
-    else {
+
+
+    // if (millisec == 0) {
+    //     m_timeinfo = rtc.getTimeStruct();
+    //     seconds = (m_timeinfo.tm_hour * 3600) + (m_timeinfo.tm_min * 60) + m_timeinfo.tm_sec;
+    //     msec = rtc.getMillis();  // current mSeconds (0-999)
+    // }
+    // else {
         msec    = (millisec % 1000UL);
         seconds = (millisec / 1000UL);
-    }
+    // }
 
     uint8_t sec      = (seconds  % 60);
     uint8_t min      = (seconds / 60) % 60;

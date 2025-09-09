@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 16-08-2025 16.21.56
+// Date .........: 09-09-2025 19.50.54
 //
 
 #pragma once
@@ -55,7 +55,7 @@ class RelayManager_Class {
         void startPulse(uint32_t duration_ms);
 
         // Ottiene il tempo rimanente del pulsetime (0 se non attivo o scaduto)
-        uint32_t getRemainingPulseTime();
+        uint32_t remainingPulseTime(void);
 
         // Deve essere chiamata regolarmente nel loop() per aggiornare lo stato del relè
         void update();

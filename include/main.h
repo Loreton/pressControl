@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 09-09-2025 16.23.10
+// Date .........: 09-09-2025 18.43.14
 //
 
 
@@ -21,19 +21,6 @@
     #include    <LnTime_Class.h>
 
 
-
-    // // Definisce i possibili tipi di pressione del pulsante.
-    // enum onSECONDS : uint32_t {
-    //     on_10 = 10,
-    //     on_15 = 15,
-    //     on_30 = 20,
-    // };
-
-    // enum onMINUTES : uint32_t {
-    //     on_10 = 10,
-    //     on_15 = 15,
-    //     on_30 = 20,
-    // };
 
 
 

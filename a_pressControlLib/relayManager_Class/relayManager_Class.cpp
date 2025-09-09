@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 09-09-2025 11.41.49
+// Date .........: 09-09-2025 20.10.53
 //
 
 #include <Arduino.h> // Necessario per funzioni come pinMode, digitalWrite, millis
@@ -97,16 +97,24 @@ void RelayManager_Class::startPulse(uint32_t duration_ms) {
 }
 
 // Ottiene il tempo rimanente del pulsetime (0 se non attivo o scaduto)
-uint32_t RelayManager_Class::getRemainingPulseTime() {
+uint32_t RelayManager_Class::remainingPulseTime() {
+    uint32_t remaining = 0;
+
+    LOG_INFO("m_pulseActive:    %lu", m_pulseActive);
     if (m_pulseActive) {
         uint32_t elapsed = millis() - m_pulseStartTime;
-        if (elapsed < m_pulseDuration) {
-            return m_pulseDuration - elapsed;
-        } else {
-            return 0; // Pulsetime scaduto
-        }
+        remaining =  (elapsed < m_pulseDuration) ? m_pulseDuration - elapsed : 0;
+
+        LOG_INFO("");
+        LOG_INFO("m_pulseDuration:    %lu", m_pulseDuration);
+        LOG_INFO("m_pulseStartTime:   %lu", m_pulseStartTime);
+        LOG_INFO("elapsed:            %lu", elapsed);
+        LOG_INFO("remaining:          %lu", remaining);
+        LOG_INFO("");
     }
-    return 0;
+
+
+    return remaining;
 }
 
 // Deve essere chiamata regolarmente nel loop() per aggiornare lo stato del relè
