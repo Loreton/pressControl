@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 02-09-2025 12.00.55
+// Date .........: 09-09-2025 11.41.49
 //
 
 #include <Arduino.h> // Necessario per funzioni come pinMode, digitalWrite, millis
@@ -87,11 +87,11 @@ void RelayManager_Class::startPulse(uint32_t duration_ms) {
         m_pulseStartTime = millis();
         m_pulseDuration = duration_ms;
         m_pulseActive = true;
-        lnTime.toHMS(m_timeBUFFER, m_timeBUFFER_Len, duration_ms, true);
+        lnTime.msecToHMS(m_timeBUFFER, m_timeBUFFER_Len, duration_ms, true);
         LOG_NOTIFY("[%s] Pulsetime avviato per %s", m_pinID, m_timeBUFFER, true);
         on(); // Accende il relè all'avvio del pulsetime
     } else {
-        lnTime.toHMS(m_timeBUFFER, m_timeBUFFER_Len, m_pulseDuration - (millis() - m_pulseStartTime), true);
+        lnTime.msecToHMS(m_timeBUFFER, m_timeBUFFER_Len, m_pulseDuration - (millis() - m_pulseStartTime), true);
         LOG_DEBUG("[%s] Pulsetime già attivo per %lu ms (skipping...)", m_pinID, m_timeBUFFER);
     }
 }

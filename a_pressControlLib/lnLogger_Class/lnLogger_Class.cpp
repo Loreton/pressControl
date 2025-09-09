@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 02-09-2025 11.59.19
+// Date .........: 09-09-2025 15.01.03
 */
 
 #include <Arduino.h>
@@ -174,7 +174,7 @@ void ESP32Logger::write(const char* color, const char* tag, const char* file, co
     if (m_logMutex != NULL && xSemaphoreTake(m_logMutex, portMAX_DELAY) == pdTRUE) {
         char nowTimeBUFFER[16];
         char fnameBUFFER[30];
-        char logLineBUFFER[256];
+        char logLineBUFFER[1000];
 
         va_list args;
         va_start(args, format);

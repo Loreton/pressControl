@@ -1,4 +1,8 @@
 #!/bin/bash
+
+### file per impostare -D flags per il progetto pressControl
+# viene letto dal programma piorun.sh e le prepara per il platformio.ini
+
 declare -A LOG_LEVEL_MAP=(
       ["none"]=0
      ["error"]=1
@@ -31,11 +35,9 @@ myFlags="${myFlags} -DLOG_LEVEL_DEBUG=${LOG_LEVEL_MAP["debug"]}"
 myFlags="${myFlags} -DLOG_LEVEL_TRACE=${LOG_LEVEL_MAP["trace"]}"
 
 
-
-
-myFlags="${myFlags} -Dln_TIME_CLASS_SECONDS_VECTOR"
-myFlags="${myFlags} -Dln_TIME_CLASS_MINUTESS_VECTOR"
-myFlags="${myFlags} -Dln_TIME_CLASS_HOURS_VECTOR"
+myFlags="${myFlags} -Dln_TIME_CLASS_SECONDS_VECTOR_xx"
+myFlags="${myFlags} -Dln_TIME_CLASS_MINUTESS_VECTOR_xx"
+myFlags="${myFlags} -Dln_TIME_CLASS_HOURS_VECTOR_xx"
 
 
 myFlags="${myFlags} -Dln_DEVEL=${ln_DEVEL}"

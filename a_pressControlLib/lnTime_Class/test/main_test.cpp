@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 08-09-2025 17.45.10
+// Date .........: 09-09-2025 16.17.56
 //
 
 
@@ -30,6 +30,7 @@ void setup() {
     lnLog.init();
 
     lnTime.setup(2 * 60);
+    lnTime.set_dhmCustomUpdate(false);
     Serial.println("Sono lnTime TEST");
 }
 

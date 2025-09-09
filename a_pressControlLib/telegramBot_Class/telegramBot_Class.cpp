@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 01-09-2025 11.40.43
+// Date .........: 09-09-2025 17.46.21
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -38,7 +38,7 @@ void TelegramBot_Class::init(const char* token, const char* chatId, const char *
 // # forse posso eliminarla mettendo lo '\n' nella addString()
 // #######################################################################
 void TelegramBot_Class::clearMessage(const char* title) {
-    m_messageBuffer[0] = '\0';
+    tg->msg[0] = '\0';
     if (title) {
         addString(title);
     }
@@ -49,15 +49,13 @@ void TelegramBot_Class::clearMessage(const char* title) {
 // # forse posso eliminarla mettendo lo '\n' nella addString()
 // #######################################################################
 void TelegramBot_Class::startNewMessage(const char* format, ...) {
-    m_messageBuffer[0] = '\0';
-    if (strlen(m_messageBuffer) < MAX_MESSAGE_SIZE) {
-        char tempBuffer[MAX_MESSAGE_SIZE - strlen(m_messageBuffer)];
-        va_list args;
-        va_start(args, format);
-        vsnprintf(tempBuffer, sizeof(tempBuffer), format, args);
-        va_end(args);
-        strcat(m_messageBuffer, tempBuffer);
-    }
+    tg->msg[0] = '\0';
+    char tempBuffer[MAX_TELEGRAM_MESSAGE_SIZE - strlen(tg->msg)];
+    va_list args;
+    va_start(args, format);
+    vsnprintf(tempBuffer, sizeof(tempBuffer), format, args);
+    va_end(args);
+    strcat(tg->msg, tempBuffer);
 }
 
 
@@ -66,11 +64,11 @@ void TelegramBot_Class::startNewMessage(const char* format, ...) {
 // # forse posso eliminarla mettendo lo '\n' nella addString()
 // #######################################################################
 void TelegramBot_Class::addLine(const char* text) {
-    if (strlen(m_messageBuffer) + strlen(text) + 2 < MAX_MESSAGE_SIZE) { // +2 per il '\n' e il terminatore
-        if (strlen(m_messageBuffer) > 0) {
-            strcat(m_messageBuffer, "\n"); // Aggiunge il carattere di newline
+    if (strlen(tg->msg) + strlen(text) + 2 < MAX_TELEGRAM_MESSAGE_SIZE) { // +2 per il '\n' e il terminatore
+        if (strlen(tg->msg) > 0) {
+            strcat(tg->msg, "\n"); // Aggiunge il carattere di newline
         }
-        strcat(m_messageBuffer, text);
+        strcat(tg->msg, text);
     }
 }
 
@@ -79,8 +77,8 @@ void TelegramBot_Class::addLine(const char* text) {
 // # stringa
 // #######################################################################
 void TelegramBot_Class::addString(const char* text) {
-    if (strlen(m_messageBuffer) + strlen(text) < MAX_MESSAGE_SIZE) {
-        strcat(m_messageBuffer, text);
+    if (strlen(tg->msg) + strlen(text) < MAX_TELEGRAM_MESSAGE_SIZE) {
+        strcat(tg->msg, text);
     }
 }
 
@@ -90,14 +88,14 @@ void TelegramBot_Class::addString(const char* text) {
 // # stringa in formato printf()
 // #######################################################################
 void TelegramBot_Class::addFormattedString(const char* format, ...) {
-    if (strlen(m_messageBuffer) < MAX_MESSAGE_SIZE) {
-        char tempBuffer[MAX_MESSAGE_SIZE - strlen(m_messageBuffer)];
+    if (strlen(tg->msg) < MAX_TELEGRAM_MESSAGE_SIZE) {
+        char tempBuffer[MAX_TELEGRAM_MESSAGE_SIZE - strlen(tg->msg)];
         va_list args;
         va_start(args, format);
         vsnprintf(tempBuffer, sizeof(tempBuffer), format, args);
         va_end(args);
 
-        strcat(m_messageBuffer, tempBuffer);
+        strcat(tg->msg, tempBuffer);
     }
 }
 
@@ -133,16 +131,11 @@ void TelegramBot_Class::addTime(const char *prefix, const char *suffix) {
 
     // prendiamo il tempo;
     strftime(m_timeStamp, sizeof(m_timeStamp), "%H:%M:%S", &timeinfo);
-
-    // uint8_t max_len=strlen(prefix) + strlen(m_timeStamp) + strlen(suffix) +2;
-
     addFormattedString("%s%s%s", prefix, m_timeStamp, suffix);
-
-
-    // char buffer[max_len];
-    // snprintf(buffer, max_len, "%s%s%s", prefix, m_timeStamp, suffix);
-    // addString(buffer);
 }
+
+
+
 
 
 
@@ -167,30 +160,37 @@ bool TelegramBot_Class::send() {
     }
 
     HTTPClient http;
-    char urlBuffer[MAX_MESSAGE_SIZE + 100];
-    char encodedMessage[MAX_MESSAGE_SIZE * 3 + 1]; // Buffer per il messaggio codificato
 
-    urlEncode(m_messageBuffer, encodedMessage);
+    // ---messsage
+    uint16_t msg_len = strlen(tg->msg);
+    LOG_DEBUG("tg->msg [%ld]: %s", msg_len, tg->msg);
+    if (msg_len > MAX_TELEGRAM_MESSAGE_SIZE) {
+        LOG_ERROR("tg->msg [len: %ld] is greather than MAX_TELEGRAM_MESSAGE_SIZE (%ld)", msg_len, MAX_TELEGRAM_MESSAGE_SIZE);
+    }
+
+    // ---encoded
+    urlEncode(tg->msg, tg->encoded);
 
     // Costruisce l'URL completo con tutti i parametri
-    snprintf(urlBuffer, sizeof(urlBuffer),
+    snprintf(tg->fullMsg, MAX_TELEGRAM_FULL_MSG_SIZE,
              "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&parse_mode=%s&text=%s",
-             m_token, m_chatId, m_parseMode, encodedMessage);
+             m_token, m_chatId, m_parseMode, tg->encoded);
 
-    LOG_TRACE("Sending msg: %s", urlBuffer);
-    http.begin(urlBuffer);
+    LOG_DEBUG("Sending msg: [%ld]: %s", strlen(tg->fullMsg), tg->fullMsg);
+    http.begin(tg->fullMsg);
     int httpResponseCode = http.GET();
     http.end();
 
     if (httpResponseCode > 0) {
-        LOG_NOTIFY("Messaggio inviato con successo: %s", urlBuffer);
+        // LOG_DEBUG("[http code: %d] - Messaggio inviato con successo: %s", httpResponseCode, tg->fullMsg);
+        LOG_DEBUG("[http code: %d] - Messaggio inviato con successo", httpResponseCode);
         return true;
     } else {
-        LOG_ERROR("Invio messaggio fallito! %s", urlBuffer);
+        // LOG_ERROR("[http code: %d] - Invio messaggio fallito! %s", httpResponseCode, tg->fullMsg);
+        LOG_ERROR("[http code: %d] - Invio messaggio fallito! %s", httpResponseCode);
         return false;
     }
 }
-
 
 
 
@@ -207,7 +207,8 @@ bool TelegramBot_Class::send() {
 // | **\\** (backslash)          | `\\`         | 92       | 5C          | `%5C`                                                            |
 
 
-void TelegramBot_Class::urlEncode(const char* src, char* dest) {
+uint16_t TelegramBot_Class::urlEncode(const char* src, char* dest) {
+    uint16_t urlEncode_len;
     const char *p = src;
     char *q = dest;
     while (*p) {
@@ -229,6 +230,13 @@ void TelegramBot_Class::urlEncode(const char* src, char* dest) {
             q += 3;
         }
         p++;
+        urlEncode_len = q-dest;
+        if (urlEncode_len >= MAX_TELEGRAM_ENCODED_SIZE) {
+            LOG_ERROR("urlEncode [len: %ld] is greather than MAX_TELEGRAM_ENCODED_SIZE (%ld)", urlEncode_len, MAX_TELEGRAM_ENCODED_SIZE);
+            break;
+        }
     }
     *q = '\0';
+    LOG_DEBUG("urlEncode [len: %ld] - %s", urlEncode_len, dest);
+    return urlEncode_len;
 }

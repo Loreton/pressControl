@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 02-09-2025 12.09.17
+// Date .........: 09-09-2025 18.15.27
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -14,7 +14,8 @@
 #include <lnLogger_Class.h>
 #include <LnTime_Class.h>
 
-#include "main.h" // per functions protoype
+#include "functionPrototypes.h" // per functions protoype
+#include "main.h"
 
 
 
@@ -86,6 +87,7 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
                 myBot.addFormattedString("<b>pump level:</b> %d/%d\n<b>duration ms:</b> %lu\n", cpLevel,  p->maxLevels(), phase_beep_duration);
                 myBot.send();
 
+                sendStatusToTelegram(true);
                 activeBuzzer.pulse(phase_beep_duration);
                 break;
 
@@ -99,7 +101,7 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
     #define ALARM_BEEP_INTERVAL 2000
     if (p->maxLevelReached() ) {
         char buffer[16+1];
-        const char *levelMS = lnTime.toHMS(buffer, 16, p->thresholdLevelValue(cpLevel));
+        const char *levelMS = lnTime.msecToHMS(buffer, 16, p->thresholdLevelValue(cpLevel));
 
         if (millis() - lastBeepTime >= ALARM_BEEP_INTERVAL) {
             activeBuzzer.pulse(1000); // NON serve per questo pulstante

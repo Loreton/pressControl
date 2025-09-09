@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 02-09-2025 20.21.39
+// Date .........: 09-09-2025 15.53.08
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -65,17 +65,21 @@ void wifiConnectedAction() {
 // #
 // ##########################################################################
 void wifiConnectedMessage() {
-    // if (myWiFiManager.isConnected()) {
     LOG_NOTIFY("WiFi_connAction Connected!");
-    myBot.startNewMessage("<b>PressControl\nTime:</b> %s\n", lnTime.nowTime());
+    myBot.startNewMessage("<b>PressControl\nTime:</b> %s\n", lnTime.now());
     myBot.addFormattedString("<b>WiFi: </b> CONNECTED\n");
     myBot.addFormattedString("<b>SSID: </b> %s\n", WiFi.SSID().c_str() );
     myBot.addFormattedString("<b>BSSID:</b> %s\n", WiFi.BSSIDstr().c_str() );
     myBot.addFormattedString("<b>RSSI: </b> %d\n", WiFi.RSSI() );
     myBot.addFormattedString("<b>IP:   </b> %s\n", WiFi.localIP().toString().c_str() );
-    myBot.send();
-    // }
 
+    if (lnTime.isNtpSynched()) {
+        myBot.addFormattedString("<b>NTP:</b> Synched\n");
+    } else {
+        myBot.addFormattedString("<b>NTP:</b> OUT of sync\n");
+    }
+
+    myBot.send();
 }
 
 

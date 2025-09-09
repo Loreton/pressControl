@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 01-09-2025 18.47.22
+// Date .........: 09-09-2025 18.15.10
 //
 
 #pragma once
@@ -37,6 +37,7 @@
 
     //* - actionStatus
     void chackActionStatus(void);
+    void sendStatusToTelegram(bool force=false);
 
     //* - telegramProcess
     void setTelegramTitle(void);

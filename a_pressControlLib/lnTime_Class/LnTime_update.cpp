@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 08-09-2025 17.38.28
+// Date .........: 09-09-2025 16.20.06
 */
 
 
@@ -44,23 +44,25 @@ void LnTime_Class::update(void) {
         }
     }
 
-
-    // // Controlla e gestisci il cambio dei giorni
-    if (onDay()) {
-        // Reset della mappa delle ore per riattivare i flag (fatto direttaemnte nel metodo)
-    }
-
-
-
-    // // Controlla e gestisci il cambio delle ore
-    if (onHour()) {
-        // Reset della mappa delle ore per riattivare i flag (fatto direttaemnte nel metodo)
-    }
+    if (!m_dhmCustomUpdate) {
+        // // Controlla e gestisci il cambio dei giorni
+        if (onDay()) {
+            // Reset della mappa delle ore per riattivare i flag (fatto direttaemnte nel metodo)
+        }
 
 
-    // // Controlla e gestisci il cambio di minuto prima di tutto
-    if (onMinute()) {
-        // Reset della mappa delle ore per riattivare i flag (fatto direttaemnte nel metodo)
+
+        // // Controlla e gestisci il cambio delle ore
+        if (onHour()) {
+            // Reset della mappa delle ore per riattivare i flag (fatto direttaemnte nel metodo)
+        }
+
+
+        // // Controlla e gestisci il cambio di minuto prima di tutto
+        if (onMinute()) {
+            // Reset della mappa delle ore per riattivare i flag (fatto direttaemnte nel metodo)
+        }
+
     }
 
 

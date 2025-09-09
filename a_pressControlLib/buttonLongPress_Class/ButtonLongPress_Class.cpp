@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 02-09-2025 11.59.33
+// Date .........: 09-09-2025 18.10.23
 //
 
 #include <Arduino.h>
@@ -146,12 +146,35 @@ uint32_t ButtonLongPress_Class::timeToNextThresholdLevel(void) {
 
 
 //###########################################################################
+//# Ritorna i millis al prossion threshold level
+//###########################################################################
+uint32_t ButtonLongPress_Class::timeToMaxThresholdLevel(void) {
+    uint32_t remaining = 0;
+    uint8_t level = m_currentPressLevel; // per comodità
+
+
+    LOG_INFO("\nlevel:                    %lu", level);
+    LOG_INFO("m_pressStartTime:         %lu", m_pressStartTime);
+    LOG_INFO("m_numThresholds:          %lu", m_numThresholds);
+    LOG_INFO("m_pressThresholds[MAX]:   %lu", m_pressThresholds[m_numThresholds-1]);
+    LOG_INFO("millis():                 %lu\n", millis());
+
+    if (level > 0 && level < m_numThresholds) {
+        remaining = m_pressThresholds[m_numThresholds-1] - m_pressThresholds[level]; // calcoliamo sempre l'ultimo;
+    }
+    return remaining;
+}
+
+
+
+//###########################################################################
 //#
 //###########################################################################
 void ButtonLongPress_Class::displayPressedLevel(bool forceDisplay) {
 
     // per aggiornare alcuni valori
     uint32_t msToNextLevel = timeToNextThresholdLevel();
+    uint32_t msToMaxLevel = timeToMaxThresholdLevel();
     m_elapsed = millis() - m_pressStartTime; // update continuo
 
 
@@ -163,15 +186,17 @@ void ButtonLongPress_Class::displayPressedLevel(bool forceDisplay) {
         if (msToNextLevel != 0) {
             char elapsedBUFFER[16];   lnLog.toHMS(elapsedBUFFER,   sizeof(elapsedBUFFER),   m_elapsed, false);
             char nextLevelBUFFER[16]; lnLog.toHMS(nextLevelBUFFER, sizeof(nextLevelBUFFER), msToNextLevel, false);
+            char maxLevelBUFFER[16];  lnLog.toHMS(maxLevelBUFFER, sizeof(maxLevelBUFFER),   msToMaxLevel, false);
 
             //* display
             LOG_NOTIFY("[%s]:", m_pinID);
             LOG_NOTIFY("\tpressed Level   %d/%d", m_currentPressLevel, m_numThresholds);
             LOG_TRACE( "\tthreshold[%d]:  %8lu", m_currentPressLevel,  m_pressThresholds[m_currentPressLevel]);
             LOG_TRACE( "\tthreshold[%d]:  %8lu", m_currentPressLevel+1,  m_pressThresholds[m_currentPressLevel+1] );
-            // LOG_TRACE( "\tGAP:            %8lu", nextGAP_ms );
+
             LOG_NOTIFY("\telapsed:        %8lu - [hms]: %s", m_elapsed, elapsedBUFFER);
             LOG_NOTIFY("\tnext threshold: %8lu - [hms]: %s", msToNextLevel, nextLevelBUFFER);
+            LOG_NOTIFY("\tmax  threshold: %8lu - [hms]: %s", msToMaxLevel, nextLevelBUFFER);
 
         }
     }

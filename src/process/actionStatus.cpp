@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 02-09-2025 12.00.44
+// Date .........: 09-09-2025 18.15.51
 //
 
 
@@ -37,31 +37,34 @@ enum ActionState : uint8_t {
 
 
 
-void sendStatusToTelegram(bool force=false) {
+void sendStatusToTelegram(bool force) {
+
     if ( f2MinutesModulo || force) {
         LOG_INFO("invio dello status su Telegram");
         #define TIME_STAMP_LENGTH 16
         static char buffer[TIME_STAMP_LENGTH+1];
-        uint32_t pressControl_remaining = pressControl.timeToNextThresholdLevel();
-        uint32_t pump_remaining         = pumpState.timeToNextThresholdLevel();
+        // uint32_t pressControl_remaining = pressControl.timeToNextThresholdLevel();
+        // uint32_t pump_remaining         = pumpState.timeToNextThresholdLevel();
+        uint32_t pressControl_remaining = pressControl.timeToMaxThresholdLevel();
+        uint32_t pump_remaining         = pumpState.timeToMaxThresholdLevel();
         uint32_t relay_remainig         = pressControlRelay.getRemainingPulseTime();
 
         setTelegramTitle();
         myBot.addFormattedString("<b>Relay:</b> %s\n", str_OnOff[relayStatus]);
         if (relay_remainig) {
-            lnTime.toHMS(buffer, TIME_STAMP_LENGTH, relay_remainig, false);
+            lnTime.msecToHMS(buffer, TIME_STAMP_LENGTH, relay_remainig, false);
             myBot.addFormattedString("\t\t<i>remainig:</i> %s\n", buffer);
         }
 
         myBot.addFormattedString("<b>PressControl:</b> %s\n", str_OnOff[pcStatus]);
         if (pressControl_remaining) {
-            lnTime.toHMS(buffer, TIME_STAMP_LENGTH, pressControl_remaining, false);
+            lnTime.msecToHMS(buffer, TIME_STAMP_LENGTH, pressControl_remaining, false);
             myBot.addFormattedString("\t\t<i>remainig:</i> %s\n", buffer);
         }
 
         myBot.addFormattedString("<b>PUMP:</b> %s\n", str_OnOff[pumpStatus]);
         if (pump_remaining) {
-            lnTime.toHMS(buffer, TIME_STAMP_LENGTH, pump_remaining, false);
+            lnTime.msecToHMS(buffer, TIME_STAMP_LENGTH, pump_remaining, false);
             myBot.addFormattedString("\t\t<i>remainig:</i> %s\n", buffer);
         }
 
@@ -137,7 +140,6 @@ void chackActionStatus() {
 
             bool    actionStateChanged;
             uint8_t actionState;
-
 
     // -----------------------------------
     // ------ Action

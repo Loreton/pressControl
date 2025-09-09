@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 30-08-2025 11.57.43
+// Date .........: 09-09-2025 15.53.22
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -23,24 +23,40 @@
 // #
 // ######################################################
 void setTelegramTitle() {
-    myBot.startNewMessage("<b>ESP32-PressControl\nTime:</b> %s\n", lnTime.nowTime());
+    myBot.startNewMessage("<b>ESP32-PressControl\nTime:</b> %s\n", lnTime.now());
 }
 
 
 // ######################################################
 // #
 // ######################################################
-void sendNtpSynchedTelegramMessage() {
-    static bool ntpSynchedMessage = false;
-    if (lnTime.isNtpSynched()) {
-        if (!ntpSynchedMessage) {
-            setTelegramTitle();
-            myBot.addFormattedString("<b>NTP:</b> Synched\n");
-            myBot.send();
-            ntpSynchedMessage = true;
-        }
-    }
-    else {
-        ntpSynchedMessage = false;
-    }
-}
+// void sendNtpSynchedTelegramMessage_OK() {
+//     static bool ntpSynchedMessage = false;
+//     if (lnTime.isNtpSynched()) {
+//         if (!ntpSynchedMessage) {
+//             setTelegramTitle();
+//             myBot.addFormattedString("<b>NTP:</b> Synched\n");
+//             myBot.send();
+//             ntpSynchedMessage = true;
+//         }
+//     }
+//     else {
+//         ntpSynchedMessage = false;
+//     }
+// }// ######################################################
+// #
+// ######################################################
+// void sendNtpSynchedTelegramMessage() {
+//     static bool ntpSynchedMessage = false;
+//     // if (lnTime.isNtpSynched()) {
+//         // if (!ntpSynchedMessage) {
+//             setTelegramTitle();
+//             myBot.addFormattedString("<b>NTP:</b> Synched\n");
+//             myBot.send();
+//             ntpSynchedMessage = true;
+//         // }
+//     // }
+//     // else {
+//         // ntpSynchedMessage = false;
+//     // }
+// }

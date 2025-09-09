@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 02-09-2025 20.26.02
+// Date .........: 09-09-2025 17.46.43
 //
 
 
@@ -71,14 +71,17 @@ void setup() {
     pinsInitialization();
 
     // --- telegram setup url
-    LOG_NOTIFY("initializing TelegramBot_Class");
+    LOG_NOTIFY("initializing TelegramBot_Classs");
     myBot.init(Loreto_Esp32_BotToken, pressControl_ChatID_str, "HTML");
+    LOG_NOTIFY("initializing completed");
 
     //  ------  calcolo memoria
     finalMemory = ESP.getFreeHeap();
     LOG_TRACE("memoria (bytes): initial=%ld - final=%ld - occupied=%ld", initialMemory, finalMemory, (initialMemory - finalMemory)); // Stima RAM allocata
 
     lnTime.setup(2*60); // Chiama il metodo setup della tua istanza di LnTime ed imposta ntpIntervalTimeSync to 10 minuti
+    lnTime.set_dhmCustomUpdate(true);
+
 }
 
 
@@ -101,17 +104,17 @@ void loop() {
     uint32_t now=millis();
     bool    actionStatusChanged;
 
-    f2MinutesModulo  = lnTime.onMinuteModulo(2);
-    f5MinutesModulo  = lnTime.onMinuteModulo(5);
-    f60MinutesModulo = lnTime.onMinuteModulo(60);
+    f10SecondsModulo = lnTime.onModulo(0, 0, 10);
+    f30SecondsModulo = lnTime.onModulo(0, 0, 30);
+    f2MinutesModulo  = lnTime.onModulo(0, 2, 0);
+    f3MinutesModulo  = lnTime.onModulo(0, 3, 0);
+    f30MinutesModulo = lnTime.onModulo(0, 30, 0);
 
-    fon30MinutesModulo = lnTime.onMinuteModulo(30);
+    // se metto queste chiamate allora devo impostare: lnTime.set_dhmCustomUpdate(true);
+    fonDay = lnTime.onDay();
+    fonHour = lnTime.onHour();
+    fonMinute = lnTime.onMinute();
 
-    fatHourOClock = lnTime.atMinute(0);
-
-    f10SecondsModulo = lnTime.onSecondModulo(10);
-    f15SecondsModulo = lnTime.onSecondModulo(15);
-    f30SecondsModulo = lnTime.onSecondModulo(30);
 
     // -----------------------------------
     // ------ refresh dei vari oggetti
@@ -134,15 +137,10 @@ void loop() {
     if (fWifiDisconnected) {wifiDisconnectedAction(); }
 
 
-    if (fon30MinutesModulo) {
-        LOG_NOTIFY("Invio del NTP status su Telegram.");
-        sendNtpSynchedTelegramMessage();
-    }
 
-
-    if (fatHourOClock) {
+    if (fonHour) {
         if (myWiFiManager.isConnected()) {
-            LOG_NOTIFY("Invio del WiFi status su Telegram.");
+            LOG_NOTIFY("onHour Invio del WiFi status su Telegram.");
             wifiConnectedMessage();
         }
     }
@@ -157,7 +155,6 @@ void loop() {
     startButton.pressingLevelNotification(startButtonNotificationCB);
     if (startButton.read()) {
         startButtonHandler(&startButton);
-        // startButton.reset();
     }
 
 
@@ -170,7 +167,6 @@ void loop() {
     pumpState.pressingLevelNotification(pumpNotificationCB);
     if (pumpState.read()) {
         pumpHandler(&pumpState);
-        // pumpState.reset();
     }
 
 

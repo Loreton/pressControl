@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 24-08-2025 09.55.38
+// Date .........: 09-09-2025 15.44.45
 //
 
 
@@ -9,7 +9,16 @@
     // #include <HTTPClient.h>
 
 
-    #define MAX_MESSAGE_SIZE 512
+    // #define MAX_MESSAGE_SIZE 512
+    #define MAX_TELEGRAM_MESSAGE_SIZE   300
+    #define MAX_TELEGRAM_ENCODED_SIZE   500
+    #define MAX_TELEGRAM_FULL_MSG_SIZE  600
+
+    typedef struct {
+        char msg[MAX_TELEGRAM_MESSAGE_SIZE + 1];
+        char encoded[MAX_TELEGRAM_ENCODED_SIZE + 1];
+        char fullMsg[MAX_TELEGRAM_FULL_MSG_SIZE + 1];
+    } telegramBuffers_t;
 
     class TelegramBot_Class {
         public:
@@ -36,12 +45,15 @@
 
             const char* m_token;
             const char* m_chatId;
-            char m_messageBuffer[MAX_MESSAGE_SIZE];
+            telegramBuffers_t tgMessage; // crea un'instanza di struct ed un pointer
+            telegramBuffers_t *tg = &tgMessage; // crea un'instanza di struct ed un pointer
+            // tg = &tgMessage;
+            // char m_messageBuffer[MAX_MESSAGE_SIZE];
             char m_parseMode[10];
             char m_timeStamp[16];
 
             // Funzione helper per l'URL-encoding
-            void urlEncode(const char* src, char* dest);
+            uint16_t urlEncode(const char* src, char* dest);
 
             // Funzione helper per l'invio HTTP
             bool sendHttpRequest(const char* url);

@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 01-09-2025 08.41.03
+// Date .........: 09-09-2025 17.53.46
 */
 
 #pragma once
@@ -58,6 +58,7 @@
 
             uint32_t thresholdLevelValue(uint8_t level);
             uint32_t timeToNextThresholdLevel(void);
+            uint32_t timeToMaxThresholdLevel(void);
 
             // Membri pubblici che potrebbero essere consultati esternamente (es. per debug o display)
             // Considera se questi debbano essere `private` con getter specifici.

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 02-09-2025 12.01.18
+// Date .........: 09-09-2025 11.39.31
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -104,7 +104,7 @@ void pressControlNotificationCB(ButtonLongPress_Class *p) {
                 LOG_WARN("[%s] ALARM! max pressing levela %d (time %lu) has been reached", p->pinID(), currentPressedLevel, currentPressedTime);
                 setTelegramTitle();
                 char buffer[TIME_BUFFER_LENGTH+1];
-                myBot.addFormattedString("<b>PressControl ALARM!:</b>\n\t pressing time %s expired", lnTime.toHMS(buffer, TIME_BUFFER_LENGTH, currentPressedTime) );
+                myBot.addFormattedString("<b>PressControl ALARM!:</b>\n\t pressing time %s expired", lnTime.msecToHMS(buffer, TIME_BUFFER_LENGTH, currentPressedTime) );
                 myBot.send();
                 firstAlarmTime=false;
             }

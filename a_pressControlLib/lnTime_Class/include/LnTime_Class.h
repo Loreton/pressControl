@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 08-09-2025 17.49.42
+// Date .........: 09-09-2025 16.21.53
 //
 
 // LnTime_Class.h
@@ -20,6 +20,7 @@
         private:
             ESP32Time rtc;
             struct tm      m_timeinfo;
+            bool m_dhmCustomUpdate = false;
             // int8_t m_last_second = -1;
             // int8_t m_last_minute = -1;
             // int8_t m_last_hour = -1;
@@ -37,6 +38,7 @@
             void setup(uint16_t ntpIntervalTimeSync=2*60); // seconds
             void update(void);
             char *now(void);
+            void set_dhmCustomUpdate(bool customUpdate);
 
 
 

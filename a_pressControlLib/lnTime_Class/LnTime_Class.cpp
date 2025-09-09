@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 08-09-2025 17.53.02
+// Date .........: 09-09-2025 16.19.33
 */
 
 
@@ -46,11 +46,11 @@ void LnTime_Class::setup(uint16_t ntpIntervalTimeSync) {
         LOG_INFO("RTC local time set");
         m_ntp_active = false;
     }
-
-
 }
 
-
+void LnTime_Class::set_dhmCustomUpdate(bool customUpdate) {
+    m_dhmCustomUpdate = customUpdate;
+}
 
 
 // void LnTime_Class::update(void) {

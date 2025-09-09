@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 04-09-2025 07.28.39
+// Date .........: 09-09-2025 16.23.10
 //
 
 
@@ -91,24 +91,16 @@
         bool fAscendent                = true;
         bool fDiscendent               = false;
 
+        bool f3MinutesModulo          = false;
         bool f10SecondsModulo          = false;
-        bool f15SecondsModulo          = false;
         bool f30SecondsModulo          = false;
 
-        bool on_10s_Modulo          = false;
-        bool on_15s_Modulo          = false;
-        bool on_30s_Modulo          = false;
-
         bool f2MinutesModulo           = false;
-        bool f5MinutesModulo           = false;
-        bool f60MinutesModulo          = false;
+        bool f30MinutesModulo          = false;
 
-        bool on_2m_Modulo           = false;
-        bool on_5m_Modulo           = false;
-        bool on_60m_Modulo          = false;
-
-        bool fatHourOClock             = false;
-        bool fon30MinutesModulo        = false;
+        bool fonDay          = false;
+        bool fonHour          = false;
+        bool fonMinute          = false;
 
         // Frequenze per una scala Do Maggiore (approssimate)
         int C_major_scale[] = {
@@ -157,16 +149,16 @@
         extern bool fAscendent;
         extern bool fDiscendent;
 
+        extern bool f3MinutesModulo;
         extern bool f10SecondsModulo;
-        extern bool f15SecondsModulo;
         extern bool f30SecondsModulo;
 
         extern bool f2MinutesModulo;
-        extern bool f5MinutesModulo;
-        extern bool f60MinutesModulo;
-        extern bool fon30MinutesModulo;
+        extern bool f30MinutesModulo;
+        extern bool fonDay;
+        extern bool fonHour;
+        extern bool fonMinute;
 
-        extern bool fatHourOClock;
 
 
         extern TelegramBot_Class      myBot;
