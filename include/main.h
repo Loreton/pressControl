@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 12.06.17
+// Date .........: 10-09-2025 15.35.21
 //
 
 
@@ -88,6 +88,7 @@
         bool fonDay          = false;
         bool fonHour          = false;
         bool fonMinute          = false;
+        bool fonSecond          = false;
 
         // Frequenze per una scala Do Maggiore (approssimate)
         int C_major_scale[] = {
@@ -145,6 +146,7 @@
         extern bool fonDay;
         extern bool fonHour;
         extern bool fonMinute;
+        extern bool fonSecond;
 
 
 

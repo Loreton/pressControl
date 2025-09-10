@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 07-09-2025 19.23.35
+// Date .........: 10-09-2025 17.06.24
 //
 
 #pragma once
@@ -14,6 +14,11 @@ private:
     uint32_t       m_NTP_SYNC_INTERVAL = 2*60*1000UL;
     bool           m_NTP_synched       = false;    // comodo da utilizzare esternamente
 
+    uint8_t         m_lastNtpStatus = 0xFF;
+    // uint8_t         m_last_status = 0xFF;
+    unsigned long   m_ntpStartTime = 0;
+    // uint32_t        m_ntp_start_time = 0;
+
     const char*    m_ntpServer1        = "pool.ntp.org";
     const char*    m_ntpServer2        = "time.google.com";
     const char*    m_ntpServer3        = "br.pool.ntp.org";
@@ -23,7 +28,6 @@ private:
 
 
     // --- methods
-            bool checkNtpSynched(void);
     static  void cbSyncTime(struct timeval *tv) ;
 
 
@@ -32,4 +36,6 @@ private:
 public:
     void initNTP(); // Nuovo metodo pubblico per la sincronizzazione
     bool isNtpSynched(void) const { return m_NTP_synched; }
+    // bool checkNtpSynched(bool force=false);
+    bool updateNtpSyncStatus(void);
 

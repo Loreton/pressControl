@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 12.02.25
+// Date .........: 10-09-2025 17.21.45
 */
 
 #include <Arduino.h> // ESP32Time.cpp
@@ -12,7 +12,7 @@
 // ---------------------------------
 // lnLibrary headers files
 // ---------------------------------
-// #define  LOG_MODULE_LEVEL LOG_LEVEL_DEBUG
+#define  LOG_MODULE_LEVEL LOG_LEVEL_NOTIFY
 #include <lnLogger_Class.h>
 #include "LnTime_Class.h"
 
@@ -51,32 +51,66 @@ void LnTime_Class::cbSyncTime(struct timeval *tv) {
  */
 
 
-
-// ##########################################
-// - aggiorna la variabile NTP_synched
-// ##########################################
-bool LnTime_Class::checkNtpSynched() {
-    // bool NTP_synched = true;
-    uint32_t elapsed = millis() - m_lastNtpAttempt;
-
-    // Se non è sincronizzato, controlla se è passato il tempo di timeout
-    if (elapsed > m_NTP_SYNC_INTERVAL*2) { // attendiamo il doppio dell'intervallo di SYNC
-
-        // metodo 2
-        struct tm timeinfo;
-        if (getLocalTime(&timeinfo)) {
-            Serial.println("Got the time from NTP");
-            m_NTP_synched = true;
+bool LnTime_Class::updateNtpSyncStatus() {
+    // ---- Gestione WiFi ----
+    if (WiFi.status() == WL_CONNECTED) {
+        // Se NTP non attivo, lo avvio
+        if (!m_ntp_active) {
+            LOG_INFO("WiFi is connected. Starting NTP client...");
+            initNTP(); // Avvia NTP e aggiorna fuso orario/server
+            m_ntpStartTime = millis();
+            // esci: lasciamo lavorare l'NTP client
+            return false;
         }
-        else {
-            Serial.println("Failed to obtain time");
+    } else {
+        // Se il WiFi si disconnette, ferma NTP
+        if (m_ntp_active) {
+            sntp_stop();
+            m_ntp_active = false;
+            LOG_WARN("No WiFi available. NTP stopped.");
+        }
+        m_NTP_synched = false;
+        return false;
+    }
+
+    // ---- Polling stato SNTP ----
+    uint8_t status = sntp_get_sync_status();
+
+    if (status != m_lastNtpStatus) {
+        LOG_INFO("NTP status changed: %d [%s]", status, sntp_status[status]);
+        m_lastNtpStatus = status;
+        if (status == SNTP_SYNC_STATUS_COMPLETED) {
+            struct tm timeinfo;
+            if (getLocalTime(&timeinfo)) {
+                rtc.setTimeStruct(timeinfo);
+                LOG_NOTIFY("RTC synchronized with NTP time");
+                m_NTP_synched = true;
+                m_ntpStartTime = millis(); // resetta timer per timeout
+            } else {
+                LOG_ERROR("Failed to obtain time");
+                m_NTP_synched = false;
+            }
+        } else {
             m_NTP_synched = false;
         }
-
-
+        return true; // stato cambiato
     }
-    return m_NTP_synched;
+
+    // ---- Timeout sync NTP ----
+    unsigned long elapsed = millis() - m_ntpStartTime;
+    if (m_ntp_active && !m_NTP_synched && elapsed > m_NTP_SYNC_INTERVAL * 2) {
+        LOG_ERROR("NTP sync timed out. Restarting NTP client.");
+        sntp_stop();
+        m_ntp_active = false;
+        m_NTP_synched = false;
+        // La prossima chiamata, se WiFi è attivo, riavvia initNTP()
+        return false;
+    }
+
+    return false; // nessun cambiamento
 }
+
+
 
 
 

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 14.31.24
+// Date .........: 10-09-2025 18.34.27
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -91,7 +91,7 @@ void pressControlNotificationCB(ButtonLongPress_Class *p) {
 
     // --- un BEEP OGNI 2 SECONDI quando si raggiunge il MAX-LEVEL---
     #define ALARM_BEEP_INTERVAL 2000
-    #define TIME_BUFFER_LENGTH 16
+    // #define TIME_BUFFER_LENGTH 16
     if (p->maxLevelReached() ) {
         uint32_t currentPressedTime = p->thresholdLevelValue(currentPressedLevel);
         if (millis() - lastBeepTime >= ALARM_BEEP_INTERVAL) {
@@ -103,8 +103,8 @@ void pressControlNotificationCB(ButtonLongPress_Class *p) {
             if (f30SecondsModulo || firstAlarmTime) {
                 LOG_WARN("[%s] ALARM! max pressing levela %d (time %lu) has been reached", p->pinID(), currentPressedLevel, currentPressedTime);
                 setTelegramTitle();
-                char buffer[TIME_BUFFER_LENGTH+1];
-                myBot.addFormattedString("<b>PressControl ALARM!:</b>\n\t pressing time %s expired", lnTime.msecToHMS(buffer, TIME_BUFFER_LENGTH, currentPressedTime) );
+                // char buffer[16];
+                myBot.addFormattedString("<b>PressControl ALARM!:</b>\n\t pressing time %s expired", lnTime.msecToHMS(currentPressedTime) );
                 myBot.send();
                 firstAlarmTime=false;
             }

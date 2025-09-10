@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 14.31.15
+// Date .........: 10-09-2025 18.48.55
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -86,6 +86,7 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
                 myBot.addFormattedString("<b>pump level:</b> %d/%d\n<b>duration ms:</b> %lu\n", cpLevel,  p->maxLevels(), phase_beep_duration);
                 myBot.send();
 
+                // LOG_INFO("invio dello status su Telegram");
                 sendStatusToTelegram(true);
                 activeBuzzer.pulse(phase_beep_duration);
                 break;

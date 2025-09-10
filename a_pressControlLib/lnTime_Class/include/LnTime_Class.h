@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 09-09-2025 16.21.53
+// Date .........: 10-09-2025 17.11.28
 //
 
 // LnTime_Class.h
@@ -21,7 +21,7 @@
             ESP32Time rtc;
             struct tm      m_timeinfo;
             bool m_dhmCustomUpdate = false;
-            // int8_t m_last_second = -1;
+            uint8_t m_last_ntp_update = 0;
             // int8_t m_last_minute = -1;
             // int8_t m_last_hour = -1;
             // std::map<uint8_t,  uint8_t>  m_at_last_second_map;

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 13.25.05
+// Date .........: 10-09-2025 18.34.25
 //
 
 
@@ -104,6 +104,22 @@ void loop() {
     uint32_t now=millis();
     bool    actionStatusChanged;
 
+    // -----------------------------------
+    // ------ refresh dei vari oggetti
+    // -----------------------------------
+
+    lnTime.update();
+    activeBuzzer.update();
+    passiveBuzzer.update();
+    pressControlLED.update();
+    pumpLED.update();
+    pressControlRelay.update();
+    magnetoTermicoRelay.update();
+    myWiFiManager.update();
+
+
+
+
     f10SecondsModulo = lnTime.onModulo(0, 0, 10);
     f30SecondsModulo = lnTime.onModulo(0, 0, 30);
     f2MinutesModulo  = lnTime.onModulo(0, 2, 0);
@@ -116,18 +132,6 @@ void loop() {
     fonMinute = lnTime.onMinute();
 
 
-    // -----------------------------------
-    // ------ refresh dei vari oggetti
-    // -----------------------------------
-    activeBuzzer.update();
-    passiveBuzzer.update();
-    pressControlLED.update();
-    pumpLED.update();
-    pressControlRelay.update();
-    magnetoTermicoRelay.update();
-    myWiFiManager.update();
-    lnTime.update();
-
 
 
     // -----------------------------------
@@ -137,6 +141,11 @@ void loop() {
     if (fWifiDisconnected) {wifiDisconnectedAction(); }
 
 
+
+    if (fonMinute) {
+        LOG_SPEC("On Minute");
+        // lnTime.checkNtpSynched(true);
+    }
 
     if (fonHour) {
         if (myWiFiManager.isConnected()) {

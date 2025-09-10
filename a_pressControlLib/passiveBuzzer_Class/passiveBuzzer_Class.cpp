@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 09.14.13
+// Date .........: 10-09-2025 15.12.42
 //
 
 #include <Arduino.h> // in testa anche per le definizioni dei type
@@ -199,8 +199,6 @@ void PassiveBuzzer_Class::update() {
                 m_noteStartTime = millis(); // Resetta il tempo di inizio per la nuova nota
                 LOG_DEBUG("%s nota %d", m_pinID, m_scaleNotes[m_currentNoteIndex]);
             }
-            LOG_SPEC("DUMP trap......");
-
         }
     }
 }
