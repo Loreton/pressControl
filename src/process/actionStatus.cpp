@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 14.12.19
+// Date .........: 10-09-2025 14.33.14
 //
 
 
@@ -37,12 +37,12 @@ enum ActionState : uint8_t {
 
 
 
+
+
+// #############################################################
+// #
+// #############################################################
 void sendStatusToTelegram(bool force) {
-    return;
-}
-
-void sendStatusToTelegram_OK(bool force) {
-
     if ( f2MinutesModulo || force) {
         LOG_INFO("invio dello status su Telegram");
         #define TIME_STAMP_LENGTH 12
@@ -57,20 +57,19 @@ void sendStatusToTelegram_OK(bool force) {
         myBot.addFormattedString("<b>Relay:</b> %s\n", str_OnOff[relayStatus]);
         if (relayStatus) {
             lnTime.msecToHMS(buffer, TIME_STAMP_LENGTH, relay_remainig, false);
-            myBot.addFormattedString("\t\t<i>remainig:</i> %s\n", buffer);
-            // myBot.addFormattedString("\t\t<i>remainig:</i> %lu\n", relay_remainig);
+            myBot.addFormattedString("\t<i>remainig: %s</i>\n", buffer);
         }
 
         myBot.addFormattedString("<b>PressControl:</b> %s\n", str_OnOff[pcStatus]);
         if (pcStatus) {
             lnTime.msecToHMS(buffer, TIME_STAMP_LENGTH, pressControl_remaining, false);
-            myBot.addFormattedString("\t\t<i>remainig:</i> %s\n", buffer);
+            myBot.addFormattedString("\t<i>remainig: %s</i>\n", buffer);
         }
 
         myBot.addFormattedString("<b>PUMP:</b> %s\n", str_OnOff[pumpStatus]);
         if (pumpStatus) {
             lnTime.msecToHMS(buffer, TIME_STAMP_LENGTH, pump_remaining, false);
-            myBot.addFormattedString("\t\t<i>remainig:</i> %s\n", buffer);
+            myBot.addFormattedString("\t<i>remainig: %s</i>\n", buffer);
         }
 
         myBot.send();

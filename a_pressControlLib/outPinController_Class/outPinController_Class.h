@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 02-09-2025 09.46.51
+// Date .........: 10-09-2025 14.36.18
 //
 #pragma once
 #include <Arduino.h> // in testa anche per le definizioni dei type
@@ -50,7 +50,7 @@ public:
 
     void blinking(uint32_t onMs, uint32_t offMs, int8_t cycles = 0);
     void blinking_dutyCycle(uint32_t period, float duty_cycle, int8_t cycles = 0); // con duty_cycle
-    void pulse(uint32_t duration);
+    void pulse(uint32_t duration, bool waitForEnding=false);
 
     // Metodi inline per accendere e spegnere
     inline void on() { _set(true); };

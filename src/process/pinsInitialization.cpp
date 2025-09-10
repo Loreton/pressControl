@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 02-09-2025 09.45.02
+// Date .........: 10-09-2025 14.37.59
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -90,20 +90,20 @@ void pinsInitialization(void) {
 
     delay(500);
     activeBuzzer.init("Buzzer", activeBuzzer_pin, HIGH);
-    activeBuzzer.pulse(500);
-    activeBuzzer.waitForPulseEnding(2000);
+    activeBuzzer.pulse(500, true);
+    // activeBuzzer.waitForPulseEnding(500);
     LOG_NOTIFY("\t[%s] initialized", activeBuzzer.pinID());
 
 
 
     pressControlLED.init("pressControlLED", pressControlLED_pin, HIGH);
-    pressControlLED.pulse(1000);
-    pressControlLED.waitForPulseEnding(1000);
+    pressControlLED.pulse(500, true);
+    // pressControlLED.waitForPulseEnding(500);
     LOG_NOTIFY("\t[%s] initialized", pressControlLED.pinID());
 
     pumpLED.init("pumpLED", pumpLED_pin, HIGH);
-    pumpLED.pulse(1000);
-    pumpLED.waitForPulseEnding(1000);
+    pumpLED.pulse(500, true);
+    // pumpLED.waitForPulseEnding(500);
     LOG_NOTIFY("\t[%s] initialized", pumpLED.pinID());
 
 
@@ -115,8 +115,6 @@ void pinsInitialization(void) {
 
     passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 150, false); // Scala discendente, 150ms per nota)
     passiveBuzzer.waitForPulseEnding(1000);
-
-
 }
 
 

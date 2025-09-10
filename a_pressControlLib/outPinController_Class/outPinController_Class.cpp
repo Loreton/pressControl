@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 02-09-2025 09.41.43
+// Date .........: 10-09-2025 14.37.03
 //
 
 #include <Arduino.h>     // in testa anche per le definizioni dei type
@@ -65,7 +65,7 @@ void outPinController_Class::update() {
 }
 
 
-void outPinController_Class::pulse(uint32_t duration) {
+void outPinController_Class::pulse(uint32_t duration, bool waitForEnding) {
     if (!m_pulseOn) {
         reset();
         m_pulseOn = true;
@@ -76,6 +76,9 @@ void outPinController_Class::pulse(uint32_t duration) {
         LOG_DEBUG("%s pulseON. duration: %lu ms", m_pinID,  m_pulseOnDuration);
     } else {
         LOG_DEBUG("%s pulseON already active: %lu ms", m_pinID,  m_pulseOnDuration);
+    }
+    if (waitForEnding) {
+        waitForPulseEnding(duration);
     }
 }
 

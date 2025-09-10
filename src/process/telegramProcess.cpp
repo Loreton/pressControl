@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 09.43.30
+// Date .........: 10-09-2025 14.29.44
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -23,8 +23,7 @@
 // #
 // ######################################################
 void setTelegramTitle() {
-    // myBot.startNewMessage("<b>ESP32-PressControl\nTime:</b> %s\n", lnTime.now());
-    return;
+    myBot.startNewMessage("<b>ESP32-PressControl\nTime:</b> %s\n", lnTime.now());
 }
 
 
