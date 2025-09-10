@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 09-09-2025 19.50.54
+// Date .........: 10-09-2025 08.30.15
 //
 
 #pragma once
@@ -31,7 +31,7 @@ class RelayManager_Class {
          * per tale ragione il buffer deve essere allocato estrnamente
          * ....oppure prestare molta attenzione
         */
-        char                m_timeBUFFER[16];
+        char                m_timeBUFFER[12];
         uint8_t             m_timeBUFFER_Len = sizeof(m_timeBUFFER);
         // Imposta lo stato fisico del relè sul pin
         void setRelay(bool state);

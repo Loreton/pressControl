@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 09-09-2025 17.46.43
+// Date .........: 10-09-2025 13.25.05
 //
 
 
@@ -37,8 +37,8 @@ size_t finalMemory;
 
 
 
-#define VERSION_LENGTH 40
-char pressControlVersion[VERSION_LENGTH+1];
+// #define VERSION_LENGTH 40
+char pressControlVersion[40];
 
 
 
@@ -49,7 +49,7 @@ char pressControlVersion[VERSION_LENGTH+1];
 void setup() {
     initialMemory = ESP.getFreeHeap();
 
-    snprintf(pressControlVersion, VERSION_LENGTH, "Version_2025-07 - rel_type: %d", ln_RELEASE_TYPE);
+    snprintf(pressControlVersion, sizeof(pressControlVersion), "Version_2025-07 - rel_type: %d", ln_RELEASE_TYPE); // snprintf() scrive al massimo n-1 caratteri più il terminatore nul (\0) in dest.
 
     Serial.begin(115200);
     delay(2000);

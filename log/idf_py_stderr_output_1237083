@@ -1,0 +1,28 @@
+Command: /home/loreto/.espressif/python_env/idf6.0_py3.12_env/bin/python -m esp_idf_diag create --no-hints --force-terminal --project-dir /media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl --build-dir /media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build --output idf-diag-da67e647-2a65-495a-8109-4570195dae44
+Creating report in "idf-diag-da67e647-2a65-495a-8109-4570195dae44" directory.
+Searching for device serial port ...
+Serial port: N/A
+warning: The device serial port is unavailable. Target information will not be gathered.
+warning: Directory "/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build" does not seem to be an ESP-IDF project build directory.
+warning: File "/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/dependencies.lock" does not exist: [Errno 2] No such file or directory: '/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/dependencies.lock'
+warning: No files matching glob "idf_component.yml" found in "/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl"
+warning: File "/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/project_description.json" does not exist: [Errno 2] No such file or directory: '/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/project_description.json'
+warning: File "/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/compile_commands.json" does not exist: [Errno 2] No such file or directory: '/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/compile_commands.json'
+warning: File "/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/esp-idf/esp_system/ld/memory.ld" does not exist: [Errno 2] No such file or directory: '/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/esp-idf/esp_system/ld/memory.ld'
+warning: File "/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/esp-idf/esp_system/ld/sections.ld" does not exist: [Errno 2] No such file or directory: '/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/esp-idf/esp_system/ld/sections.ld'
+warning: File "/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/flash_app_args" does not exist: [Errno 2] No such file or directory: '/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/flash_app_args'
+warning: File "/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/flash_args" does not exist: [Errno 2] No such file or directory: '/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/flash_args'
+warning: File "/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/bootloader-flash_args" does not exist: [Errno 2] No such file or directory: '/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/bootloader-flash_args'
+warning: File "/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/flash_bootloader_args" does not exist: [Errno 2] No such file or directory: '/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/flash_bootloader_args'
+warning: File "/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/flasher_args.json" does not exist: [Errno 2] No such file or directory: '/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/flasher_args.json'
+warning: File "/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/flash_project_args" does not exist: [Errno 2] No such file or directory: '/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/flash_project_args'
+warning: File "/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/partition-table-flash_args" does not exist: [Errno 2] No such file or directory: '/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/partition-table-flash_args'
+warning: File "/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/sdkconfig" does not exist: [Errno 2] No such file or directory: '/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/sdkconfig'
+warning: No files matching glob "idf_py_stdout_output*" found in "/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/log"
+warning: No files matching glob "idf_py_stderr_output*" found in "/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/log"
+warning: No files matching glob "idf_py_stdout_output*" found in "/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/log"
+warning: No files matching glob "idf_py_stderr_output*" found in "/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/log"
+warning: No files matching glob "idf_py_stdout_output*" found in "/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/log"
+warning: No files matching glob "idf_py_stderr_output*" found in "/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build/log"
+warning: No files matching glob "*.map" found in "/media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/pressControl/build"
+The report has been created in the "idf-diag-da67e647-2a65-495a-8109-4570195dae44" directory.

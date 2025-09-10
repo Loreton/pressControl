@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 07-09-2025 19.24.14
+// Date .........: 10-09-2025 12.02.25
 */
 
 #include <Arduino.h> // ESP32Time.cpp
@@ -35,6 +35,7 @@ const char* sntp_status[] = {
 void LnTime_Class::cbSyncTime(struct timeval *tv) {
     uint8_t status = sntp_get_sync_status();
     LOG_NOTIFY("NTP time synched: %d [%s]", status, sntp_status[status]);
+    // LOG_NOTIFY("NTP time synched: %d [xxx]", status);
 }
 
 

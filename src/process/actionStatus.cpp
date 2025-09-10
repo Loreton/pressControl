@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 09-09-2025 20.14.20
+// Date .........: 10-09-2025 13.16.28
 //
 
 
@@ -38,10 +38,14 @@ enum ActionState : uint8_t {
 
 
 void sendStatusToTelegram(bool force) {
+    return;
+}
+
+void sendStatusToTelegram_OK(bool force) {
 
     if ( f2MinutesModulo || force) {
         LOG_INFO("invio dello status su Telegram");
-        #define TIME_STAMP_LENGTH 16
+        #define TIME_STAMP_LENGTH 12
         static char buffer[TIME_STAMP_LENGTH+1];
         // uint32_t pressControl_remaining = pressControl.timeToNextThresholdLevel();
         // uint32_t pump_remaining         = pumpState.timeToNextThresholdLevel();
@@ -54,7 +58,7 @@ void sendStatusToTelegram(bool force) {
         if (relayStatus) {
             lnTime.msecToHMS(buffer, TIME_STAMP_LENGTH, relay_remainig, false);
             myBot.addFormattedString("\t\t<i>remainig:</i> %s\n", buffer);
-            myBot.addFormattedString("\t\t<i>remainig:</i> %lu\n", relay_remainig);
+            // myBot.addFormattedString("\t\t<i>remainig:</i> %lu\n", relay_remainig);
         }
 
         myBot.addFormattedString("<b>PressControl:</b> %s\n", str_OnOff[pcStatus]);
@@ -81,6 +85,8 @@ void sendStatusToTelegram(bool force) {
 void startAlarmActions() {
     static uint32_t relay_delay=MAGNETOTERMIC_RELAY_PULSETIME + 3000;
     static uint32_t last_relay_time;
+    // LOG_SPEC("DUMP trap......");
+
     if (! fPUMP_ALARM) {
         LOG_ERROR("Starting Recovery Actions for Alarm."); // NO perchè compare ad ogni giro di loop
         last_relay_time=0;
@@ -142,6 +148,8 @@ void chackActionStatus() {
             bool    actionStateChanged;
             uint8_t actionState;
 
+    // LOG_SPEC("DUMP trap......");
+
     // -----------------------------------
     // ------ Action
     // -----------------------------------
@@ -156,16 +164,13 @@ void chackActionStatus() {
     actionStateChanged = (actionState == lastActionState) ? false : true;
 
 
-    // if (actionStateChanged) { // facciamo comunque il display ogni 15 secondi
-    //     sendStatusToTelegram(fForce);
-    // }
-
     if ( actionStateChanged || f2MinutesModulo ) { // facciamo comunque il display ogni 15 secondi
         lastActionState=actionState;
         LOG_INFO("actionState [%02d]: %7s %16s %5s", actionState, "RELAY", "PRESS-CONTROL", "PUMP");
         LOG_INFO("actionState [%02d]: %7s %16s %5s", actionState, str_OnOff[relayStatus], str_OnOff[pcStatus], str_OnOff[pumpStatus]);
-
+        LOG_SPEC("DUMP trap......");
     }
+
 
 
 
@@ -174,14 +179,15 @@ void chackActionStatus() {
 
         // status normale in attesa che si accenda il PC
         case pumpAlarm:
+            // LOG_SPEC("DUMP trap......");
             if ( f10SecondsModulo ) {
                 LOG_ERROR("Pump Alarm");
-                setTelegramTitle();
-                myBot.addFormattedString("<b>Pump Alarm!!!!:</b>\n");
-                myBot.addFormattedString("<b>Relay:</b> %s\n", str_OnOff[relayStatus]);
-                myBot.addFormattedString("<b>PressControl:</b> %s\n", str_OnOff[pcStatus]);
-                myBot.addFormattedString("<b>PUMP:</b> %s\n", str_OnOff[pumpStatus]);
-                myBot.send();
+                // setTelegramTitle();
+                // myBot.addFormattedString("<b>Pump Alarm!!!!:</b>\n");
+                // myBot.addFormattedString("<b>Relay:</b> %s\n", str_OnOff[relayStatus]);
+                // myBot.addFormattedString("<b>PressControl:</b> %s\n", str_OnOff[pcStatus]);
+                // myBot.addFormattedString("<b>PUMP:</b> %s\n", str_OnOff[pumpStatus]);
+                // myBot.send();
             }
             fIdleStatus=false;
             startAlarmActions();
@@ -190,6 +196,8 @@ void chackActionStatus() {
 
         // status normale in attesa che si accenda il PC
         case pcOFF_pumpOFF:
+            LOG_SPEC("DUMP trap......");
+
             if (relayStatus) {
                 // non può essere il rele on ed il PC off
                 if ( f10SecondsModulo ) LOG_ERROR("Relè OFF quando invece il PC è ON");
@@ -206,6 +214,7 @@ void chackActionStatus() {
 
         // non può essere la pompa ON ed il PC off
         case pcOFF_pumpON:
+            LOG_SPEC("DUMP trap......");
             if ( f10SecondsModulo ) LOG_ERROR("Pump ON quando il PC è OFF.");
             startAlarmActions();
             fIdleStatus=false;
@@ -213,6 +222,7 @@ void chackActionStatus() {
 
         // status normale in attesa che si accenda la pompa
         case pcON_pumpOFF:
+            LOG_SPEC("DUMP trap......");
             // if ( fModulo15Seconds )  sendStatusToTelegram();
             sendStatusToTelegram(forceSend);
             pressControlLED.on(); // accendiamo fisso il LED
@@ -223,6 +233,7 @@ void chackActionStatus() {
 
         // status normale con la pompa accesa
         case pcON_pumpON:
+            LOG_SPEC("DUMP trap......");
             // if ( fModulo15Seconds )  sendStatusToTelegram();
             sendStatusToTelegram(forceSend);
             pressControlLED.on();

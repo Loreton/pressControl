@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 09-09-2025 18.43.14
+// Date .........: 10-09-2025 12.06.17
 //
 
 
@@ -43,7 +43,7 @@
         #define PUMP_PHASE_02                   2*60*1000UL  // milliSeconds
         #define PUMP_PHASE_03                   3*60*1000UL  // milliSeconds
         #define PUMP_PHASE_04                   4*60*1000UL  // milliSeconds
-        #define BEEP_MULTIPLICATION_FACTOR        3*1000UL  // milliSeconds
+        #define BEEP_MULTIPLICATION_FACTOR        2*1000UL  // milliSeconds
 
         #define ACTION_STATUS_DISPLAY_INTERVAL  5*60*1000UL  // xx minuti
         #define PRESS_CONTROL_PIN_MAX_TIME     30*60*1000UL  // tempo in cui il pressControl starà acceso.

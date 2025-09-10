@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 09-09-2025 16.19.33
+// Date .........: 10-09-2025 12.11.16
 */
 
 
@@ -53,45 +53,11 @@ void LnTime_Class::set_dhmCustomUpdate(bool customUpdate) {
 }
 
 
-// void LnTime_Class::update(void) {
-//     m_timeinfo = rtc.getTimeStruct(); // lo facciamo qui una volta sola....
-
-//     if (WiFi.status() == WL_CONNECTED ) {
-//         if (!m_ntp_active) {
-//             LOG_INFO("WiFi is connected. Starting NTP client...");
-//             initNTP(); // Imposta il fuso orario e i server NTP
-//         } else if (! checkNtpSynched() ) {
-//             LOG_ERROR("NTP sync failed or timed out. Restarting NTP client.");
-//             sntp_stop();
-//             initNTP(); // Avvia un nuovo tentativo
-//         } else {
-//             m_lastNtpAttempt = millis(); // Resetta il timer per un nuovo tentativo al prossimo reconnect
-//         }
-
-
-//     }
-//     else {
-//         // Se il WiFi è disconnesso, disattiva l'NTP per evitare tentativi inutili
-//         if (m_ntp_active) {
-//             sntp_stop();
-//             m_ntp_active = false;
-//             LOG_WARN("No WiFi available. NTP stopped.");
-//         }
-//     }
-
-//     // Esegui l'aggiornamento dei flag dei secondi e dei minuti
-//     #ifdef LN_TIME_CLASS_SECONDS_VECTOR
-//         updateAtSecondFlags();
-//     #endif
-
-// }
-
-
 
 // Ottiene l'ora corrente formattata HH:MM:SS
 char *LnTime_Class::now() {
     m_timeinfo = rtc.getTimeStruct();
-    snprintf(sharedTimeBUFFER, sizeof(sharedTimeBUFFER), "%02d:%02d:%02d", m_timeinfo.tm_hour, m_timeinfo.tm_min, m_timeinfo.tm_sec);
+    snprintf(sharedTimeBUFFER, sizeof(sharedTimeBUFFER)-1, "%02d:%02d:%02d", m_timeinfo.tm_hour, m_timeinfo.tm_min, m_timeinfo.tm_sec);
     return sharedTimeBUFFER;
 }
 

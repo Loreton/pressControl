@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 03-09-2025 11.59.40
+// Date .........: 10-09-2025 09.09.04
 */
 
 #pragma once
@@ -29,7 +29,9 @@ class ESP32Logger { // Renamed from ESP32LoggerMutex for simplicity and clarity
         ESP32Logger(void);
         void init(void);
         void write(const char* color, const char* tag, const char* file, const char* function, int line, const char* format, ...);
-        const char* toHMS(char *buffer, uint8_t buffer_len, uint32_t millisec, bool addMilliSec=false, bool stripHeader=false);
+        const char* msecToHMS(char *buffer, uint8_t buffer_len, uint32_t millisec, bool addMilliSec=false, bool stripHeader=false);
+        const char* msecToHMS(uint32_t millisec, bool withMilliSec=false, bool stripHours=false); // usa un buffer interno
+        // const char* secToHMS(uint32_t millisec, bool stripHours=false); // usa un buffer interno
 
     private:
         ESP32Time rtc;

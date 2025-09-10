@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 09-09-2025 18.27.16
+// Date .........: 10-09-2025 11.45.31
 //
 
 #include <Arduino.h>
@@ -189,9 +189,21 @@ void ButtonLongPress_Class::displayPressedLevel(bool forceDisplay) {
         m_lastDisplayTime = m_elapsed;
 
         if (msToNextLevel != 0) {
-            char elapsedBUFFER[16];   lnLog.toHMS(elapsedBUFFER,   sizeof(elapsedBUFFER),   m_elapsed, false);
-            char nextLevelBUFFER[16]; lnLog.toHMS(nextLevelBUFFER, sizeof(nextLevelBUFFER), msToNextLevel, false);
-            char maxLevelBUFFER[16];  lnLog.toHMS(maxLevelBUFFER, sizeof(maxLevelBUFFER),   msToMaxLevel, false);
+            // const char *hmsTime;
+
+            //* display
+            LOG_NOTIFY("[%s]:", m_pinID);
+            LOG_INFO("  pressed Level   %d/%d", m_currentPressLevel, m_numThresholds);
+            LOG_TRACE("  threshold[%d]:  %8lu", m_currentPressLevel,  m_pressThresholds[m_currentPressLevel]);
+            LOG_TRACE("  threshold[%d]:  %8lu", m_currentPressLevel+1,  m_pressThresholds[m_currentPressLevel+1] );
+
+            LOG_INFO("  telapsed:       %8lu - [hms]: %s", m_elapsed,     lnLog.msecToHMS(m_elapsed));
+            LOG_INFO("  next threshold: %8lu - [hms]: %s", msToNextLevel, lnLog.msecToHMS(msToNextLevel));
+            LOG_INFO("  max  threshold: %8lu - [hms]: %s", msToMaxLevel,  lnLog.msecToHMS(msToMaxLevel));
+            #if 0
+            char elapsedBUFFER[12];   lnLog.msecToHMS(elapsedBUFFER,   sizeof(elapsedBUFFER),   m_elapsed, false);
+            char nextLevelBUFFER[12]; lnLog.msecToHMS(nextLevelBUFFER, sizeof(nextLevelBUFFER), msToNextLevel, false);
+            char maxLevelBUFFER[12];  lnLog.msecToHMS(maxLevelBUFFER, sizeof(maxLevelBUFFER),   msToMaxLevel, false);
 
             //* display
             LOG_NOTIFY("[%s]:", m_pinID);
@@ -202,6 +214,7 @@ void ButtonLongPress_Class::displayPressedLevel(bool forceDisplay) {
             LOG_NOTIFY("\telapsed:        %8lu - [hms]: %s", m_elapsed, elapsedBUFFER);
             LOG_NOTIFY("\tnext threshold: %8lu - [hms]: %s", msToNextLevel, nextLevelBUFFER);
             LOG_NOTIFY("\tmax  threshold: %8lu - [hms]: %s", msToMaxLevel, maxLevelBUFFER);
+            #endif
 
         }
     }

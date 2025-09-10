@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 09-09-2025 20.10.53
+// Date .........: 10-09-2025 08.39.02
 //
 
 #include <Arduino.h> // Necessario per funzioni come pinMode, digitalWrite, millis
@@ -83,16 +83,21 @@ void RelayManager_Class::toggle() {
 
 // Avvia un pulsetime per il relè
 void RelayManager_Class::startPulse(uint32_t duration_ms) {
+    const char *hmsTime;
     if (!m_pulseActive) {
         m_pulseStartTime = millis();
         m_pulseDuration = duration_ms;
         m_pulseActive = true;
-        lnTime.msecToHMS(m_timeBUFFER, m_timeBUFFER_Len, duration_ms, true);
-        LOG_NOTIFY("[%s] Pulsetime avviato per %s", m_pinID, m_timeBUFFER, true);
+        // lnTime.msecToHMS(m_timeBUFFER, m_timeBUFFER_Len, duration_ms, true);
+        // LOG_NOTIFY("[%s] Pulsetime avviato per %s", m_pinID, m_timeBUFFER, true);
+        hmsTime = lnTime.msecToHMS(duration_ms, true);
+        LOG_NOTIFY("[%s] Pulsetime avviato per %s", m_pinID, hmsTime);
         on(); // Accende il relè all'avvio del pulsetime
     } else {
-        lnTime.msecToHMS(m_timeBUFFER, m_timeBUFFER_Len, m_pulseDuration - (millis() - m_pulseStartTime), true);
-        LOG_DEBUG("[%s] Pulsetime già attivo per %lu ms (skipping...)", m_pinID, m_timeBUFFER);
+        hmsTime = lnTime.msecToHMS(m_pulseDuration - (millis() - m_pulseStartTime), true);
+        LOG_DEBUG("[%s] Pulsetime già attivo per %lu ms (skipping...)", m_pinID, hmsTime);
+        // lnTime.msecToHMS(m_timeBUFFER, m_timeBUFFER_Len, m_pulseDuration - (millis() - m_pulseStartTime), true);
+        // LOG_DEBUG("[%s] Pulsetime già attivo per %lu ms (skipping...)", m_pinID, m_timeBUFFER);
     }
 }
 

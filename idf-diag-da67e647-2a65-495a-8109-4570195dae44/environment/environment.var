@@ -1,0 +1,11 @@
+IDF_PYTHON_ENV_PATH=/home/[XXX]/.espressif/python_env/idf6.0_py3.12_env
+IDF_PATH=/media/[XXX]/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/esp/esp-idf
+OPENOCD_SCRIPTS=/home/[XXX]/.espressif/tools/openocd-esp32/v0.12.0-esp32-20250707/openocd-esp32/share/openocd/scripts
+ESP_IDF_VERSION=6.0
+IDF_PY_COMP_WORDBREAKS= 	
+"'><=;|&(:
+IDF_DEACTIVATE_FILE_PATH=/tmp/tmpro6b2n6xidf_885181
+PATH=/media/[XXX]/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/esp/esp-idf/components/espcoredump:/media/[XXX]/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/esp/esp-idf/components/partition_table:/media/[XXX]/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/esp/esp-idf/components/app_update:/home/[XXX]/.espressif/tools/xtensa-esp-elf-gdb/16.2_20250324/xtensa-esp-elf-gdb/bin:/home/[XXX]/.espressif/tools/xtensa-esp-elf/esp-15.1.0_20250607/xtensa-esp-elf/bin:/home/[XXX]/.espressif/tools/esp32ulp-elf/2.38_20240113/esp32ulp-elf/bin:/home/[XXX]/.espressif/tools/openocd-esp32/v0.12.0-esp32-20250707/openocd-esp32/bin:/home/[XXX]/.espressif/tools/ninja/1.12.1/:/home/[XXX]/.espressif/python_env/idf6.0_py3.12_env/bin:/media/[XXX]/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/esp/esp-idf/tools:/home/[XXX]/.nvm/versions/node/v20.15.1/bin:/home/[XXX]/lnFreex/doublecmd:.:/home/[XXX]/lnProfile/liveProduction:/home/[XXX]/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin
+IDF_TOOLS_EXPORT_CMD=/media/[XXX]/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/esp/esp-idf/export.sh
+IDF_TOOLS_INSTALL_CMD=/media/[XXX]/LnDisk_SD_ext4/Filu/GIT-REPO/ESP32/esp/esp-idf/install.sh
+ESP_ROM_ELF_DIR=/home/[XXX]/.espressif/tools/esp-rom-elfs/20241011/

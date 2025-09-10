@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 09-09-2025 20.19.20
+// Date .........: 10-09-2025 13.22.49
 */
 
 
@@ -19,25 +19,15 @@
 // ################################################################
 // Converte millisecondi in HH:MM:SS.ms
 // ritorna il timestamp del giorno
-//    se millisec != 0 allora converte i millisec in timestamp
 //    withMilliSec = true: aggiunge .xxx alla fine della stringa
-//    stripHeader = true: rimuove hour o minutes se == 0
+//    stripHeader = true: rimuove hour se == 0
 // ################################################################
 const char* LnTime_Class::msecToHMS(char *buffer, uint8_t buffer_len, uint32_t millisec, bool withMilliSec, bool stripHours) {
     uint16_t msec;
     uint32_t seconds;
 
-
-
-    // if (millisec == 0) {
-    //     m_timeinfo = rtc.getTimeStruct();
-    //     seconds = (m_timeinfo.tm_hour * 3600) + (m_timeinfo.tm_min * 60) + m_timeinfo.tm_sec;
-    //     msec = rtc.getMillis();  // current mSeconds (0-999)
-    // }
-    // else {
-        msec    = (millisec % 1000UL);
-        seconds = (millisec / 1000UL);
-    // }
+    msec    = (millisec % 1000UL);
+    seconds = (millisec / 1000UL);
 
     uint8_t sec      = (seconds  % 60);
     uint8_t min      = (seconds / 60) % 60;
@@ -58,16 +48,17 @@ const char* LnTime_Class::msecToHMS(char *buffer, uint8_t buffer_len, uint32_t m
 }
 
 
-
 const char* LnTime_Class::msecToHMS(uint32_t millisec, bool withMilliSec, bool stripHours) {
-    char buffer[16];
-    return msecToHMS(buffer, 15, millisec, withMilliSec, stripHours);
+    const char buff_SIZE = 16;
+    char buffer[buff_SIZE];
+    return msecToHMS(buffer, sizeof(buffer), millisec, withMilliSec, stripHours);
 }
 
 
 const char* LnTime_Class::secToHMS(uint32_t seconds, bool stripHours) {
-    char buffer[16];
-    return msecToHMS(buffer, 15, seconds*1000UL, false, stripHours);
+    const char buff_SIZE = 16;
+    char buffer[buff_SIZE];
+    return msecToHMS(buffer, sizeof(buffer), seconds*1000UL, false, stripHours);
 }
 
 

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 02-09-2025 09.42.16
+// Date .........: 10-09-2025 09.14.13
 //
 
 #include <Arduino.h> // in testa anche per le definizioni dei type
@@ -9,7 +9,8 @@
 // ---------------------------------
 // lnLibrary headers files
 // ---------------------------------
-// #define  LOG_MODULE_LEVEL LOG_LEVEL_DEBUG
+// #define  LOG_MODULE_LEVEL LOG_LEVEL_TRACE
+#include <lnGlobalVars.h> // Assuming these are defined elsewhere
 #include <lnLogger_Class.h> // Assuming these are defined elsewhere
 #include <lnSetPinID.h>   // Assuming this is defined elsewhere
 #include "passiveBuzzer_Class.h"
@@ -51,6 +52,7 @@ void PassiveBuzzer_Class::init(const char* pin_name, int buzzerPin, uint8_t acti
     digitalWrite(m_pin, m_off);
 
     LOG_TRACE("[%s] initialized. active level: %s", m_pinID, str_pinLevel[m_activeLevel]);
+    // LOG_TRACE("[%s] initialized. active level: %d", m_pinID, m_activeLevel);
     begin();
 }
 
@@ -197,6 +199,8 @@ void PassiveBuzzer_Class::update() {
                 m_noteStartTime = millis(); // Resetta il tempo di inizio per la nuova nota
                 LOG_DEBUG("%s nota %d", m_pinID, m_scaleNotes[m_currentNoteIndex]);
             }
+            LOG_SPEC("DUMP trap......");
+
         }
     }
 }

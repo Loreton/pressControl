@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 09-09-2025 15.53.08
+// Date .........: 10-09-2025 09.42.44
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -66,6 +66,7 @@ void wifiConnectedAction() {
 // ##########################################################################
 void wifiConnectedMessage() {
     LOG_NOTIFY("WiFi_connAction Connected!");
+    #if 0
     myBot.startNewMessage("<b>PressControl\nTime:</b> %s\n", lnTime.now());
     myBot.addFormattedString("<b>WiFi: </b> CONNECTED\n");
     myBot.addFormattedString("<b>SSID: </b> %s\n", WiFi.SSID().c_str() );
@@ -80,6 +81,7 @@ void wifiConnectedMessage() {
     }
 
     myBot.send();
+    #endif
 }
 
 

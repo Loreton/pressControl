@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 02-09-2025 11.59.23
+// Date .........: 10-09-2025 09.34.47
 //
 
 
@@ -130,7 +130,7 @@ void WiFiManager_Class::update() {
             m_lastScanTime = millis();
         }
         else {
-            if (scanElapsed % 5000UL < 100) {
+            if (scanElapsed % 60000UL < 100) {
                 LOG_NOTIFY("scanElapsed/m_scanInterval is not expired: (%lu/%lu)", scanElapsed,  m_scanInterval);
             }
         }
@@ -213,11 +213,15 @@ void WiFiManager_Class::processScanResults(int networks) {
 // #####################################################################
 void WiFiManager_Class::connectToSSID(int8_t networkIndex) {
     if (networkIndex == -1) {
-        LOG_ERROR("Nessuna delle reti configurate è stata trovata.");
+        LOG_ERROR("Nessuna delle reti configurate...:");
+        for (int i = 0; i < m_networkCount; i++) {
+            LOG_INFO("  [%d] - %s", i, m_networks[i].ssid);
+        }
+        LOG_ERROR("  ...è stata trovata.");
     } else {
         const char *ssid     = m_networks[networkIndex].ssid;
         const char *password = m_networks[networkIndex].password;
-        LOG_SPEC("best net: [%d] - %s", networkIndex, ssid);
+        LOG_NOTIFY("best net: [%d] - %s", networkIndex, ssid);
 
         // Controlla se siamo già connessi alla rete migliore
         // if (WiFi.status() == WL_CONNECTED && String(WiFi.SSID()) == String(ssid)) {
@@ -246,28 +250,28 @@ void WiFiManager_Class::showCurrentConnection() {
     const char *ptr;
 
     if (WiFi.status() == WL_CONNECTED) {
-        LOG_SPEC("Connected to:     %s", WiFi.SSID());
-        LOG_SPEC("\tBSSID:          %s", WiFi.BSSIDstr().c_str());
-        LOG_SPEC("\tRSSI:           %ld", WiFi.RSSI());
-        LOG_SPEC("\tCHANNEL:        %ld", WiFi.channel());
-        LOG_SPEC("\tIP:             %s",  WiFi.localIP().toString().c_str());
+        LOG_NOTIFY("Connected to:     %s", WiFi.SSID());
+        LOG_NOTIFY("\tBSSID:          %s", WiFi.BSSIDstr().c_str());
+        LOG_NOTIFY("\tRSSI:           %ld", WiFi.RSSI());
+        LOG_NOTIFY("\tCHANNEL:        %ld", WiFi.channel());
+        LOG_NOTIFY("\tIP:             %s",  WiFi.localIP().toString().c_str());
     }
     else {
         LOG_ERROR("WiFi is not connected!");
     }
     uint32_t scanElapsed = millis() - m_lastScanTime;
 
-    ptr = lnLog.toHMS(buffer, 16, (m_scanInterval-scanElapsed), fMilliSecondsTrue, fstripHoursTrue);
-    LOG_SPEC("\tNext Scan:      %s - %7lu", ptr,  (m_scanInterval-scanElapsed));
+    ptr = lnLog.msecToHMS(buffer, 16, (m_scanInterval-scanElapsed), fMilliSecondsTrue, fstripHoursTrue);
+    LOG_NOTIFY("\tNext Scan:      %s - %7lu", ptr,  (m_scanInterval-scanElapsed));
 
-    ptr = lnLog.toHMS(buffer, 16, m_scanInterval, fMilliSecondsTrue, fstripHoursTrue);
-    LOG_SPEC("\tScan interval:  %s - %7lu", ptr, m_scanInterval);
+    ptr = lnLog.msecToHMS(buffer, 16, m_scanInterval, fMilliSecondsTrue, fstripHoursTrue);
+    LOG_NOTIFY("\tScan interval:  %s - %7lu", ptr, m_scanInterval);
 
-    ptr = lnLog.toHMS(buffer, 16, scanElapsed, fMilliSecondsTrue, fstripHoursTrue);
-    LOG_SPEC("\tScan elapsed:   %s - %7lu", ptr, scanElapsed);
+    ptr = lnLog.msecToHMS(buffer, 16, scanElapsed, fMilliSecondsTrue, fstripHoursTrue);
+    LOG_NOTIFY("\tScan elapsed:   %s - %7lu", ptr, scanElapsed);
 
-    LOG_SPEC("\tis scanning:    %d", m_scanning);
-    LOG_SPEC("\tis starting:    %d", m_starting);
+    LOG_NOTIFY("\tis scanning:    %d", m_scanning);
+    LOG_NOTIFY("\tis starting:    %d", m_starting);
 #endif
 }
 

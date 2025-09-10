@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 09-09-2025 18.15.27
+// Date .........: 10-09-2025 12.06.23
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -83,9 +83,9 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
             case PRESSED_LEVEL_9:
 
                 LOG_INFO("%s beeping. duration: %lu ms", p->pinID(),  phase_beep_duration);
-                setTelegramTitle();
-                myBot.addFormattedString("<b>pump level:</b> %d/%d\n<b>duration ms:</b> %lu\n", cpLevel,  p->maxLevels(), phase_beep_duration);
-                myBot.send();
+                // setTelegramTitle();
+                // myBot.addFormattedString("<b>pump level:</b> %d/%d\n<b>duration ms:</b> %lu\n", cpLevel,  p->maxLevels(), phase_beep_duration);
+                // myBot.send();
 
                 sendStatusToTelegram(true);
                 activeBuzzer.pulse(phase_beep_duration);
@@ -111,10 +111,10 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
         if (f30SecondsModulo || firstAlarmTime) {
             // LOG_WARN("[%s] ALARM! max pressed level %d reached", p->pinID(), cpLevel);
             LOG_WARN("[%s] ALARM! Pump is ON for too much time: %s (level %d reached)", p->pinID(), levelMS, cpLevel);
-            setTelegramTitle();
+            // setTelegramTitle();
             // myBot.addFormattedString("<b>pump ALARM!:</b> max pressed level %d reached", cpLevel);
-            myBot.addFormattedString("<b>pump ALARM!:</b>\nPump ON for too much time:\n<b>reached level:</b> %d\n<b>ON time:</b> %s", cpLevel, levelMS);
-            myBot.send();
+            // myBot.addFormattedString("<b>pump ALARM!:</b>\nPump ON for too much time:\n<b>reached level:</b> %d\n<b>ON time:</b> %s", cpLevel, levelMS);
+            // myBot.send();
             firstAlarmTime=false;
         }
     }

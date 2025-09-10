@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 09-09-2025 15.01.03
+// Date .........: 10-09-2025 12.01.17
 */
 
 #include <Arduino.h>
@@ -39,31 +39,22 @@ void ESP32Logger::init() { // Changed class name
 // ################################################################
 // Converte millisecondi in HH:MM:SS.ms
 // ritorna il timestamp del giorno
-//    se millisec != 0 allora converte i millisec in timestamp
 //    addMilliSec = true: aggiunge .xxx alla fine della stringa
 //    stripHeader = true: rimuove hour o minutes se == 0
 // ################################################################
 
-const char* ESP32Logger::toHMS(char *buffer, uint8_t buffer_len, uint32_t millisec, bool addMilliSec, bool stripHours) {
+const char* ESP32Logger::msecToHMS(char *buffer, uint8_t buffer_len, uint32_t millisec, bool withMilliSec, bool stripHours) {
     uint16_t msec;
     uint32_t seconds;
 
-
-    if (millisec == 0) {
-        m_timeinfo = rtc.getTimeStruct();
-        seconds = (m_timeinfo.tm_hour * 3600) + (m_timeinfo.tm_min * 60) + m_timeinfo.tm_sec;
-        msec = rtc.getMillis();  // current mSeconds (0-999)
-    }
-    else {
-        msec    = (millisec % 1000UL);
-        seconds = (millisec / 1000UL);
-    }
+    msec    = (millisec % 1000UL);
+    seconds = (millisec / 1000UL);
 
     uint8_t sec      = (seconds  % 60);
     uint8_t min      = (seconds / 60) % 60;
     uint8_t hour     = (seconds / 3600);
 
-    if (addMilliSec) {
+    if (withMilliSec) {
         snprintf(buffer, buffer_len, "%02d:%02d:%02d.%03lu", hour, min, sec, msec);
     }
     else {
@@ -77,6 +68,16 @@ const char* ESP32Logger::toHMS(char *buffer, uint8_t buffer_len, uint32_t millis
     return buffer;
 }
 
+const char* ESP32Logger::msecToHMS(uint32_t millisec, bool withMilliSec, bool stripHours) {
+    char buffer[12];
+    return msecToHMS(buffer, 15, millisec, withMilliSec, stripHours);
+}
+
+
+// const char* ESP32Logger::secToHMS(uint32_t seconds, bool stripHours) {
+//     char buffer[12];
+//     return msecToHMS(buffer, 15, seconds*1000UL, false, stripHours);
+// }
 
 
 /**
@@ -172,26 +173,29 @@ void ESP32Logger::write(const char* color, const char* tag, const char* file, co
 
     // Try to acquire the mutex. Wait indefinitely (portMAX_DELAY) if it's already locked.
     if (m_logMutex != NULL && xSemaphoreTake(m_logMutex, portMAX_DELAY) == pdTRUE) {
-        char nowTimeBUFFER[16];
-        char fnameBUFFER[30];
-        char logLineBUFFER[1000];
+        const uint8_t nowTIME_SIZE = 16;
+        const uint8_t fname_SIZE   = 30;
+        const uint16_t logLine_SIZE = 512;
+        char nowTimeBUFFER[nowTIME_SIZE+1];
+        char fnameBUFFER[fname_SIZE+1];
+        char logLineBUFFER[logLine_SIZE+1];
 
         va_list args;
         va_start(args, format);
-        int len = vsnprintf(logLineBUFFER, sizeof(logLineBUFFER), format, args);
+        int len = vsnprintf(logLineBUFFER, logLine_SIZE, format, args);
         va_end(args);
 
-        if (len >= sizeof(logLineBUFFER)) {
-            logLineBUFFER[sizeof(logLineBUFFER) - 1] = '\0';
+        if (len >= logLine_SIZE) {
+            logLineBUFFER[logLine_SIZE] = '\0';  // EOS
         }
 
         struct tm timeinfo = this_rtc.getTimeStruct();
-        snprintf(nowTimeBUFFER, sizeof(nowTimeBUFFER), "%02d:%02d:%02d", timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
+        snprintf(nowTimeBUFFER, nowTIME_SIZE, "%02d:%02d:%02d", timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
 
         Serial.printf("%s[%s][%s][%s] %s%s\n",
                       color,
                       nowTimeBUFFER,
-                      this->getFileLineInfo(fnameBUFFER, sizeof(fnameBUFFER)-1, file, function, line),
+                      this->getFileLineInfo(fnameBUFFER, fname_SIZE, file, function, line),
                       tag,
                       logLineBUFFER,
                       LogColors::RESET);
