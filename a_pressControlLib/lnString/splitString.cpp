@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 30-08-2025 10.57.54
+// Date .........: 10-09-2025 13.35.54
 */
 
 
@@ -139,7 +139,7 @@ char *getSubString(char *source, char *dest, char left, char right) {
         len=myTo - myFrom;
     }
    LOG_INFO("len: %d\n", len);
-    snprintf(dest, len+1, "%s", myFrom);
+    snprintf(dest, len+1, "%s", myFrom); // snprintf() scrive al massimo n-1 caratteri più il terminatore nul (\0) in dest.
    LOG_INFO("From: %s\n", dest);
     return dest;
 }

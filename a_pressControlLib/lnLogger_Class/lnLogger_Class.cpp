@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 12.01.17
+// Date .........: 10-09-2025 13.54.04
 */
 
 #include <Arduino.h>
@@ -55,10 +55,10 @@ const char* ESP32Logger::msecToHMS(char *buffer, uint8_t buffer_len, uint32_t mi
     uint8_t hour     = (seconds / 3600);
 
     if (withMilliSec) {
-        snprintf(buffer, buffer_len, "%02d:%02d:%02d.%03lu", hour, min, sec, msec);
+        snprintf(buffer, buffer_len, "%02d:%02d:%02d.%03lu", hour, min, sec, msec); // snprintf() scrive al massimo n-1 caratteri più il terminatore nul (\0) in dest.
     }
     else {
-        snprintf(buffer, buffer_len, "%02d:%02d:%02d", hour, min, sec);
+        snprintf(buffer, buffer_len, "%02d:%02d:%02d", hour, min, sec); // snprintf() scrive al massimo n-1 caratteri più il terminatore nul (\0) in dest.
     }
 
     if (stripHours && hour == 0)  {
@@ -91,14 +91,12 @@ const char* ESP32Logger::msecToHMS(uint32_t millisec, bool withMilliSec, bool st
 
 // per eventuali test:
 //     /media/loreto/LnDisk_SD_ext4/Filu/GIT-REPO/c-cpp/variEsempi/formatLogFname.cpp
-const char* ESP32Logger::getFileLineInfo(char *outBUFFER, const uint8_t outBUFFER_LEN, const char* file, const char* function, int line) {
+const char* ESP32Logger::getFileLineInfo(char *outBUFFER, const uint16_t outBUFFER_SIZE, const char* file, const char* function, int line) {
+    const uint16_t outBUFFER_LEN = outBUFFER_SIZE-1; // per sicurezza prendiamo l'ultimo byte per lo '\0'
 
     // Estrai il nome del file (senza percorso)
     const char *filename = strrchr(file, '/');
     filename = filename ? filename + 1 : file;
-    // snprintf(outBUFFER, outBUFFER_LEN, "%s", "ciao");
-
-    // return outBUFFER;
 
     const char paddingChar      = '.'; // carattere di padding
     const uint8_t func_len      = strlen(function);
@@ -106,8 +104,8 @@ const char* ESP32Logger::getFileLineInfo(char *outBUFFER, const uint8_t outBUFFE
     const uint8_t fixed_len     = func_len + line_len  + 1;
     const uint8_t file_len      = outBUFFER_LEN - fixed_len; // 1 per il terminatore '\0'
 
-    char lineBuff[line_len+1];
-    snprintf(lineBuff, line_len+1 ,":%03d", line);
+    char lineBuff[line_len+1]; // spazio per '\0'
+    snprintf(lineBuff, sizeof(lineBuff) ,":%03d", line); // snprintf() scrive al massimo n-1 caratteri più il terminatore nul (\0) in dest.
 
 
     int8_t j;
@@ -140,7 +138,7 @@ const char* ESP32Logger::getFileLineInfo(char *outBUFFER, const uint8_t outBUFFE
     for (j = 0; lineBuff[j] != '\0' && *ptr != '\0'; j++) {  // --- verifichiamo anche non superare il limite del buffer '\0' messo precedentemente
         *ptr++ = lineBuff[j];
     }
-   *ptr = '\0'; // terminatore della stringa (per sicurezza.....)
+   // *ptr = '\0'; // terminatore della stringa (per sicurezza.....)
 
 
     return outBUFFER;
@@ -173,29 +171,29 @@ void ESP32Logger::write(const char* color, const char* tag, const char* file, co
 
     // Try to acquire the mutex. Wait indefinitely (portMAX_DELAY) if it's already locked.
     if (m_logMutex != NULL && xSemaphoreTake(m_logMutex, portMAX_DELAY) == pdTRUE) {
-        const uint8_t nowTIME_SIZE = 16;
-        const uint8_t fname_SIZE   = 30;
-        const uint16_t logLine_SIZE = 512;
-        char nowTimeBUFFER[nowTIME_SIZE+1];
-        char fnameBUFFER[fname_SIZE+1];
-        char logLineBUFFER[logLine_SIZE+1];
+        // const uint8_t nowTIME_SIZE = 16;
+        // const uint8_t fname_SIZE   = 30;
+        // const uint16_t logLine_SIZE = 512;
+        char nowTimeBUFFER[16];
+        char fnameBUFFER[32];
+        char logLineBUFFER[512];
 
         va_list args;
         va_start(args, format);
-        int len = vsnprintf(logLineBUFFER, logLine_SIZE, format, args);
+        int len = vsnprintf(logLineBUFFER, sizeof(logLineBUFFER), format, args);
         va_end(args);
 
-        if (len >= logLine_SIZE) {
-            logLineBUFFER[logLine_SIZE] = '\0';  // EOS
+        if (len >= sizeof(logLineBUFFER)) {
+            logLineBUFFER[sizeof(logLineBUFFER)-1] = '\0';  // EOS
         }
 
         struct tm timeinfo = this_rtc.getTimeStruct();
-        snprintf(nowTimeBUFFER, nowTIME_SIZE, "%02d:%02d:%02d", timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
+        snprintf(nowTimeBUFFER, sizeof(nowTimeBUFFER), "%02d:%02d:%02d", timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec); // snprintf() scrive al massimo n-1 caratteri più il terminatore nul (\0) in dest.
 
         Serial.printf("%s[%s][%s][%s] %s%s\n",
                       color,
                       nowTimeBUFFER,
-                      this->getFileLineInfo(fnameBUFFER, fname_SIZE, file, function, line),
+                      this->getFileLineInfo(fnameBUFFER, sizeof(fnameBUFFER), file, function, line),
                       tag,
                       logLineBUFFER,
                       LogColors::RESET);

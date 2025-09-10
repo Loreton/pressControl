@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 07-09-2025 08.56.49
+// Date .........: 10-09-2025 13.34.37
 */
 
 
@@ -104,7 +104,7 @@ void LnTime_Class::update(void) {
 // Ottiene l'ora corrente formattata HH:MM:SS
 char *LnTime_Class::nowTime() {
     m_timeinfo = rtc.getTimeStruct();
-    snprintf(sharedTimeBUFFER, sizeof(sharedTimeBUFFER), "%02d:%02d:%02d", m_timeinfo.tm_hour, m_timeinfo.tm_min, m_timeinfo.tm_sec);
+    snprintf(sharedTimeBUFFER, sizeof(sharedTimeBUFFER), "%02d:%02d:%02d", m_timeinfo.tm_hour, m_timeinfo.tm_min, m_timeinfo.tm_sec); // snprintf() scrive al massimo n-1 caratteri più il terminatore nul (\0) in dest.
     return sharedTimeBUFFER;
 }
 
@@ -139,10 +139,10 @@ const char* LnTime_Class::toHMS(char *buffer, uint8_t buffer_len, uint32_t milli
     uint8_t hour     = (seconds / 3600);
 
     if (withMilliSec) {
-        snprintf(buffer, buffer_len, "%02d:%02d:%02d.%03lu", hour, min, sec, msec);
+        snprintf(buffer, buffer_len, "%02d:%02d:%02d.%03lu", hour, min, sec, msec); // snprintf() scrive al massimo n-1 caratteri più il terminatore nul (\0) in dest.
     }
     else {
-        snprintf(buffer, buffer_len, "%02d:%02d:%02d", hour, min, sec);
+        snprintf(buffer, buffer_len, "%02d:%02d:%02d", hour, min, sec); // snprintf() scrive al massimo n-1 caratteri più il terminatore nul (\0) in dest.
     }
 
     if (stripHours && hour == 0)  {

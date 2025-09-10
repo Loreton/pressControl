@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 09.44.45
+// Date .........: 10-09-2025 13.33.09
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -53,7 +53,7 @@ void TelegramBot_Class::startNewMessage(const char* format, ...) {
     char tempBuffer[MAX_TELEGRAM_MESSAGE_SIZE - strlen(tg->msg)];
     va_list args;
     va_start(args, format);
-    vsnprintf(tempBuffer, sizeof(tempBuffer), format, args);
+    vsnprintf(tempBuffer, sizeof(tempBuffer), format, args); // snprintf() scrive al massimo n-1 caratteri più il terminatore nul (\0) in dest.
     va_end(args);
     strcat(tg->msg, tempBuffer);
 }
@@ -92,7 +92,7 @@ void TelegramBot_Class::addFormattedString(const char* format, ...) {
         char tempBuffer[MAX_TELEGRAM_MESSAGE_SIZE - strlen(tg->msg)];
         va_list args;
         va_start(args, format);
-        vsnprintf(tempBuffer, sizeof(tempBuffer), format, args);
+        vsnprintf(tempBuffer, sizeof(tempBuffer), format, args); // snprintf() scrive al massimo n-1 caratteri più il terminatore nul (\0) in dest.
         va_end(args);
 
         strcat(tg->msg, tempBuffer);
@@ -172,7 +172,8 @@ bool TelegramBot_Class::send() {
     urlEncode(tg->msg, tg->encoded);
 
     // Costruisce l'URL completo con tutti i parametri
-    snprintf(tg->fullMsg, MAX_TELEGRAM_FULL_MSG_SIZE,
+
+    snprintf(tg->fullMsg, sizeof(tg->fullMsg), // snprintf() scrive al massimo n-1 caratteri più il terminatore nul (\0) in dest.
              "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&parse_mode=%s&text=%s",
              m_token, m_chatId, m_parseMode, tg->encoded);
 

@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 13.22.49
+// Date .........: 10-09-2025 13.39.14
 */
 
 
@@ -34,10 +34,11 @@ const char* LnTime_Class::msecToHMS(char *buffer, uint8_t buffer_len, uint32_t m
     uint8_t hour     = (seconds / 3600);
 
     if (withMilliSec) {
-        snprintf(buffer, buffer_len, "%02d:%02d:%02d.%03lu", hour, min, sec, msec);
+        snprintf(buffer, buffer_len, "%02d:%02d:%02d.%03lu", hour, min, sec, msec); // snprintf() scrive al massimo n-1 caratteri più il terminatore nul (\0) in dest.
     }
     else {
-        snprintf(buffer, buffer_len, "%02d:%02d:%02d", hour, min, sec);
+        snprintf(buffer, buffer_len, "%02d:%02d:%02d", hour, min, sec);  // snprintf() scrive al massimo n-1 caratteri più il terminatore nul (\0) in dest.
+
     }
 
     if (stripHours && hour == 0)  {
@@ -49,15 +50,15 @@ const char* LnTime_Class::msecToHMS(char *buffer, uint8_t buffer_len, uint32_t m
 
 
 const char* LnTime_Class::msecToHMS(uint32_t millisec, bool withMilliSec, bool stripHours) {
-    const char buff_SIZE = 16;
-    char buffer[buff_SIZE];
+    // const char buff_SIZE = 16;
+    char buffer[16];
     return msecToHMS(buffer, sizeof(buffer), millisec, withMilliSec, stripHours);
 }
 
 
 const char* LnTime_Class::secToHMS(uint32_t seconds, bool stripHours) {
-    const char buff_SIZE = 16;
-    char buffer[buff_SIZE];
+    // const char buff_SIZE = 16;
+    char buffer[16];
     return msecToHMS(buffer, sizeof(buffer), seconds*1000UL, false, stripHours);
 }
 

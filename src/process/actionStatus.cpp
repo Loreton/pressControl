@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 13.16.28
+// Date .........: 10-09-2025 14.12.19
 //
 
 
@@ -32,7 +32,7 @@ enum ActionState : uint8_t {
     pcOFF_pumpON,    // solo la pompa è acessa. Anomalo. Non dovrebbe mai accadere
     pcON_pumpOFF,    // rele esterno - PressControl ON (con il rele esterno)
     pcON_pumpON,     // rele esterno - Pressione lunga.
-    pumpAlarm,
+    PUMP_ALARM,
 } ;
 
 
@@ -123,7 +123,7 @@ void resetAlarmActions(bool syncBlinking) {
     magnetoTermicoRelay.off();
 
     if (syncBlinking) {
-        LOG_SPEC("Synching LED blinking"); // NO perchè compare ad ogni giro di loop
+        LOG_INFO("Synching LED blinking"); // NO perchè compare ad ogni giro di loop
         pressControlLED.reset(); // per sincronizzare i led
         pumpLED.reset(); // per sincronizzare i led
         activeBuzzer.blinking(100, 100, 3);
@@ -140,15 +140,13 @@ void resetAlarmActions(bool syncBlinking) {
 // #
 // #############################################################
 void chackActionStatus() {
-    static bool fIdleStatus = false;
+    static bool fIdleStatus = false; // flag per indicare situazione di tutto spento
 
     static  uint8_t  lastActionState = 1;
             uint32_t now = millis();
 
             bool    actionStateChanged;
             uint8_t actionState;
-
-    // LOG_SPEC("DUMP trap......");
 
     // -----------------------------------
     // ------ Action
@@ -157,10 +155,16 @@ void chackActionStatus() {
     pumpStatus  = pumpState.isPressed();
     pcStatus    = pressControl.isPressed();
 
-    actionState = (pcStatus*2) + (pumpStatus*1);
+    // azzeriamo l'allarme se la pompa si spegne
+    if (!pcStatus) {fPUMP_ALARM = false; }
+
     if (fPUMP_ALARM) {
-        actionState = pumpAlarm;
+        actionState = PUMP_ALARM;
+        LOG_ERROR("Pump Alarm status: %d", fPUMP_ALARM);
+    } else {
+        actionState = (pcStatus*2) + (pumpStatus*1);
     }
+
     actionStateChanged = (actionState == lastActionState) ? false : true;
 
 
@@ -168,7 +172,6 @@ void chackActionStatus() {
         lastActionState=actionState;
         LOG_INFO("actionState [%02d]: %7s %16s %5s", actionState, "RELAY", "PRESS-CONTROL", "PUMP");
         LOG_INFO("actionState [%02d]: %7s %16s %5s", actionState, str_OnOff[relayStatus], str_OnOff[pcStatus], str_OnOff[pumpStatus]);
-        LOG_SPEC("DUMP trap......");
     }
 
 
@@ -178,7 +181,7 @@ void chackActionStatus() {
     switch (actionState) {
 
         // status normale in attesa che si accenda il PC
-        case pumpAlarm:
+        case PUMP_ALARM:
             // LOG_SPEC("DUMP trap......");
             if ( f10SecondsModulo ) {
                 LOG_ERROR("Pump Alarm");
@@ -196,7 +199,7 @@ void chackActionStatus() {
 
         // status normale in attesa che si accenda il PC
         case pcOFF_pumpOFF:
-            LOG_SPEC("DUMP trap......");
+            // LOG_SPEC("DUMP trap......");
 
             if (relayStatus) {
                 // non può essere il rele on ed il PC off
@@ -214,7 +217,7 @@ void chackActionStatus() {
 
         // non può essere la pompa ON ed il PC off
         case pcOFF_pumpON:
-            LOG_SPEC("DUMP trap......");
+            // LOG_SPEC("DUMP trap......");
             if ( f10SecondsModulo ) LOG_ERROR("Pump ON quando il PC è OFF.");
             startAlarmActions();
             fIdleStatus=false;
@@ -222,7 +225,7 @@ void chackActionStatus() {
 
         // status normale in attesa che si accenda la pompa
         case pcON_pumpOFF:
-            LOG_SPEC("DUMP trap......");
+            // LOG_SPEC("DUMP trap......");
             // if ( fModulo15Seconds )  sendStatusToTelegram();
             sendStatusToTelegram(forceSend);
             pressControlLED.on(); // accendiamo fisso il LED
@@ -233,7 +236,7 @@ void chackActionStatus() {
 
         // status normale con la pompa accesa
         case pcON_pumpON:
-            LOG_SPEC("DUMP trap......");
+            // LOG_SPEC("DUMP trap......");
             // if ( fModulo15Seconds )  sendStatusToTelegram();
             sendStatusToTelegram(forceSend);
             pressControlLED.on();

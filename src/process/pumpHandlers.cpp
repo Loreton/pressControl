@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 12.06.23
+// Date .........: 10-09-2025 14.10.51
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -51,7 +51,6 @@ void pumpHandler(ButtonLongPress_Class *p) {
     passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 150, fDiscendent); // Scala ascendente, 150ms per nota)
     passiveBuzzer.waitForPulseEnding(3000);
     fPUMP_ALARM = false;
-
 }
 
 
@@ -93,6 +92,7 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
 
             default:
                 LOG_INFO("[%s] sono nel default", p->pinID());
+                // fPUMP_ALARM=false;
                 break;
         }
     }

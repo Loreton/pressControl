@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 12.11.16
+// Date .........: 10-09-2025 13.38.34
 */
 
 
@@ -57,7 +57,7 @@ void LnTime_Class::set_dhmCustomUpdate(bool customUpdate) {
 // Ottiene l'ora corrente formattata HH:MM:SS
 char *LnTime_Class::now() {
     m_timeinfo = rtc.getTimeStruct();
-    snprintf(sharedTimeBUFFER, sizeof(sharedTimeBUFFER)-1, "%02d:%02d:%02d", m_timeinfo.tm_hour, m_timeinfo.tm_min, m_timeinfo.tm_sec);
+    snprintf(sharedTimeBUFFER, sizeof(sharedTimeBUFFER), "%02d:%02d:%02d", m_timeinfo.tm_hour, m_timeinfo.tm_min, m_timeinfo.tm_sec); // snprintf() scrive al massimo n-1 caratteri più il terminatore nul (\0) in dest.
     return sharedTimeBUFFER;
 }
 
