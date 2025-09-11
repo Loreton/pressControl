@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 14.29.44
+// Date .........: 11-09-2025 07.02.50
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -27,36 +27,3 @@ void setTelegramTitle() {
 }
 
 
-// ######################################################
-// #
-// ######################################################
-// void sendNtpSynchedTelegramMessage_OK() {
-//     static bool ntpSynchedMessage = false;
-//     if (lnTime.isNtpSynched()) {
-//         if (!ntpSynchedMessage) {
-//             setTelegramTitle();
-//             myBot.addFormattedString("<b>NTP:</b> Synched\n");
-//             myBot.send();
-//             ntpSynchedMessage = true;
-//         }
-//     }
-//     else {
-//         ntpSynchedMessage = false;
-//     }
-// }// ######################################################
-// #
-// ######################################################
-// void sendNtpSynchedTelegramMessage() {
-//     static bool ntpSynchedMessage = false;
-//     // if (lnTime.isNtpSynched()) {
-//         // if (!ntpSynchedMessage) {
-//             setTelegramTitle();
-//             myBot.addFormattedString("<b>NTP:</b> Synched\n");
-//             myBot.send();
-//             ntpSynchedMessage = true;
-//         // }
-//     // }
-//     // else {
-//         // ntpSynchedMessage = false;
-//     // }
-// }

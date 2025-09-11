@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 11.45.31
+// Date .........: 11-09-2025 18.06.20
 //
 
 #include <Arduino.h>
@@ -130,7 +130,8 @@ uint32_t ButtonLongPress_Class::timeToNextThresholdLevel(void) {
     // ------------------------
     uint32_t elapsed = millis() - m_pressStartTime;
     // --- Controlla l'indice prima di accedere all'array m_gapThresholds
-    if (level > 0 && level < m_numThresholds) {
+    // if (level > 0 && level < m_numThresholds) {
+    if (isPressed()  && level < m_numThresholds) {
         if (level<m_numThresholds-1) {
             nextGAP_ms = m_pressThresholds[level+1]-m_pressThresholds[level];
         } else if (level>=m_numThresholds-1) {
@@ -153,7 +154,8 @@ uint32_t ButtonLongPress_Class::timeToMaxThresholdLevel(void) {
     uint8_t level = m_currentPressLevel; // per comodità
 
 
-    if (level > 0 && level < m_numThresholds) {
+    // if (level > 0 && level < m_numThresholds) {
+    if (isPressed() && level < m_numThresholds) {
         uint32_t elapsed = millis() - m_pressStartTime;
         remaining = m_pressThresholds[m_numThresholds-1] - elapsed; // calcoliamo sempre l'ultimo;
     }
@@ -192,14 +194,14 @@ void ButtonLongPress_Class::displayPressedLevel(bool forceDisplay) {
             // const char *hmsTime;
 
             //* display
-            LOG_NOTIFY("[%s]:", m_pinID);
-            LOG_INFO("  pressed Level   %d/%d", m_currentPressLevel, m_numThresholds);
+            LOG_INFO("[%s]: pressed Level %d/%d", m_pinID, m_currentPressLevel, m_numThresholds);
+            // LOG_INFO("  pressed Level   %d/%d", m_currentPressLevel, m_numThresholds);
             LOG_TRACE("  threshold[%d]:  %8lu", m_currentPressLevel,  m_pressThresholds[m_currentPressLevel]);
             LOG_TRACE("  threshold[%d]:  %8lu", m_currentPressLevel+1,  m_pressThresholds[m_currentPressLevel+1] );
 
-            LOG_INFO("  telapsed:       %8lu - [hms]: %s", m_elapsed,     lnLog.msecToHMS(m_elapsed));
-            LOG_INFO("  next threshold: %8lu - [hms]: %s", msToNextLevel, lnLog.msecToHMS(msToNextLevel));
-            LOG_INFO("  max  threshold: %8lu - [hms]: %s", msToMaxLevel,  lnLog.msecToHMS(msToMaxLevel));
+            LOG_TRACE("  elapsed:        %8lu - [hms]: %s", m_elapsed,     lnLog.msecToHMS(m_elapsed));
+            LOG_TRACE("  next threshold: %8lu - [hms]: %s", msToNextLevel, lnLog.msecToHMS(msToNextLevel));
+            LOG_TRACE("  max  threshold: %8lu - [hms]: %s", msToMaxLevel,  lnLog.msecToHMS(msToMaxLevel));
             #if 0
             char elapsedBUFFER[12];   lnLog.msecToHMS(elapsedBUFFER,   sizeof(elapsedBUFFER),   m_elapsed, false);
             char nextLevelBUFFER[12]; lnLog.msecToHMS(nextLevelBUFFER, sizeof(nextLevelBUFFER), msToNextLevel, false);

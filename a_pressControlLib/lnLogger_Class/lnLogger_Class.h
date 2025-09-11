@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 13.44.31
+// Date .........: 11-09-2025 14.28.33
 */
 
 #pragma once
@@ -36,6 +36,7 @@ class ESP32Logger { // Renamed from ESP32LoggerMutex for simplicity and clarity
     private:
         ESP32Time rtc;
         struct tm      m_timeinfo;
+        char sharedTimeBUFFER[16];
 
         bool m_mutexInitialized = false;
         SemaphoreHandle_t m_logMutex = NULL; // The mutex to protect log operations

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 14.43.27
+// Date .........: 11-09-2025 19.14.02
 //
 
 #include <Arduino.h>     // in testa anche per le definizioni dei type
@@ -79,11 +79,12 @@ void outPinController_Class::pulse(uint32_t duration, bool waitForEnding) {
     }
     if (waitForEnding) {
         waitForPulseEnding(duration*2);
+        off();
     }
 }
 
 
-void outPinController_Class::blinking(uint32_t onMs, uint32_t offMs, int8_t cycles) {
+void outPinController_Class::blinking(uint32_t onMs, uint32_t offMs, int8_t cycles, bool waitForEnding) {
     if (!m_blinking) {
         reset();
         m_blinking = true;
@@ -101,17 +102,21 @@ void outPinController_Class::blinking(uint32_t onMs, uint32_t offMs, int8_t cycl
     else {
         LOG_DEBUG("%s already blinking. ON: %lu ms, OFF: %lu ms (cycles: %d)", m_pinID,  m_onTime, m_offTime, m_numCycles);
     }
-
+    if (waitForEnding) {
+        uint32_t duration = (onMs + offMs) * cycles;
+        waitForPulseEnding(duration);
+        off();
+    }
 }
 
 // duty-cycle da 0.0 a 1.0
-void outPinController_Class::blinking_dutyCycle(uint32_t period, float duty_cycle, int8_t cycles) {
+void outPinController_Class::blinking_dutyCycle(uint32_t period, float duty_cycle, int8_t cycles, bool waitForEnding) {
     if (!m_blinking) {
         float dutyCycle = constrain(duty_cycle, 0.0, 1.0); // importanti i decimali per avere un float point
         uint32_t on_duration = period * dutyCycle;
         uint32_t off_duration = period - on_duration;
         LOG_DEBUG("%s duty_cycle: %.2f ON: %lums, OFF: %lums (cycles: %d)", m_pinID, dutyCycle, on_duration, off_duration, cycles);
-        blinking(on_duration, off_duration, cycles);
+        blinking(on_duration, off_duration, cycles, waitForEnding);
     }
 }
 

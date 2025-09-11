@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 19.28.44
+// Date .........: 11-09-2025 18.03.30
 //
 
 
@@ -24,62 +24,58 @@
 uint8_t relayStatus;
 uint8_t pumpStatus;
 uint8_t pcStatus;
+uint32_t pressControl_remaining;
+uint32_t pump_remaining;
+uint32_t relay_remainig;
 const bool fForce = true;
 
 // Definisce i possibili tipi di condizioni
 enum ActionState : uint8_t {
     pcOFF_pumpOFF = 0,      // tutto spento.
     pcOFF_pumpON,    // solo la pompa è acessa. Anomalo. Non dovrebbe mai accadere
-    pcON_pumpOFF,    // rele esterno - PressControl ON (con il rele esterno)
-    pcON_pumpON,     // rele esterno - Pressione lunga.
+    pressControlON_pumpOFF,    // rele esterno - PressControl ON (con il rele esterno)
+    pressControlON_pumpON,     // rele esterno - Pressione lunga.
     PUMP_ALARM,
 } ;
 
 
 
+void readDevicesStatus(void) {
+    relayStatus            = pressControlRelay.isActive();
+    pumpStatus             = pumpState.isPressed();
+    pcStatus               = pressControl.isPressed();
+
+    pressControl_remaining = pressControl.timeToMaxThresholdLevel();
+    pump_remaining         = pumpState.timeToMaxThresholdLevel();
+    relay_remainig         = pressControlRelay.remainingPulseTime();
+
+}
 
 
 // #############################################################
 // #
 // #############################################################
-void sendStatusToTelegram(bool force) {
-    // if ( f2MinutesModulo || force) {
-        // LOG_INFO("invio dello status su Telegram");
-        // #define TIME_STAMP_LENGTH 12
-        // static char buffer[TIME_STAMP_LENGTH+1];
-        // uint32_t pressControl_remaining = pressControl.timeToNextThresholdLevel();
-        // uint32_t pump_remaining         = pumpState.timeToNextThresholdLevel();
-        uint32_t pressControl_remaining = pressControl.timeToMaxThresholdLevel();
-        uint32_t pump_remaining         = pumpState.timeToMaxThresholdLevel();
-        uint32_t relay_remainig         = pressControlRelay.remainingPulseTime();
+void telegramSendDevicesStatus(void) {
+    readDevicesStatus();
 
-        setTelegramTitle();
-        myBot.addFormattedString("<b>Relay:</b> %s\n", str_OnOff[relayStatus]);
-        // if (relayStatus && relay_remainig != 0) {
-        if (relayStatus) {
-            // lnTime.msecToHMS(buffer, TIME_STAMP_LENGTH, relay_remainig, false);
-            // myBot.addFormattedString("\t<i>remainig: %s</i>\n", buffer);
-            myBot.addFormattedString("\t<i>remainig: %s</i>\n", lnTime.msecToHMS(relay_remainig));
-        }
+    setTelegramTitle();
 
-        myBot.addFormattedString("<b>PressControl:</b> %s\n", str_OnOff[pcStatus]);
-        // if (pcStatus && pressControl_remaining != 0) {
-        if (pcStatus) {
-            // lnTime.msecToHMS(buffer, TIME_STAMP_LENGTH, pressControl_remaining, false);
-            // myBot.addFormattedString("\t<i>remainig: %s</i>\n", buffer);
-            myBot.addFormattedString("\t<i>remainig: %s</i>\n", lnTime.msecToHMS(pressControl_remaining));
-        }
+    myBot.addFormattedString("<b>Relay:</b> %s\n", str_OnOff[relayStatus]);
+    if (relayStatus && relay_remainig != 0) {
+        myBot.addFormattedString("\t<i>remainig: %s</i>\n", lnTime.msecToHMS(relay_remainig));
+    }
 
-        myBot.addFormattedString("<b>PUMP:</b> %s\n", str_OnOff[pumpStatus]);
-        // if (pumpStatus && pump_remaining != 0) {
-        if (pumpStatus) {
-            // lnTime.msecToHMS(buffer, TIME_STAMP_LENGTH, pump_remaining, false);
-            // myBot.addFormattedString("\t<i>remainig: %s</i>\n", buffer);
-            myBot.addFormattedString("\t<i>remainig: %s</i>\n", lnTime.msecToHMS(pump_remaining));
-        }
+    myBot.addFormattedString("<b>PressControl:</b> %s\n", str_OnOff[pcStatus]);
+    if (pcStatus && pressControl_remaining != 0) {
+        myBot.addFormattedString("\t<i>remainig: %s</i>\n", lnTime.msecToHMS(pressControl_remaining));
+    }
 
-        myBot.send();
-    // }
+    myBot.addFormattedString("<b>PUMP:</b> %s\n", str_OnOff[pumpStatus]);
+    if (pumpStatus && pump_remaining != 0) {
+        myBot.addFormattedString("\t<i>remainig: %s</i>\n", lnTime.msecToHMS(pump_remaining));
+    }
+
+    myBot.send();
 }
 
 
@@ -156,11 +152,18 @@ void chackActionStatus() {
     // -----------------------------------
     // ------ Action
     // -----------------------------------
-    relayStatus = pressControlRelay.isActive();
-    pumpStatus  = pumpState.isPressed();
-    pcStatus    = pressControl.isPressed();
+    readDevicesStatus();
 
-    // azzeriamo l'allarme se la pompa si spegne
+    // relayStatus = pressControlRelay.isActive();
+    // pumpStatus  = pumpState.isPressed();
+    // pcStatus    = pressControl.isPressed();
+
+    // pressControl_remaining = pressControl.timeToMaxThresholdLevel();
+    // pump_remaining         = pumpState.timeToMaxThresholdLevel();
+    // relay_remainig         = pressControlRelay.remainingPulseTime();
+
+
+    // azzeriamo l'allarme se la pompa è spenta
     if (!pcStatus) {fPUMP_ALARM = false; }
 
     if (fPUMP_ALARM) {
@@ -174,12 +177,21 @@ void chackActionStatus() {
 
     bool forceSend = actionStateChanged ? true : false;
 
-    if ( actionStateChanged || f2MinutesModulo ) { // facciamo comunque il display ogni 15 secondi
+    // if ( actionStateChanged || modulo_05_minutes ) { // facciamo comunque il display ogni 15 secondi
+    if ( actionStateChanged  ) {
         lastActionState=actionState;
-        LOG_INFO("actionState [%02d]: %7s %16s %5s", actionState, "RELAY", "PRESS-CONTROL", "PUMP");
-        LOG_INFO("actionState [%02d]: %7s %16s %5s", actionState, str_OnOff[relayStatus], str_OnOff[pcStatus], str_OnOff[pumpStatus]);
+        // LOG_INFO("actionState [%02d]: %7s %16s %5s", actionState, "RELAY", "PRESS-CONTROL", "PUMP");
+        // LOG_INFO("actionState [%02d]: %7s %16s %5s", actionState, str_OnOff[relayStatus], str_OnOff[pcStatus], str_OnOff[pumpStatus]);
+        // LOG_INFO("actionState [%02d]: %12s", actionState, lnTime.msecToHMS(pressControl_remaining);
+
+
+        LOG_INFO("actionState [%02d]:", actionState);
+        LOG_INFO("   RELAY:         %-7s - remaining: %s", str_OnOff[relayStatus],    lnTime.msecToHMS(relay_remainig));
+        LOG_INFO("   PRESS-CONTROL: %-7s - remaining: %s", str_OnOff[pcStatus],       lnTime.msecToHMS(pressControl_remaining));
+        LOG_INFO("   PUMP:          %-7s - remaining: %s", str_OnOff[pumpStatus],     lnTime.msecToHMS(pump_remaining));
+
         LOG_INFO("invio dello status su Telegram");
-        sendStatusToTelegram(true);
+        telegramSendDevicesStatus();
     }
 
 
@@ -191,7 +203,7 @@ void chackActionStatus() {
         // status normale in attesa che si accenda il PC
         case PUMP_ALARM:
             // LOG_SPEC("DUMP trap......");
-            if ( f10SecondsModulo ) {
+            if ( modulo_10_seconds ) {
                 LOG_ERROR("Pump Alarm");
                 setTelegramTitle();
                 myBot.addFormattedString("<b>Pump Alarm!!!!:</b>\n");
@@ -211,7 +223,7 @@ void chackActionStatus() {
 
             if (relayStatus) {
                 // non può essere il rele on ed il PC off
-                if ( f10SecondsModulo ) LOG_ERROR("Relè OFF quando invece il PC è ON");
+                if ( modulo_10_seconds ) LOG_ERROR("Relè OFF quando invece il PC è ON");
                 startAlarmActions();
                 fIdleStatus=false;
             } else {
@@ -226,16 +238,16 @@ void chackActionStatus() {
         // non può essere la pompa ON ed il PC off
         case pcOFF_pumpON:
             // LOG_SPEC("DUMP trap......");
-            if ( f10SecondsModulo ) LOG_ERROR("Pump ON quando il PC è OFF.");
+            if ( modulo_10_seconds ) LOG_ERROR("Pump ON quando il PC è OFF.");
             startAlarmActions();
             fIdleStatus=false;
             break;
 
         // status normale in attesa che si accenda la pompa
-        case pcON_pumpOFF:
-            if ( fModulo15Seconds ) {
+        case pressControlON_pumpOFF:
+            if ( modulo_05_minutes ) {
                 LOG_INFO("invio dello status su Telegram");
-                sendStatusToTelegram(forceSend);
+                telegramSendDevicesStatus();
             }
             pressControlLED.on(); // accendiamo fisso il LED
             pumpLED.off();        // facciamoòp lampeggiare
@@ -244,10 +256,10 @@ void chackActionStatus() {
 
 
         // status normale con la pompa accesa
-        case pcON_pumpON:
-            if ( fModulo15Seconds ) {
+        case pressControlON_pumpON:
+            if ( modulo_02_minutes ) {
                 LOG_INFO("invio dello status su Telegram");
-                sendStatusToTelegram(forceSend);
+                telegramSendDevicesStatus();
             }
             pressControlLED.on();
             pumpLED.on();

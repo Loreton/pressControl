@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 15.35.21
+// Date .........: 11-09-2025 14.31.15
 //
 
 
@@ -78,12 +78,22 @@
         bool fAscendent                = true;
         bool fDiscendent               = false;
 
-        bool f3MinutesModulo          = false;
-        bool f10SecondsModulo          = false;
-        bool f30SecondsModulo          = false;
+        // bool f3MinutesModulo          = false;
+        // bool f10SecondsModulo          = false;
+        // bool f30SecondsModulo          = false;
+        // bool f2MinutesModulo           = false;
+        // bool f30MinutesModulo          = false;
 
-        bool f2MinutesModulo           = false;
-        bool f30MinutesModulo          = false;
+        bool modulo_10_seconds          = false;
+        bool modulo_30_seconds          = false;
+
+        bool modulo_02_minutes          = false;
+        bool modulo_03_minutes          = false;
+        bool modulo_05_minutes          = false;
+        bool modulo_30_minutes          = false;
+
+
+
 
         bool fonDay          = false;
         bool fonHour          = false;
@@ -137,12 +147,15 @@
         extern bool fAscendent;
         extern bool fDiscendent;
 
-        extern bool f3MinutesModulo;
-        extern bool f10SecondsModulo;
-        extern bool f30SecondsModulo;
 
-        extern bool f2MinutesModulo;
-        extern bool f30MinutesModulo;
+        extern bool modulo_10_seconds;
+        extern bool modulo_30_seconds;
+
+        extern bool modulo_02_minutes;
+        extern bool modulo_03_minutes;
+        extern bool modulo_05_minutes;
+        extern bool modulo_30_minutes;
+
         extern bool fonDay;
         extern bool fonHour;
         extern bool fonMinute;

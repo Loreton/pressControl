@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 02-09-2025 12.01.07
+// Date .........: 11-09-2025 07.01.38
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -18,40 +18,22 @@
 
 // Crea un'istanza della classe WiFiManager
 WiFiManager_Class myWiFiManager;
-LnTime_Class LnTime;
+LnTime_Class      LnTime;
 
-// ----------------------------------------------------
-// callBack on wifi events
-// ----------------------------------------------------
-void wifiConnectedCB(arduino_event_id_t event) {
-    if (event == ARDUINO_EVENT_WIFI_STA_GOT_IP) {
-        LOG_NOTIFY("CALLBACK_WIFI - CONNECTED");
-        // LnTime.initNTP();
-    }
-    if (event == ARDUINO_EVENT_WIFI_STA_DISCONNECTED) {
-        LOG_ERROR("CALLBACK_WIFI - DIS-CONNECTED");
-        // LnTime.setNtpInactive();
-    }
-}
+
 
 // #############################################################
 // # WIFI CALLBACK
 // #############################################################
-// void wifiConnectedCB(arduino_event_id_t event) {
-//     if (event == ARDUINO_EVENT_WIFI_STA_GOT_IP) {
-//         tgMsgLen = snprintf(tgMessageBuffer, TG_MSG_MAX_SIZE, "WIFI - CONNECTED");
-//         LOG_NOTIFY(tgMessageBuffer);
-//         sendMessageToTelegram(tgMessageBuffer);
-//         LnTime.initNTP();
-//     }
-//     if (event == ARDUINO_EVENT_WIFI_STA_DISCONNECTED) {
-//         tgMsgLen = snprintf(tgMessageBuffer, TG_MSG_MAX_SIZE, "WIFI - DISCONNECTED");
-//         LOG_ERROR(tgMessageBuffer);
-//         sendMessageToTelegram(tgMessageBuffer);
-//         LnTime.setNtpInactive();
+void wifiConnectedCB(arduino_event_id_t event) {
+    if (event == ARDUINO_EVENT_WIFI_STA_GOT_IP) {
+        LOG_NOTIFY("CALLBACK_WIFI - CONNECTED");
+    }
+    if (event == ARDUINO_EVENT_WIFI_STA_DISCONNECTED) {
+        LOG_ERROR("CALLBACK_WIFI - DIS-CONNECTED");
+    }
+}
 
-//     }
-// }
 
 
 

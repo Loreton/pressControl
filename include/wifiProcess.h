@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 01-09-2025 19.34.16
+// Date .........: 11-09-2025 07.00.29
 //
 
 #pragma once
@@ -33,6 +33,7 @@
 
 
     void wifiConnectedCB(arduino_event_id_t event);
-    void wifiConnectedAction(void);
-    void wifiConnectedMessage(void);
-    void wifiDisconnectedAction(void);
+    // void wifiConnectedAction(void);
+    void telegramWifiConnectedMessage(void);
+    // void wifiDisconnectedAction(void);
+    void wifiProcess(void);

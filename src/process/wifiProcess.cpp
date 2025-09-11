@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 14.30.15
+// Date .........: 11-09-2025 19.10.00
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -33,7 +33,8 @@ void wifiConnectedCB(arduino_event_id_t event) {
         if (!fWifiConnected) {
             fWifiConnected=true;
             // activeBuzzer.pulse(1000);
-            activeBuzzer.blinking(300, 200, 3);
+            activeBuzzer.blinking(300, 200, 3, true);
+            // activeBuzzer.waitForPulseEnding(2000);
         }
     }
 
@@ -41,22 +42,15 @@ void wifiConnectedCB(arduino_event_id_t event) {
         LOG_ERROR("WiFi_callBack - DISCONNECTED");
         if (!fWifiDisconnected) {
             fWifiConnected=false;
-            activeBuzzer.blinking(300, 200, 5);
+            activeBuzzer.blinking(300, 200, 5, true);
+            // activeBuzzer.waitForPulseEnding(3000);
+
         }
     }
     fWifiDisconnected = !fWifiConnected;
 }
 
 
-// ##########################################################################
-// #
-// ##########################################################################
-void wifiConnectedAction() {
-    if (fWifiConnected) {
-        fWifiConnected = false;
-        wifiConnectedMessage();
-    }
-}
 
 
 
@@ -64,8 +58,8 @@ void wifiConnectedAction() {
 // ##########################################################################
 // #
 // ##########################################################################
-void wifiConnectedMessage() {
-    LOG_NOTIFY("WiFi_connAction Connected!");
+void telegramWifiConnectedMessage() {
+    LOG_NOTIFY("WiFi Connected!");
     myBot.startNewMessage("<b>PressControl\nTime:</b> %s\n", lnTime.now());
     myBot.addFormattedString("<b>WiFi: </b> CONNECTED\n");
     myBot.addFormattedString("<b>SSID: </b> %s\n", WiFi.SSID().c_str() );
@@ -80,8 +74,6 @@ void wifiConnectedMessage() {
     }
 
     myBot.send();
-    #if 0
-    #endif
 }
 
 
@@ -89,15 +81,13 @@ void wifiConnectedMessage() {
 // ##########################################################################
 // #
 // ##########################################################################
-void wifiDisconnectedAction() {
-    // activeBuzzer.blinking(300, 200, 5); // Scala ascendente, 150ms per nota)
-    // passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 300, fDiscendent); // Scala ascendente, 150ms per nota)
-        // static uint32_t lastRestartRequest=0;
-    if ( fWifiDisconnected) { // 2 minuti
-        // if (myWiFiManager.restart()) {
-        // LOG_ERROR("WiFi_disconntedAction....nothing");
+void wifiProcess() {
+    if (fWifiConnected) {
+        fWifiConnected = false;
+        telegramWifiConnectedMessage();
+    }
+
+    if (fWifiDisconnected) {
         fWifiDisconnected = false;
     }
 }
-
-

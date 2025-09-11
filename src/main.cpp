@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 18.34.25
+// Date .........: 11-09-2025 19.02.10
 //
 
 
@@ -119,48 +119,54 @@ void loop() {
 
 
 
+    // -----------------------------------
+    // --- lettura degli status orari
+    // -----------------------------------
+    modulo_10_seconds = lnTime.onModulo(0, 0, 10);
+    modulo_30_seconds = lnTime.onModulo(0, 0, 30);
 
-    f10SecondsModulo = lnTime.onModulo(0, 0, 10);
-    f30SecondsModulo = lnTime.onModulo(0, 0, 30);
-    f2MinutesModulo  = lnTime.onModulo(0, 2, 0);
-    f3MinutesModulo  = lnTime.onModulo(0, 3, 0);
-    f30MinutesModulo = lnTime.onModulo(0, 30, 0);
+    modulo_02_minutes = lnTime.onModulo(0, 2, 0);
+    modulo_03_minutes = lnTime.onModulo(0, 3, 0);
+    modulo_05_minutes = lnTime.onModulo(0, 5, 0);
+    modulo_30_minutes = lnTime.onModulo(0, 30, 0);
 
-    // se metto queste chiamate allora devo impostare: lnTime.set_dhmCustomUpdate(true);
-    fonDay = lnTime.onDay();
-    fonHour = lnTime.onHour();
+
+
+    // -----------------------------------
+    // --- lnTime.set_dhmCustomUpdate(true) per aggiornare i valoi manualmente;
+    // -----------------------------------
+    fonDay    = lnTime.onDay();
+    fonHour   = lnTime.onHour();
     fonMinute = lnTime.onMinute();
 
 
 
+    // -----------------------------------
+    // --- controlla lo stato del WiFi
+    // -----------------------------------
+    wifiProcess();
 
-    // -----------------------------------
-    // --- SEND NTP sync message to Telegram
-    // -----------------------------------
-    if (fWifiConnected)    {wifiConnectedAction(); }
-    if (fWifiDisconnected) {wifiDisconnectedAction(); }
 
 
 
     if (fonMinute) {
         LOG_SPEC("On Minute");
-        // lnTime.checkNtpSynched(true);
     }
 
     if (fonHour) {
         if (myWiFiManager.isConnected()) {
-            LOG_NOTIFY("onHour Invio del WiFi status su Telegram.");
-            wifiConnectedMessage();
+            LOG_NOTIFY("Invio del WiFi status su Telegram (onHour)!");
+            telegramWifiConnectedMessage();
         }
     }
 
 
 
 
-    /**
-     * Leggi lo stato dello startButton
-     * Se è stato rilasciato
-    */
+    // -----------------------------------
+    // - Leggi lo stato dello startButton
+    // - Se è stato rilasciato
+    // -----------------------------------
     startButton.pressingLevelNotification(startButtonNotificationCB);
     if (startButton.read()) {
         startButtonHandler(&startButton);
@@ -169,29 +175,29 @@ void loop() {
 
 
 
-    /**
-     * Leggi lo stato della pompa
-     * Se è stato rilasciato
-    */
+    // -----------------------------------
+    // - Leggi lo stato della pompa
+    // - Se è stato rilasciato
+    // -----------------------------------
     pumpState.pressingLevelNotification(pumpNotificationCB);
     if (pumpState.read()) {
         pumpHandler(&pumpState);
     }
 
 
-    /**
-     * Leggi lo stato del pressControl
-     * Se è stato rilasciato
-    */
+    // -----------------------------------
+    // - Leggi lo stato del pressControl
+    // - Se è stato rilasciato
+    // -----------------------------------
     pressControl.pressingLevelNotification(pressControlNotificationCB);
     if (pressControl.read()) {
         pressControlHandler(&pressControl);
     }
 
 
-    // # ------------------------
-    // # controllo dello stato dei dispositivi
-    // # ------------------------ */
+    // ---------------------------
+    // - controllo dello stato dei dispositivi
+    // ---------------------------
     chackActionStatus();
 
     if (first_run) {

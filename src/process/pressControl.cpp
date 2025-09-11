@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 18.34.27
+// Date .........: 11-09-2025 17.43.12
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -100,7 +100,7 @@ void pressControlNotificationCB(ButtonLongPress_Class *p) {
             LOG_WARN("[%s] ALARM! max pressing level %d (time %lu) has been reached", p->pinID(), currentPressedLevel, currentPressedTime);
             lastBeepTime = millis();
 
-            if (f30SecondsModulo || firstAlarmTime) {
+            if (modulo_30_seconds || firstAlarmTime) {
                 LOG_WARN("[%s] ALARM! max pressing levela %d (time %lu) has been reached", p->pinID(), currentPressedLevel, currentPressedTime);
                 setTelegramTitle();
                 // char buffer[16];
@@ -116,6 +116,8 @@ void pressControlNotificationCB(ButtonLongPress_Class *p) {
              * dopo di che se ancora non funziona rimane allarme fisso con il buzzer
             */
             fPressControlTimeExausted = true;
+
+            // --- metto il controllo in modo da non spegnere il magnetoTermico se non serve
             if (pressControlRelay.isActive()) {
                 pressControlRelay.off(); // forziamo il relè
             }

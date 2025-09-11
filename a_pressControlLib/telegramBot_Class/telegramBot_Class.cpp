@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 13.33.09
+// Date .........: 11-09-2025 14.44.50
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -16,6 +16,7 @@
 #include <lnLogger_Class.h>
 #include "telegramBot_Class.h"
 
+HTTPClient http;
 
 
 TelegramBot_Class::TelegramBot_Class() {}
@@ -105,15 +106,15 @@ void TelegramBot_Class::addFormattedString(const char* format, ...) {
 void TelegramBot_Class::addTime(void) {
     struct tm timeinfo;
     if(!getLocalTime(&timeinfo)){
-      // Fallback in caso di errore
-      addString("TIME_ERROR");
+      addString("ERROR on getting TIME"); // Fallback in caso di errore
       return;
     }
+    // struct timeinfo = rtc.getTimeStruct();
 
-    char timeStr[9];
-
-    strftime(timeStr, sizeof(timeStr), "%H:%M:%S", &timeinfo);
-    addString(timeStr);
+    // char timeStr[10];
+    // strftime(timeStr, sizeof(timeStr), "%H:%M:%S", &timeinfo);
+    snprintf(m_timeStamp, sizeof(m_timeStamp), "%02d:%02d:%02d", timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
+    addString(m_timeStamp);
 }
 
 
@@ -123,14 +124,14 @@ void TelegramBot_Class::addTime(void) {
 void TelegramBot_Class::addTime(const char *prefix, const char *suffix) {
     struct tm timeinfo;
     if(!getLocalTime(&timeinfo)){
-      // Fallback in caso di errore
-      addString("TIME_ERROR");
+      addString("TIME_ERROR"); // Fallback in caso di errore
       return;
     }
 
 
     // prendiamo il tempo;
-    strftime(m_timeStamp, sizeof(m_timeStamp), "%H:%M:%S", &timeinfo);
+    snprintf(m_timeStamp, sizeof(m_timeStamp), "%02d:%02d:%02d", timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
+    // strftime(m_timeStamp, sizeof(m_timeStamp), "%H:%M:%S", &timeinfo);
     addFormattedString("%s%s%s", prefix, m_timeStamp, suffix);
 }
 
@@ -154,12 +155,13 @@ void TelegramBot_Class::setParseMode(const char* mode) {
 // # prima dell'invio passa il messaggio alla urlencode per convertice caratteri speciali
 // #######################################################################
 bool TelegramBot_Class::send() {
+    bool fStatus=false;
     if (WiFi.status() != WL_CONNECTED) {
         LOG_ERROR("WiFi non connected. Message non sent.");
         return false;
     }
 
-    HTTPClient http;
+    // HTTPClient http;
 
     // ---messsage
     uint16_t msg_len = strlen(tg->msg);
@@ -182,15 +184,40 @@ bool TelegramBot_Class::send() {
     int httpResponseCode = http.GET();
     http.end();
 
-    if (httpResponseCode > 0) {
-        // LOG_DEBUG("[http code: %d] - Messaggio inviato con successo: %s", httpResponseCode, tg->fullMsg);
-        LOG_DEBUG("[http code: %d] - Messaggio inviato con successo", httpResponseCode);
-        return true;
-    } else {
-        // LOG_ERROR("[http code: %d] - Invio messaggio fallito! %s", httpResponseCode, tg->fullMsg);
-        LOG_ERROR("[http code: %d] - Invio messaggio fallito! %s", httpResponseCode);
-        return false;
+    LOG_DEBUG("[http code: %d]", httpResponseCode);
+
+    switch (httpResponseCode) {
+        // Informational responses (100 – 199)
+        // Successful responses (200 – 299)
+        // Redirection messages (300 – 399)
+        // Client error responses (400 – 499)
+        // Server error responses (500 – 599)
+
+        case 200 ...299:
+            LOG_INFO("[%d] - Send OK", httpResponseCode);
+            fStatus=true;
+            break;
+
+        case 300 ...399:
+            LOG_INFO("[%d] - Redirect....????", httpResponseCode);
+            fStatus=true;
+            break;
+
+        case 400 ...499:
+            LOG_ERROR("[%d] - Bad Request! Client Error URL: %s (size: %ld)", httpResponseCode, tg->fullMsg, strlen(tg->fullMsg));
+            break;
+
+        case 500 ...599:
+            LOG_ERROR("[%d] - Bad Request! Server Error URL: %s (size: %ld)", httpResponseCode, tg->fullMsg, strlen(tg->fullMsg));
+            break;
+
+        default:
+            LOG_ERROR("[%d] - Send ERROR! URL: %s (size: %ld)", httpResponseCode, tg->fullMsg, strlen(tg->fullMsg));
+            break;
     }
+
+
+    return fStatus;
 }
 
 

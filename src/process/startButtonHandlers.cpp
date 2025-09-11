@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 14.40.15
+// Date .........: 11-09-2025 17.41.41
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -29,7 +29,7 @@ void startButtonHandler(ButtonLongPress_Class *p) {
 
         case PRESSED_LEVEL_1:
             LOG_INFO("[%s] toggling....", pressControlRelay.pinID());
-            pressControlRelay.toggle();
+            pressControlRelay.toggle(35*60*1000UL); // 35 minuti
             break;
 
 

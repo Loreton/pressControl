@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 09-09-2025 18.15.10
+// Date .........: 11-09-2025 14.33.21
 //
 
 #pragma once
@@ -42,3 +42,4 @@
     //* - telegramProcess
     void setTelegramTitle(void);
     void sendNtpSynchedTelegramMessage(void);
+    void telegramSendDevicesStatus(void);

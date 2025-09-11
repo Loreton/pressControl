@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 09-09-2025 17.53.46
+// Date .........: 11-09-2025 14.24.37
 */
 
 #pragma once
@@ -50,7 +50,8 @@
 
             // Funzioni inline (getter)
             inline bool     maxLevelReached(void) const { return m_maxLevelReachedAndNotified; }
-            inline bool     isPressed(void) const { return (m_buttonPressed == m_pressedLogicLevel); }
+            inline bool     isPressed1(void) const { return (m_buttonPressed == m_pressedLogicLevel); }
+            inline bool     isPressed(void) const { return (digitalRead(m_pin) == m_pressedLogicLevel); }
             inline uint8_t  currentPressLevel(void) const { return m_currentPressLevel; }
             inline uint8_t  lastPressedLevel(void) const { return m_lastPressedLevel; }
             inline uint8_t  maxLevels(void) const { return m_numThresholds; }

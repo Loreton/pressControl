@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 13.54.04
+// Date .........: 11-09-2025 14.29.00
 */
 
 #include <Arduino.h>
@@ -44,11 +44,9 @@ void ESP32Logger::init() { // Changed class name
 // ################################################################
 
 const char* ESP32Logger::msecToHMS(char *buffer, uint8_t buffer_len, uint32_t millisec, bool withMilliSec, bool stripHours) {
-    uint16_t msec;
-    uint32_t seconds;
 
-    msec    = (millisec % 1000UL);
-    seconds = (millisec / 1000UL);
+    uint16_t msec    = (millisec % 1000UL);
+    uint32_t seconds = (millisec / 1000UL);
 
     uint8_t sec      = (seconds  % 60);
     uint8_t min      = (seconds / 60) % 60;
@@ -69,8 +67,7 @@ const char* ESP32Logger::msecToHMS(char *buffer, uint8_t buffer_len, uint32_t mi
 }
 
 const char* ESP32Logger::msecToHMS(uint32_t millisec, bool withMilliSec, bool stripHours) {
-    char buffer[12];
-    return msecToHMS(buffer, 15, millisec, withMilliSec, stripHours);
+    return msecToHMS(sharedTimeBUFFER, sizeof(sharedTimeBUFFER), millisec, withMilliSec, stripHours);
 }
 
 

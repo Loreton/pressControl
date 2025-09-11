@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 18.48.55
+// Date .........: 11-09-2025 14.33.38
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -87,7 +87,7 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
                 myBot.send();
 
                 // LOG_INFO("invio dello status su Telegram");
-                sendStatusToTelegram(true);
+                telegramSendDevicesStatus();
                 activeBuzzer.pulse(phase_beep_duration);
                 break;
 
@@ -109,7 +109,7 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
             lastBeepTime = millis();
             fPUMP_ALARM = true;
         }
-        if (f30SecondsModulo || firstAlarmTime) {
+        if (modulo_30_seconds || firstAlarmTime) {
             // LOG_WARN("[%s] ALARM! max pressed level %d reached", p->pinID(), cpLevel);
             LOG_WARN("[%s] ALARM! Pump is ON for too much time: %s (level %d reached)", p->pinID(), levelMS, cpLevel);
             setTelegramTitle();
