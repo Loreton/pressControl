@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-09-2025 07.55.39
+// Date .........: 12-09-2025 08.29.52
 //
 
 
@@ -32,10 +32,8 @@
             // Metodi per la preparazione del messaggio
             void clearMessage();
             void startNewMessage(const char* format, ...);
-            void addLine(const char* text);
             void addString(const char* text);
             void addFormattedString(const char* format, ...);
-            void addTime(void);
             void addTime(const char *prefix=nullptr, const char *suffix=nullptr); // nel centro mettiamo TIME
             void setParseMode(const char* mode);
 
