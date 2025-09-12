@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-09-2025 13.36.28
+// Date .........: 12-09-2025 17.04.09
 //
 
 
@@ -55,6 +55,8 @@ void setup() {
     delay(2000);
     lnLog.init();
 
+    initFlags();
+
     LOG_INFO("%s", pressControlVersion);
 
     // ------ WiFi
@@ -86,7 +88,7 @@ void setup() {
 }
 
 
-bool    first_run=true;
+// bool    first_run=true;
 
 
 // #############################################################
@@ -123,22 +125,22 @@ void loop() {
     // -----------------------------------
     // --- lettura degli status orari
     // -----------------------------------
-    modulo_10_seconds = lnTime.onModulo(0, 0, 10);
-    modulo_30_seconds = lnTime.onModulo(0, 0, 30);
+    f.modulo_10_seconds = lnTime.onModulo(0, 0, 10);
+    f.modulo_30_seconds = lnTime.onModulo(0, 0, 30);
 
-    modulo_02_minutes = lnTime.onModulo(0, 2, 0);
-    modulo_03_minutes = lnTime.onModulo(0, 3, 0);
-    modulo_05_minutes = lnTime.onModulo(0, 5, 0);
-    modulo_30_minutes = lnTime.onModulo(0, 30, 0);
+    f.modulo_02_minutes = lnTime.onModulo(0, 2, 0);
+    f.modulo_03_minutes = lnTime.onModulo(0, 3, 0);
+    f.modulo_05_minutes = lnTime.onModulo(0, 5, 0);
+    f.modulo_30_minutes = lnTime.onModulo(0, 30, 0);
 
 
 
     // -----------------------------------
     // --- lnTime.set_dhmCustomUpdate(true) per aggiornare i valoi manualmente;
     // -----------------------------------
-    fonDay    = lnTime.onDay();
-    fonHour   = lnTime.onHour();
-    fonMinute = lnTime.onMinute();
+    f.onDay    = lnTime.onDay();
+    f.onHour   = lnTime.onHour();
+    f.onMinute = lnTime.onMinute();
 
 
     // -----------------------------------
@@ -152,11 +154,12 @@ void loop() {
     chackActionStatus();
 
 
-    if (fonMinute) {
+    if (f.onMinute) {
         LOG_SPEC("On Minute");
     }
 
-    if (fonHour) {
+    if (f.onHour) {
+        LOG_SPEC("On Hour");
         if (myWiFiManager.isConnected()) {
             LOG_NOTIFY("Invio del WiFi status su Telegram (onHour)!");
             telegramWifiConnectedMessage();
@@ -200,8 +203,9 @@ void loop() {
 
 
 
-    if (first_run) {
-        first_run=false;
+    // if (first_run) {
+    if (f.firstRun) {
+        f.firstRun=false;
         LOG_INFO("fine primo loop....");
     }
 

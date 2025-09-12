@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-09-2025 13.59.16
+// Date .........: 12-09-2025 16.09.52
 */
 
 
@@ -32,8 +32,8 @@
     // #pragma message(VAR_NAME_VALUE(LORETO))
     // #pragma message(VAR_NAME_VALUE(LORETO2))
 
-    #define ON  true
-    #define OFF false
+    // #define ON  true
+    // #define OFF false
 
     #ifdef __I_AM_MAIN_CPP__
         const char PROGMEM *str_action[]     = {"released", "pressed"};

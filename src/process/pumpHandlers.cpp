@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 11-09-2025 14.33.38
+// Date .........: 12-09-2025 16.21.36
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -48,9 +48,9 @@ void pumpHandler(ButtonLongPress_Class *p) {
 
     // Dopo aver processato i dati, li resettiamo per la prossima pressione.
     p->reset();
-    passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 150, fDiscendent); // Scala ascendente, 150ms per nota)
+    passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 150, f.discendent); // Scala ascendente, 150ms per nota)
     passiveBuzzer.waitForPulseEnding(3000);
-    fPUMP_ALARM = false;
+    f.PUMP_ALARM = false;
 }
 
 
@@ -59,7 +59,6 @@ void pumpHandler(ButtonLongPress_Class *p) {
 
 
 void pumpNotificationCB(ButtonLongPress_Class *p) {
-    static bool firstAlarmTime = true;
     static uint32_t lastBeepTime;
     uint32_t phase_beep_duration;
     uint8_t cpLevel = p->currentPressLevel();
@@ -69,7 +68,7 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
         switch (cpLevel) {
             case PRESSED_LEVEL_1:
                 LOG_NOTIFY("%s has been detected ON", p->pinID());
-                passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 150, fAscendent); // Scala ascendente, 150ms per nota)
+                passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 150, f.ascendent); // Scala ascendente, 150ms per nota)
                 break;
 
             case PRESSED_LEVEL_2:
@@ -93,7 +92,7 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
 
             default:
                 LOG_INFO("[%s] sono nel default", p->pinID());
-                // fPUMP_ALARM=false;
+                // f.PUMP_ALARM=false;
                 break;
         }
     }
@@ -107,20 +106,20 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
         if (millis() - lastBeepTime >= ALARM_BEEP_INTERVAL) {
             activeBuzzer.pulse(1000); // NON serve per questo pulstante
             lastBeepTime = millis();
-            fPUMP_ALARM = true;
+            f.PUMP_ALARM = true;
         }
-        if (modulo_30_seconds || firstAlarmTime) {
+        if (f.modulo_30_seconds || f.firstPumpAlarmTime) {
             // LOG_WARN("[%s] ALARM! max pressed level %d reached", p->pinID(), cpLevel);
             LOG_WARN("[%s] ALARM! Pump is ON for too much time: %s (level %d reached)", p->pinID(), levelMS, cpLevel);
             setTelegramTitle();
             myBot.addFormattedString("<b>pump ALARM!:</b> max pressed level %d reached", cpLevel);
             myBot.addFormattedString("<b>pump ALARM!:</b>\nPump ON for too much time:\n<b>reached level:</b> %d\n<b>ON time:</b> %s", cpLevel, levelMS);
             myBot.send();
-            firstAlarmTime=false;
+            f.firstPumpAlarmTime=false;
         }
     }
     else {
-        firstAlarmTime=true;
+        f.firstPumpAlarmTime=true;
     }
 
 

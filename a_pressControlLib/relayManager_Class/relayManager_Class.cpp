@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 11-09-2025 18.19.48
+// Date .........: 12-09-2025 17.17.17
 //
 
 #include <Arduino.h> // Necessario per funzioni come pinMode, digitalWrite, millis
@@ -119,7 +119,7 @@ void RelayManager_Class::startPulse(uint32_t duration_ms) {
         m_pulseDuration = (duration_ms != 0) ? duration_ms : m_defaultPulseTime;
         m_pulseActive = true;
 
-        hmsTime = lnTime.msecToHMS(m_pulseDuration, true);
+        hmsTime = lnTime.msecToHMS(m_pulseDuration);
         LOG_NOTIFY("[%s] Pulsetime started! [%s]", m_pinID, hmsTime);
         if (m_relayState != m_On) {
             on();
@@ -127,7 +127,7 @@ void RelayManager_Class::startPulse(uint32_t duration_ms) {
     }
     #if LOG_MODULE_LEVEL >= LOG_LEVEL_TRACE
     else {
-        hmsTime = lnTime.msecToHMS(m_pulseDuration - (millis() - m_pulseStartTime), true);
+        hmsTime = lnTime.msecToHMS(m_pulseDuration - (millis() - m_pulseStartTime));
         LOG_TRACE("[%s] Pulsetime already active [%s]", m_pinID, hmsTime);
     }
     #endif

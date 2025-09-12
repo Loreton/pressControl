@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 11-09-2025 17.41.41
+// Date .........: 12-09-2025 17.22.00
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -23,7 +23,7 @@
 // void startButtonHandler(uint8_t pressedLevel) {
 void startButtonHandler(ButtonLongPress_Class *p) {
     uint8_t pressedLevel = p->currentPressLevel();
-    LOG_NOTIFY("[%s] - PRESSED_LEVEL: %d", startButton.pinID(), pressedLevel);
+    LOG_INFO("[%s] - PRESSED_LEVEL: %d", startButton.pinID(), pressedLevel);
 
     switch (pressedLevel) {
 
@@ -54,7 +54,7 @@ void startButtonNotificationCB(ButtonLongPress_Class *p) {
 
     // LOG_NOTIFY("%s checking...", p->pinID());
     if (p->pressedLevelHasChanged()) {
-        LOG_NOTIFY("%s level has been changed", p->pinID());
+        LOG_NOTIFY("[%s] level has been changed to: %d", p->pinID(), p->currentPressLevel());
 
         phase_beep_duration = 300 * p->currentPressLevel(); // arbitrario....
         switch (p->currentPressLevel()) {

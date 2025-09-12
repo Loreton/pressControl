@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-09-2025 11.38.09
+// Date .........: 12-09-2025 17.20.13
 //
 
 
@@ -27,7 +27,7 @@ uint8_t pcStatus;
 uint32_t pressControl_remaining;
 uint32_t pump_remaining;
 uint32_t relay_remainig;
-const bool fForce = true;
+// const bool fForce = true;
 
 // Definisce i possibili tipi di condizioni
 enum ActionState : uint8_t {
@@ -88,13 +88,12 @@ void startAlarmActions() {
     static uint32_t last_relay_time;
     // LOG_SPEC("DUMP trap......");
 
-    if (! fPUMP_ALARM) {
+    if (!f.PUMP_ALARM) {
         LOG_ERROR("Starting Recovery Actions for Alarm."); // NO perchè compare ad ogni giro di loop
         last_relay_time=0;
     }
 
-    fPUMP_ALARM=true;
-    // fSyncBlinking=false;
+    f.PUMP_ALARM=true;
     pressControlRelay.off();
     // tentiamo di togliere corrente al magnetotermico
     if ( (millis() - last_relay_time) > relay_delay ) {
@@ -104,7 +103,6 @@ void startAlarmActions() {
     pumpLED.blinking(300, 300);
     pressControlLED.blinking(300, 300);
     activeBuzzer.blinking(300, 300);
-    // actionStateDisplayInterval=2000; // ogni due secondi
 }
 
 
@@ -114,9 +112,9 @@ void startAlarmActions() {
 // #
 // #############################################################
 void resetAlarmActions(bool syncBlinking) {
-    if (fPUMP_ALARM) {
+    if (f.PUMP_ALARM) {
         LOG_INFO("Recovery Actions for Alarm Ended."); // NO perchè compare ad ogni giro di loop
-        fPUMP_ALARM=false;
+        f.PUMP_ALARM=false;
     }
     activeBuzzer.reset();
     passiveBuzzer.myNoTone();
@@ -127,8 +125,7 @@ void resetAlarmActions(bool syncBlinking) {
         LOG_INFO("Synching LED blinking"); // NO perchè compare ad ogni giro di loop
         pressControlLED.reset(); // per sincronizzare i led
         pumpLED.reset(); // per sincronizzare i led
-        activeBuzzer.blinking(100, 100, 3);
-        activeBuzzer.waitForPulseEnding(1000);
+        activeBuzzer.blinking(100, 100, 3, f.waitForPulseEnding);
 
     }
     pressControlLED.blinking(1000, 3000);
@@ -153,14 +150,14 @@ void chackActionStatus() {
     // ------ Action
     // -----------------------------------
     readDevicesStatus();
-    if (!pcStatus) {fPUMP_ALARM = false; }
+    if (!pcStatus) {f.PUMP_ALARM = false; }
 
 
 
     // azzeriamo l'allarme se la pompa è spenta
-    if (fPUMP_ALARM) {
+    if (f.PUMP_ALARM) {
         actionState = PUMP_ALARM;
-        LOG_ERROR("Pump Alarm status: %d", fPUMP_ALARM);
+        LOG_ERROR("Pump Alarm status: %d", f.PUMP_ALARM);
     } else {
         actionState = (pcStatus*2) + (pumpStatus*1);
     }
@@ -169,7 +166,7 @@ void chackActionStatus() {
 
     bool forceSend = actionStateChanged ? true : false;
 
-    // if ( actionStateChanged || modulo_05_minutes ) { // facciamo comunque il display ogni 15 secondi
+    // if ( actionStateChanged || f.modulo_05_minutes ) { // facciamo comunque il display ogni 15 secondi
     if ( actionStateChanged  ) {
         lastActionState=actionState;
         // LOG_INFO("actionState [%02d]: %7s %16s %5s", actionState, "RELAY", "PRESS-CONTROL", "PUMP");
@@ -177,7 +174,7 @@ void chackActionStatus() {
         // LOG_INFO("actionState [%02d]: %12s", actionState, lnTime.msecToHMS(pressControl_remaining);
 
 
-        LOG_INFO("actionState [%02d]:", actionState);
+        LOG_NOTIFY("actionState [%02d]:", actionState);
         LOG_INFO("   RELAY:         %-7s - remaining: %s", str_OnOff[relayStatus],    lnTime.msecToHMS(relay_remainig));
         LOG_INFO("   PRESS-CONTROL: %-7s - remaining: %s", str_OnOff[pcStatus],       lnTime.msecToHMS(pressControl_remaining));
         LOG_INFO("   PUMP:          %-7s - remaining: %s", str_OnOff[pumpStatus],     lnTime.msecToHMS(pump_remaining));
@@ -195,7 +192,7 @@ void chackActionStatus() {
         // status normale in attesa che si accenda il PC
         case PUMP_ALARM:
             // LOG_SPEC("DUMP trap......");
-            if ( modulo_10_seconds ) {
+            if ( f.modulo_10_seconds ) {
                 LOG_ERROR("Pump Alarm");
                 setTelegramTitle();
                 myBot.addFormattedString("<b>Pump Alarm!!!!:</b>\n");
@@ -215,7 +212,7 @@ void chackActionStatus() {
 
             if (relayStatus) {
                 // non può essere il rele on ed il PC off
-                if ( modulo_10_seconds ) LOG_ERROR("Relè OFF quando invece il PC è ON");
+                if ( f.modulo_10_seconds ) LOG_ERROR("Relè OFF quando invece il PC è ON");
                 startAlarmActions();
                 fIdleStatus=false;
             } else {
@@ -230,14 +227,14 @@ void chackActionStatus() {
         // non può essere la pompa ON ed il PC off
         case pressControlOFF_pumpON:
             // LOG_SPEC("DUMP trap......");
-            if ( modulo_10_seconds ) LOG_ERROR("Pump ON quando il PC è OFF.");
+            if ( f.modulo_10_seconds ) LOG_ERROR("Pump ON quando il PC è OFF.");
             startAlarmActions();
             fIdleStatus=false;
             break;
 
         // status normale in attesa che si accenda la pompa
         case pressControlON_pumpOFF:
-            if ( modulo_05_minutes ) {
+            if ( f.modulo_05_minutes ) {
                 LOG_INFO("invio dello status su Telegram");
                 telegramSendDevicesStatus();
             }
@@ -249,7 +246,7 @@ void chackActionStatus() {
 
         // status normale con la pompa accesa
         case pressControlON_pumpON:
-            if ( modulo_02_minutes ) {
+            if ( f.modulo_02_minutes ) {
                 LOG_INFO("invio dello status su Telegram");
                 telegramSendDevicesStatus();
             }

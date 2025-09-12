@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 11-09-2025 17.43.12
+// Date .........: 12-09-2025 16.46.38
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -56,7 +56,6 @@ void pressControlHandler(ButtonLongPress_Class *p) {
 
 void pressControlNotificationCB(ButtonLongPress_Class *p) {
     static uint32_t lastBeepTime;
-    static bool firstAlarmTime = true;
     uint32_t phase_beep_duration;
     uint8_t currentPressedLevel = p->currentPressLevel();
 
@@ -66,8 +65,7 @@ void pressControlNotificationCB(ButtonLongPress_Class *p) {
         switch (currentPressedLevel) {
             case PRESSED_LEVEL_1:
                 LOG_NOTIFY("%s has been detected ON", p->pinID());
-                activeBuzzer.blinking(300, 200, 3);
-                activeBuzzer.waitForPulseEnding(2000);
+                activeBuzzer.blinking(300, 200, 3, f.waitForPulseEnding);
                 break;
 
             case PRESSED_LEVEL_2:
@@ -100,13 +98,13 @@ void pressControlNotificationCB(ButtonLongPress_Class *p) {
             LOG_WARN("[%s] ALARM! max pressing level %d (time %lu) has been reached", p->pinID(), currentPressedLevel, currentPressedTime);
             lastBeepTime = millis();
 
-            if (modulo_30_seconds || firstAlarmTime) {
+            if (f.modulo_30_seconds || f.firstPressControlAlarmTime) {
                 LOG_WARN("[%s] ALARM! max pressing levela %d (time %lu) has been reached", p->pinID(), currentPressedLevel, currentPressedTime);
                 setTelegramTitle();
                 // char buffer[16];
                 myBot.addFormattedString("<b>PressControl ALARM!:</b>\n\t pressing time %s expired", lnTime.msecToHMS(currentPressedTime) );
                 myBot.send();
-                firstAlarmTime=false;
+                f.firstPressControlAlarmTime=false;
             }
 
 
@@ -115,7 +113,7 @@ void pressControlNotificationCB(ButtonLongPress_Class *p) {
              * ...e se non funziona chiudiamo il magnetotermico
              * dopo di che se ancora non funziona rimane allarme fisso con il buzzer
             */
-            fPressControlTimeExausted = true;
+            f.PressControlTimeExausted = true;
 
             // --- metto il controllo in modo da non spegnere il magnetoTermico se non serve
             if (pressControlRelay.isActive()) {
@@ -128,7 +126,7 @@ void pressControlNotificationCB(ButtonLongPress_Class *p) {
         }
     }
     else {
-        firstAlarmTime=true;
+        f.firstPressControlAlarmTime=true;
     }
 
 

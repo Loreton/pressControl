@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 11-09-2025 19.14.02
+// Date .........: 12-09-2025 16.49.19
 //
 
 #include <Arduino.h>     // in testa anche per le definizioni dei type
@@ -89,6 +89,8 @@ void outPinController_Class::blinking(uint32_t onMs, uint32_t offMs, int8_t cycl
         reset();
         m_blinking = true;
 
+        if (cycles == 0) {waitForEnding = false; } // se cycles == 0 allora non consideriamo il wait altrimenti sarebbe infinito
+
         // se m_numCycles == 0 (default) il numero di cicli è infinito fino al reset
         m_numCycles = (cycles > 0) ? cycles : 0;
         m_temporaryBlinking = (cycles > 0) ? true : false;
@@ -102,6 +104,7 @@ void outPinController_Class::blinking(uint32_t onMs, uint32_t offMs, int8_t cycl
     else {
         LOG_DEBUG("%s already blinking. ON: %lu ms, OFF: %lu ms (cycles: %d)", m_pinID,  m_onTime, m_offTime, m_numCycles);
     }
+
     if (waitForEnding) {
         uint32_t duration = (onMs + offMs) * cycles;
         waitForPulseEnding(duration);

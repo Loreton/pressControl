@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 11-09-2025 19.10.00
+// Date .........: 12-09-2025 17.22.55
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -33,7 +33,7 @@ void wifiConnectedCB(arduino_event_id_t event) {
         if (!fWifiConnected) {
             fWifiConnected=true;
             // activeBuzzer.pulse(1000);
-            activeBuzzer.blinking(300, 200, 3, true);
+            activeBuzzer.blinking(300, 200, 3, f.waitForPulseEnding);
             // activeBuzzer.waitForPulseEnding(2000);
         }
     }
@@ -42,7 +42,7 @@ void wifiConnectedCB(arduino_event_id_t event) {
         LOG_ERROR("WiFi_callBack - DISCONNECTED");
         if (!fWifiDisconnected) {
             fWifiConnected=false;
-            activeBuzzer.blinking(300, 200, 5, true);
+            activeBuzzer.blinking(300, 200, 5, f.waitForPulseEnding);
             // activeBuzzer.waitForPulseEnding(3000);
 
         }
@@ -59,7 +59,7 @@ void wifiConnectedCB(arduino_event_id_t event) {
 // #
 // ##########################################################################
 void telegramWifiConnectedMessage() {
-    LOG_NOTIFY("WiFi Connected!");
+    // LOG_NOTIFY("WiFi Connected!");
     myBot.startNewMessage("<b>PressControl\nTime:</b> %s\n", lnTime.now());
     myBot.addFormattedString("<b>WiFi: </b> CONNECTED\n");
     myBot.addFormattedString("<b>SSID: </b> %s\n", WiFi.SSID().c_str() );

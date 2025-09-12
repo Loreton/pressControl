@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-09-2025 14.28.47
+// Date .........: 12-09-2025 17.11.23
 //
 
 //--- flags.cpp
@@ -23,14 +23,35 @@ void printFlags() {
     Serial.printf("modulo_03_minutes:        %u\n", f.modulo_03_minutes);
     Serial.printf("modulo_05_minutes:        %u\n", f.modulo_05_minutes);
     Serial.printf("modulo_30_minutes:        %u\n", f.modulo_30_minutes);
-    Serial.printf("fonDay:                   %u\n", f.fonDay);
-    Serial.printf("fonHour:                  %u\n", f.fonHour);
-    Serial.printf("fonMinute:                %u\n", f.fonMinute);
-    Serial.printf("fonSecond:                %u\n", f.fonSecond);
+    Serial.printf("fonDay:                   %u\n", f.onDay);
+    Serial.printf("fonHour:                  %u\n", f.onHour);
+    Serial.printf("fonMinute:                %u\n", f.onMinute);
+    Serial.printf("fonSecond:                %u\n", f.onSecond);
 }
 
 
 void initFlags() {
-    f.ON       = 1;
-    f.firstRun = 1;
+    f.ON                         = 1;
+    // f.OFF                        = 0;
+    f.firstRun                   = 1;
+    // f.PressControlTimeExausted   = 0;
+    // f.PUMP_ALARM                 = 0;
+    f.ascendent                  = 1;
+    // f.discendent                 = 0;
+    // f.modulo_10_seconds          = 0;
+    // f.modulo_30_seconds          = 0;
+    // f.modulo_02_minutes          = 0;
+    // f.modulo_03_minutes          = 0;
+    // f.modulo_05_minutes          = 0;
+    // f.modulo_30_minutes          = 0;
+    // f.onDay                      = 0;
+    // f.onHour                     = 0;
+    // f.onMinute                   = 0;
+    // f.onSecond                   = 0;
+    f.force                      = 1;
+    // f.noForce                    = 0;
+    f.firstPumpAlarmTime         = 1;
+    f.firstPressControlAlarmTime = 1;
+    f.waitForPulseEnding         = 1;
+    f.withMilliSec               = 1;
 }

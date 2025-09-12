@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 09.34.47
+// Date .........: 12-09-2025 17.15.37
 //
 
 
@@ -125,7 +125,7 @@ void WiFiManager_Class::update() {
     if ( (WiFi.status() != WL_CONNECTED || scanElapsed > m_scanInterval ) && !m_scanning) {
         if ( scanElapsed > m_scanInterval) {
             if (WiFi.status() != WL_CONNECTED)   {LOG_ERROR("WiFi - connessione non attiva."); }
-            if (scanElapsed > m_scanInterval)    {LOG_NOTIFY("WiFi - Tempo di scansione periodica (%lu ms) scaduto", m_scanInterval); }
+            if (scanElapsed > m_scanInterval)    {LOG_NOTIFY("WiFi - Intervallo di scansione periodica (%s) raggiunto", lnLog.msecToHMS(m_scanInterval, fMilliSecondsTrue)); }
             connectToBestNetwork();
             m_lastScanTime = millis();
         }
@@ -176,9 +176,9 @@ void WiFiManager_Class::processScanResults(int networks) {
         return;
     }
 
-    LOG_INFO("reti trovate: %d", networks);
 
     // Cerca la rete migliore tra quelle configurate
+    LOG_NOTIFY("reti trovate: %d", networks);
     for (int i = 0; i < networks; ++i) {
         LOG_INFO("  %d: SSID: %-12s BSSID: %s (%d dBm)", i + 1, WiFi.SSID(i).c_str(), WiFi.BSSIDstr(i).c_str(), WiFi.RSSI(i));
         for (int j = 0; j < m_networkCount; ++j) {
@@ -198,9 +198,10 @@ void WiFiManager_Class::processScanResults(int networks) {
     if ( (currRSSI == 0) || (bestRSSI - currRSSI >= 10) ) {
         connectToSSID(bestNetworkIndex);
     } else {
-        LOG_NOTIFY("currSSID: %-12s (%d dBm)", WiFi.SSID().c_str(), WiFi.RSSI());
-        LOG_NOTIFY("newSSID:  %-12s (%d dBm)", WiFi.SSID(bestNetworkIndex), bestRSSI);  // il nome lo prelevo dalla mia struttura che è char*
-        LOG_NOTIFY("RSSI gap is less than 10. Mantaining current SSID");
+        LOG_NOTIFY("WiFi Status");
+        LOG_INFO("   currSSID: %-12s (%d dBm)", WiFi.SSID().c_str(), WiFi.RSSI());
+        LOG_INFO("   newSSID:  %-12s (%d dBm)", WiFi.SSID(bestNetworkIndex), bestRSSI);  // il nome lo prelevo dalla mia struttura che è char*
+        LOG_INFO("   RSSI gap is less than 10. Mantaining current SSID");
     }
 }
 

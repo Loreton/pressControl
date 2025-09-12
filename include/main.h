@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-09-2025 13.59.23
+// Date .........: 12-09-2025 16.35.51
 //
 
 
@@ -9,6 +9,7 @@
     // #include "a_decisionalVariables.h"
     #include    "functionPrototypes.h" // per functions protoype
     #include    "pin_Definitions.h"
+    #include    "flags.h"
 
 
     // #include    <lnLogger_Class.h>
@@ -71,31 +72,6 @@
         RelayManager_Class               pressControlRelay;
         RelayManager_Class               magnetoTermicoRelay;
 
-        bool fPressControlTimeExausted = false; // indica che il pressContro ha terminato il tempo massiomo di ON
-        bool fPUMP_ALARM               = false;
-        bool fAscendent                = true;
-        bool fDiscendent               = false;
-
-        // bool f3MinutesModulo          = false;
-        // bool f10SecondsModulo          = false;
-        // bool f30SecondsModulo          = false;
-        // bool f2MinutesModulo           = false;
-        // bool f30MinutesModulo          = false;
-
-        bool modulo_10_seconds          = false;
-        bool modulo_30_seconds          = false;
-        bool modulo_02_minutes          = false;
-        bool modulo_03_minutes          = false;
-        bool modulo_05_minutes          = false;
-        bool modulo_30_minutes          = false;
-
-
-
-
-        bool fonDay          = false;
-        bool fonHour          = false;
-        bool fonMinute          = false;
-        bool fonSecond          = false;
 
         // Frequenze per una scala Do Maggiore (approssimate)
         int C_major_scale[] = {
@@ -137,27 +113,8 @@
         extern RelayManager_Class     pressControlRelay;
         extern RelayManager_Class     magnetoTermicoRelay;
 
-        extern bool                   fPressControlTimeExausted; // indica che il pressContro ha terminato il tempo massiomo di ON
         extern int C_major_scale[];
         extern int  C_major_num_notes;
-        extern bool fPUMP_ALARM;
-        extern bool fAscendent;
-        extern bool fDiscendent;
-
-
-        extern bool modulo_10_seconds;
-        extern bool modulo_30_seconds;
-
-        extern bool modulo_02_minutes;
-        extern bool modulo_03_minutes;
-        extern bool modulo_05_minutes;
-        extern bool modulo_30_minutes;
-
-        extern bool fonDay;
-        extern bool fonHour;
-        extern bool fonMinute;
-        extern bool fonSecond;
-
 
 
         extern TelegramBot_Class      myBot;
