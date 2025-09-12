@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 09-09-2025 15.44.45
+// Date .........: 12-09-2025 07.55.39
 //
 
 
@@ -15,6 +15,7 @@
     #define MAX_TELEGRAM_FULL_MSG_SIZE  600
 
     typedef struct {
+        uint16_t pos = 0; // posizione da scrivere nel msg[]
         char msg[MAX_TELEGRAM_MESSAGE_SIZE + 1];
         char encoded[MAX_TELEGRAM_ENCODED_SIZE + 1];
         char fullMsg[MAX_TELEGRAM_FULL_MSG_SIZE + 1];
@@ -29,13 +30,13 @@
             void init(const char* token, const char* chatId, const char *parseMode="HTML");
 
             // Metodi per la preparazione del messaggio
-            void clearMessage(const char* title=nullptr);
+            void clearMessage();
             void startNewMessage(const char* format, ...);
             void addLine(const char* text);
             void addString(const char* text);
             void addFormattedString(const char* format, ...);
             void addTime(void);
-            void addTime(const char *prefix, const char *suffix); // nel centro mettiamo TIME
+            void addTime(const char *prefix=nullptr, const char *suffix=nullptr); // nel centro mettiamo TIME
             void setParseMode(const char* mode);
 
             // Metodo per l'invio

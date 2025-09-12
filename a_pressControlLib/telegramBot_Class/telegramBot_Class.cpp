@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 11-09-2025 14.44.50
+// Date .........: 12-09-2025 08.22.41
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -12,7 +12,7 @@
 // ---------------------------------
 // lnLibrary headers files
 // ---------------------------------
-// #define  LOG_MODULE_LEVEL LOG_LEVEL_DEBUG
+#define  LOG_MODULE_LEVEL LOG_LEVEL_DEBUG
 #include <lnLogger_Class.h>
 #include "telegramBot_Class.h"
 
@@ -21,7 +21,7 @@ HTTPClient http;
 
 TelegramBot_Class::TelegramBot_Class() {}
 
-
+char tempBuffer[MAX_TELEGRAM_MESSAGE_SIZE];
 
 void TelegramBot_Class::init(const char* token, const char* chatId, const char *parseMode) {
     m_token = token;
@@ -38,11 +38,9 @@ void TelegramBot_Class::init(const char* token, const char* chatId, const char *
 // # aggiunge una linea in formato HTML quindi aggiunge uno %0a finale
 // # forse posso eliminarla mettendo lo '\n' nella addString()
 // #######################################################################
-void TelegramBot_Class::clearMessage(const char* title) {
+void TelegramBot_Class::clearMessage(void) {
     tg->msg[0] = '\0';
-    if (title) {
-        addString(title);
-    }
+    tg->pos = 0;
 }
 
 // #######################################################################
@@ -51,36 +49,31 @@ void TelegramBot_Class::clearMessage(const char* title) {
 // #######################################################################
 void TelegramBot_Class::startNewMessage(const char* format, ...) {
     tg->msg[0] = '\0';
-    char tempBuffer[MAX_TELEGRAM_MESSAGE_SIZE - strlen(tg->msg)];
+    // char tempBuffer[MAX_TELEGRAM_MESSAGE_SIZE - strlen(tg->msg)];
+    // char tempBuffer[MAX_TELEGRAM_MESSAGE_SIZE];
     va_list args;
     va_start(args, format);
     vsnprintf(tempBuffer, sizeof(tempBuffer), format, args); // snprintf() scrive al massimo n-1 caratteri più il terminatore nul (\0) in dest.
     va_end(args);
-    strcat(tg->msg, tempBuffer);
+    // strcat(tg->msg, tempBuffer);
+    uint16_t max_size = MAX_TELEGRAM_MESSAGE_SIZE - tg->pos;
+    tg->pos += snprintf(tg->msg + tg->pos, max_size, "%s", tempBuffer);
+    LOG_INFO("pos: %d msg: %s", tg->pos, tg->msg);
 }
 
 
-// #######################################################################
-// # aggiunge una linea in formato HTML quindi aggiunge uno %0a finale
-// # forse posso eliminarla mettendo lo '\n' nella addString()
-// #######################################################################
-void TelegramBot_Class::addLine(const char* text) {
-    if (strlen(tg->msg) + strlen(text) + 2 < MAX_TELEGRAM_MESSAGE_SIZE) { // +2 per il '\n' e il terminatore
-        if (strlen(tg->msg) > 0) {
-            strcat(tg->msg, "\n"); // Aggiunge il carattere di newline
-        }
-        strcat(tg->msg, text);
-    }
-}
 
 
 // #######################################################################
 // # stringa
 // #######################################################################
 void TelegramBot_Class::addString(const char* text) {
-    if (strlen(tg->msg) + strlen(text) < MAX_TELEGRAM_MESSAGE_SIZE) {
-        strcat(tg->msg, text);
-    }
+    // if (strlen(tg->msg) + strlen(text) < MAX_TELEGRAM_MESSAGE_SIZE) {
+    //     strcat(tg->msg, text);
+    // }
+    uint16_t max_size = MAX_TELEGRAM_MESSAGE_SIZE - tg->pos;
+    tg->pos += snprintf(tg->msg + tg->pos, max_size, "%s", text);
+    LOG_INFO("pos: %d msg: %s", tg->pos, tg->msg);
 }
 
 
@@ -89,33 +82,32 @@ void TelegramBot_Class::addString(const char* text) {
 // # stringa in formato printf()
 // #######################################################################
 void TelegramBot_Class::addFormattedString(const char* format, ...) {
-    if (strlen(tg->msg) < MAX_TELEGRAM_MESSAGE_SIZE) {
-        char tempBuffer[MAX_TELEGRAM_MESSAGE_SIZE - strlen(tg->msg)];
+    // if (strlen(tg->msg) < MAX_TELEGRAM_MESSAGE_SIZE) {
+        // char tempBuffer[MAX_TELEGRAM_MESSAGE_SIZE];
         va_list args;
         va_start(args, format);
         vsnprintf(tempBuffer, sizeof(tempBuffer), format, args); // snprintf() scrive al massimo n-1 caratteri più il terminatore nul (\0) in dest.
         va_end(args);
 
-        strcat(tg->msg, tempBuffer);
-    }
+        // strcat(tg->msg, tempBuffer);
+        uint16_t max_size = MAX_TELEGRAM_MESSAGE_SIZE - tg->pos;
+        tg->pos += snprintf(tg->msg + tg->pos, max_size, "%s", tempBuffer);
+        LOG_INFO("pos: %d msg: %s", tg->pos, tg->msg);
+    // }
 }
 
 // #######################################################################
 // # add "HH:MM:SS"
 // #######################################################################
-void TelegramBot_Class::addTime(void) {
-    struct tm timeinfo;
-    if(!getLocalTime(&timeinfo)){
-      addString("ERROR on getting TIME"); // Fallback in caso di errore
-      return;
-    }
-    // struct timeinfo = rtc.getTimeStruct();
-
-    // char timeStr[10];
-    // strftime(timeStr, sizeof(timeStr), "%H:%M:%S", &timeinfo);
-    snprintf(m_timeStamp, sizeof(m_timeStamp), "%02d:%02d:%02d", timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
-    addString(m_timeStamp);
-}
+// void TelegramBot_Class::addTime(void) {
+//     struct tm timeinfo;
+//     if(!getLocalTime(&timeinfo)){
+//       addString("ERROR on getting TIME"); // Fallback in caso di errore
+//       return;
+//     }
+//     snprintf(m_timeStamp, sizeof(m_timeStamp), "%02d:%02d:%02d", timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
+//     addString(m_timeStamp);
+// }
 
 
 // #######################################################################
@@ -131,7 +123,6 @@ void TelegramBot_Class::addTime(const char *prefix, const char *suffix) {
 
     // prendiamo il tempo;
     snprintf(m_timeStamp, sizeof(m_timeStamp), "%02d:%02d:%02d", timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
-    // strftime(m_timeStamp, sizeof(m_timeStamp), "%H:%M:%S", &timeinfo);
     addFormattedString("%s%s%s", prefix, m_timeStamp, suffix);
 }
 
@@ -144,7 +135,7 @@ void TelegramBot_Class::addTime(const char *prefix, const char *suffix) {
 // # set parse mode
 // #######################################################################
 void TelegramBot_Class::setParseMode(const char* mode) {
-    strncpy(m_parseMode, mode, sizeof(m_parseMode) - 1);
+    strncpy(m_parseMode, mode, sizeof(m_parseMode));
     m_parseMode[sizeof(m_parseMode) - 1] = '\0';
 }
 
@@ -153,13 +144,17 @@ void TelegramBot_Class::setParseMode(const char* mode) {
 
 // #######################################################################
 // # prima dell'invio passa il messaggio alla urlencode per convertice caratteri speciali
+// # comunque ripulisce il messaggio     tg->msg[0] = '\0';
 // #######################################################################
 bool TelegramBot_Class::send() {
     bool fStatus=false;
     if (WiFi.status() != WL_CONNECTED) {
         LOG_ERROR("WiFi non connected. Message non sent.");
+        tg->msg[0] = '\0'; // clear message
         return false;
     }
+    LOG_INFO("pos: %d msg: %s", tg->pos, tg->msg);
+
 
     // HTTPClient http;
 
@@ -175,14 +170,15 @@ bool TelegramBot_Class::send() {
 
     // Costruisce l'URL completo con tutti i parametri
 
-    snprintf(tg->fullMsg, sizeof(tg->fullMsg), // snprintf() scrive al massimo n-1 caratteri più il terminatore nul (\0) in dest.
-             "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&parse_mode=%s&text=%s",
-             m_token, m_chatId, m_parseMode, tg->encoded);
+    // snprintf() scrive al massimo n-1 caratteri più il terminatore nul (\0) in dest.
+    snprintf(tg->fullMsg, sizeof(tg->fullMsg), "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&parse_mode=%s&text=%s",
+                                                m_token, m_chatId, m_parseMode, tg->encoded);
 
     LOG_DEBUG("Sending msg: [%ld]: %s", strlen(tg->fullMsg), tg->fullMsg);
     http.begin(tg->fullMsg);
     int httpResponseCode = http.GET();
     http.end();
+    tg->msg[0] = '\0'; // clear message
 
     LOG_DEBUG("[http code: %d]", httpResponseCode);
 

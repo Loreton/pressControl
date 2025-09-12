@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 11-09-2025 18.03.30
+// Date .........: 11-09-2025 19.48.30
 //
 
 
@@ -31,8 +31,8 @@ const bool fForce = true;
 
 // Definisce i possibili tipi di condizioni
 enum ActionState : uint8_t {
-    pcOFF_pumpOFF = 0,      // tutto spento.
-    pcOFF_pumpON,    // solo la pompa è acessa. Anomalo. Non dovrebbe mai accadere
+    pressControlOFF_pumpOFF = 0,      // tutto spento.
+    pressControlOFF_pumpON,    // solo la pompa è acessa. Anomalo. Non dovrebbe mai accadere
     pressControlON_pumpOFF,    // rele esterno - PressControl ON (con il rele esterno)
     pressControlON_pumpON,     // rele esterno - Pressione lunga.
     PUMP_ALARM,
@@ -218,7 +218,7 @@ void chackActionStatus() {
 
 
         // status normale in attesa che si accenda il PC
-        case pcOFF_pumpOFF:
+        case pressControlOFF_pumpOFF:
             // LOG_SPEC("DUMP trap......");
 
             if (relayStatus) {
@@ -236,7 +236,7 @@ void chackActionStatus() {
 
 
         // non può essere la pompa ON ed il PC off
-        case pcOFF_pumpON:
+        case pressControlOFF_pumpON:
             // LOG_SPEC("DUMP trap......");
             if ( modulo_10_seconds ) LOG_ERROR("Pump ON quando il PC è OFF.");
             startAlarmActions();

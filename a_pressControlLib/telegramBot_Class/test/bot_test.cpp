@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 16-08-2025 17.50.25
+// Date .........: 12-09-2025 08.24.20
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -12,14 +12,15 @@
 // #include "WiFiManager_Class.h"
 
 
-#include "../telegramBot_Class.h"
+#include <lnLogger_Class.h>
+// #include "../telegramBot_Class.h"
+#include "telegramBot_Class.h"
 
 
 
 #define __I_AM_MAIN_CPP__   // in testa a tutto
 #include "wifiManager_ssid_credentials.h"
 #include "@ln_esp32_telegram_credentials.h"
-
 
 
 
@@ -33,6 +34,7 @@ TelegramBot_Class myBot;
 
 void setup() {
     Serial.begin(115200);
+    lnLog.init();
 
     WiFi.begin(ssid, password);
     while (WiFi.status() != WL_CONNECTED) {
@@ -50,12 +52,12 @@ void loop() {
     myBot.clearMessage();
     myBot.setParseMode("HTML");
 
-    myBot.addFormattedString("<b>ESP32</b> - ");
-    myBot.addTime();
-    myBot.addLine("PC relay: <b>OFF</b>");
-    myBot.addLine("PC status: <b>OFF</b>");
-    myBot.addLine("PUMP status: <b>OFF</b>");
-    myBot.addFormattedString("\n<b>ESP32</b> - %s %d", "ciao", 54);
+    // myBot.addFormattedString("<b>ESP32</b> - ");
+    myBot.addTime("<b>ESP32</b> - ", "\n");
+    myBot.addString("PC relay: <b>OFF</b>\n");
+    myBot.addString("PC status: <b>OFF</b>\n");
+    myBot.addString("PUMP status: <b>OFF</b>\n");
+    myBot.addFormattedString("<b>ESP32</b> - %s %d", "ciao", 54);
 
     if (myBot.send()) {
         Serial.println("Messaggio inviato con successo!");
