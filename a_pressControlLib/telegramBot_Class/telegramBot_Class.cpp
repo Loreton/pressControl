@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-09-2025 08.38.17
+// Date .........: 12-09-2025 11.49.29
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -12,7 +12,7 @@
 // ---------------------------------
 // lnLibrary headers files
 // ---------------------------------
-#define  LOG_MODULE_LEVEL LOG_LEVEL_DEBUG
+// #define  LOG_MODULE_LEVEL LOG_LEVEL_DEBUG
 #include <lnLogger_Class.h>
 #include "telegramBot_Class.h"
 
@@ -21,15 +21,7 @@ HTTPClient http;
 char tempBuffer[MAX_TELEGRAM_MESSAGE_SIZE];
 
 
-
-
-
-
 TelegramBot_Class::TelegramBot_Class() {}
-
-
-
-
 
 // #######################################################################
 // # init
@@ -64,7 +56,7 @@ void TelegramBot_Class::startNewMessage(const char* format, ...) {
 
     uint16_t max_size = MAX_TELEGRAM_MESSAGE_SIZE - tg->pos;
     tg->pos += snprintf(tg->msg + tg->pos, max_size, "%s", tempBuffer);
-    LOG_INFO("pos: %d msg: %s", tg->pos, tg->msg);
+    // LOG_INFO("pos: %d msg: %s", tg->pos, tg->msg);
 }
 
 
@@ -76,7 +68,7 @@ void TelegramBot_Class::startNewMessage(const char* format, ...) {
 void TelegramBot_Class::addString(const char* text) {
     uint16_t max_size = MAX_TELEGRAM_MESSAGE_SIZE - tg->pos;
     tg->pos += snprintf(tg->msg + tg->pos, max_size, "%s", text);
-    LOG_INFO("pos: %d msg: %s", tg->pos, tg->msg);
+    // LOG_INFO("pos: %d msg: %s", tg->pos, tg->msg);
 }
 
 
@@ -93,7 +85,7 @@ void TelegramBot_Class::addFormattedString(const char* format, ...) {
     // strcat(tg->msg, tempBuffer);
     uint16_t max_size = MAX_TELEGRAM_MESSAGE_SIZE - tg->pos;
     tg->pos += snprintf(tg->msg + tg->pos, max_size, "%s", tempBuffer);
-    LOG_INFO("pos: %d msg: %s", tg->pos, tg->msg);
+    // LOG_INFO("pos: %d msg: %s", tg->pos, tg->msg);
 }
 
 
@@ -123,7 +115,7 @@ void TelegramBot_Class::addTime(const char *prefix, const char *suffix) {
 // #######################################################################
 void TelegramBot_Class::setParseMode(const char* mode) {
     snprintf(m_parseMode, sizeof(m_parseMode), "%s", mode);
-    LOG_INFO("parseMode: %s", m_parseMode);
+    // LOG_INFO("parseMode: %s", m_parseMode);
 }
 
 
@@ -140,7 +132,7 @@ bool TelegramBot_Class::send() {
         tg->msg[0] = '\0'; // clear message
         return false;
     }
-    LOG_INFO("pos: %d msg: %s", tg->pos, tg->msg);
+    // LOG_INFO("pos: %d msg: %s", tg->pos, tg->msg);
 
 
     // HTTPClient http;

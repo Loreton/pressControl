@@ -1,20 +1,19 @@
 # pressControl
 
-TEST:
+
     test01:
         - premere startButton
         - si deve attivare il relè
-        - dopo 1 minuto si deve spegnere
+        - dopo 30 minuti si deve spegnere
 
-    ripetere test01:
-        - premere startButton
-        - si deve attivare il relè
-        - dopo 1 minuto si deve spegnere
 
     test02:
+        note:
+            L'effetto è identico al test01 solo che il pressecontrol viene acceso da un relè esterno
+            il circuito si comporta allo stesso modo in quanto monitora gli eventi.
         - portare a massa il pressControlPin
         - si deve attivare lo status del PressControl
-        - dopo 1 minuto deve andare in allarme e fare il toggling del magnetotermico per tentare di spegnere il PressControl.
+        - dopo 30 minuti deve andare in allarme e fare il toggling del magnetotermico per tentare di spegnere il PressControl.
         - rimuovere il pressControl_pin da massa
 
     test03:
@@ -22,8 +21,8 @@ TEST:
         - si deve attivare il relè
         - portare a massa il pumpState_pin
         - ci saranno i vari livelli di beep per la pompa
-        - dopo 1 minuto si deve spegenre il rele ma deve andare in allarme e fare il toggling del magnetotermico
-           per tentare di spegnere il PressControl in quanto la pompa risulta ancora accesa
+        - dopo 4 minuti si deve spegenre il rele ma deve andare in allarme, la pompa risulta accesa con il jumper,
+            e viene attivato il secondo relè il quale togli alimentazione al magnetotermico esterno per tentare di spegnere il PressControl
         - rimuovere il pumpState_pin da massa
 
 
@@ -64,6 +63,18 @@ hardware:
 
 
 
+Accensione:
+    vengono mana mano provati i vari device, buzzer, led
+
+PressControl_ON:
+    vengono emessi 3 beep veloci ad indicare l'accensione
+PressControl_OFF:
+    vengono emessi 3 beep lenti ad indicare lo spegnimento
+
+Pump_ON:
+    scala crescente
+Pump_OFF:
+    scala decrescente
 
 
 Azioni:

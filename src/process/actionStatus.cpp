@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 11-09-2025 19.48.30
+// Date .........: 12-09-2025 11.38.09
 //
 
 
@@ -56,7 +56,7 @@ void readDevicesStatus(void) {
 // #
 // #############################################################
 void telegramSendDevicesStatus(void) {
-    readDevicesStatus();
+    readDevicesStatus(); // devo rileggerli perché questa funzione è richiamata anche da altri moduli
 
     setTelegramTitle();
 
@@ -153,19 +153,11 @@ void chackActionStatus() {
     // ------ Action
     // -----------------------------------
     readDevicesStatus();
+    if (!pcStatus) {fPUMP_ALARM = false; }
 
-    // relayStatus = pressControlRelay.isActive();
-    // pumpStatus  = pumpState.isPressed();
-    // pcStatus    = pressControl.isPressed();
-
-    // pressControl_remaining = pressControl.timeToMaxThresholdLevel();
-    // pump_remaining         = pumpState.timeToMaxThresholdLevel();
-    // relay_remainig         = pressControlRelay.remainingPulseTime();
 
 
     // azzeriamo l'allarme se la pompa è spenta
-    if (!pcStatus) {fPUMP_ALARM = false; }
-
     if (fPUMP_ALARM) {
         actionState = PUMP_ALARM;
         LOG_ERROR("Pump Alarm status: %d", fPUMP_ALARM);

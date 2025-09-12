@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 11-09-2025 14.31.15
+// Date .........: 12-09-2025 13.59.23
 //
 
 
@@ -19,8 +19,6 @@
     #include    <telegramBot_Class.h>
     #include    <WiFiManager_Class.h>
     #include    <LnTime_Class.h>
-
-
 
 
 
@@ -86,7 +84,6 @@
 
         bool modulo_10_seconds          = false;
         bool modulo_30_seconds          = false;
-
         bool modulo_02_minutes          = false;
         bool modulo_03_minutes          = false;
         bool modulo_05_minutes          = false;

@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 11-09-2025 19.02.10
+// Date .........: 12-09-2025 13.36.28
 //
 
 
@@ -75,12 +75,13 @@ void setup() {
     myBot.init(Loreto_Esp32_BotToken, pressControl_ChatID_str, "HTML");
     LOG_NOTIFY("initializing completed");
 
-    //  ------  calcolo memoria
-    finalMemory = ESP.getFreeHeap();
-    LOG_TRACE("memoria (bytes): initial=%ld - final=%ld - occupied=%ld", initialMemory, finalMemory, (initialMemory - finalMemory)); // Stima RAM allocata
 
     lnTime.setup(2*60); // Chiama il metodo setup della tua istanza di LnTime ed imposta ntpIntervalTimeSync to 10 minuti
     lnTime.set_dhmCustomUpdate(true);
+
+    //  ------  calcolo memoria
+    finalMemory = ESP.getFreeHeap();
+    LOG_SPEC("memoria (bytes): initial=%ld - final=%ld - occupied=%ld", initialMemory, finalMemory, (initialMemory - finalMemory)); // Stima RAM allocata
 
 }
 
@@ -140,13 +141,15 @@ void loop() {
     fonMinute = lnTime.onMinute();
 
 
-
     // -----------------------------------
     // --- controlla lo stato del WiFi
     // -----------------------------------
     wifiProcess();
 
-
+    // ---------------------------
+    // - controllo dello stato dei dispositivi
+    // ---------------------------
+    chackActionStatus();
 
 
     if (fonMinute) {
@@ -195,10 +198,7 @@ void loop() {
     }
 
 
-    // ---------------------------
-    // - controllo dello stato dei dispositivi
-    // ---------------------------
-    chackActionStatus();
+
 
     if (first_run) {
         first_run=false;
