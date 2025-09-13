@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 17.11.28
+// Date .........: 13-09-2025 16.55.36
 //
 
 // LnTime_Class.h
@@ -11,7 +11,6 @@
     #include <map>
     #include <vector> // Use std::vector for flexible arrays
 
-    // #define TIME_BUFFER_LENGTH 16
     #define EUROPE_ROME_TZ "CET-1CEST,M3.5.0,M10.5.0/3"
 
     class LnTime_Class {
@@ -22,12 +21,6 @@
             struct tm      m_timeinfo;
             bool m_dhmCustomUpdate = false;
             uint8_t m_last_ntp_update = 0;
-            // int8_t m_last_minute = -1;
-            // int8_t m_last_hour = -1;
-            // std::map<uint8_t,  uint8_t>  m_at_last_second_map;
-            // std::map<uint8_t,  uint8_t>  m_at_last_minute_map;
-            // std::map<uint8_t,  uint8_t>  m_at_last_hour_map;
-
 
 
         public:
@@ -35,7 +28,7 @@
             LnTime_Class();
 
             // Metodi pubblici
-            void setup(uint16_t ntpIntervalTimeSync=2*60); // seconds
+            void setup(uint16_t ntpIntervalTimeSync=2*60); // 2 minuti
             void update(void);
             char *now(void);
             void set_dhmCustomUpdate(bool customUpdate);

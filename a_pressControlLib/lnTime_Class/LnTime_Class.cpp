@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 13.38.34
+// Date .........: 13-09-2025 16.57.57
 */
 
 
@@ -33,7 +33,7 @@ LnTime_Class::LnTime_Class() {}
 // # ntpIntervalTimeSync: seconds
 // ################################################################
 void LnTime_Class::setup(uint16_t ntpIntervalTimeSync) {
-    m_NTP_SYNC_INTERVAL = ntpIntervalTimeSync*1000UL;
+    m_NTP_SYNC_INTERVAL = ntpIntervalTimeSync*1000UL; // per la funzione sntp_set_sync_interval(millisec)
 
     if (WiFi.status() == WL_CONNECTED) {
         LOG_INFO("WiFi is connected. Synchronizing time with NTP server...");
@@ -48,13 +48,20 @@ void LnTime_Class::setup(uint16_t ntpIntervalTimeSync) {
     }
 }
 
+
+
+// ################################################################
+// #
+// ################################################################
 void LnTime_Class::set_dhmCustomUpdate(bool customUpdate) {
     m_dhmCustomUpdate = customUpdate;
 }
 
 
 
-// Ottiene l'ora corrente formattata HH:MM:SS
+// ################################################################
+// # ritorna l'ora corrente formattata HH:MM:SS
+// ################################################################
 char *LnTime_Class::now() {
     m_timeinfo = rtc.getTimeStruct();
     snprintf(sharedTimeBUFFER, sizeof(sharedTimeBUFFER), "%02d:%02d:%02d", m_timeinfo.tm_hour, m_timeinfo.tm_min, m_timeinfo.tm_sec); // snprintf() scrive al massimo n-1 caratteri più il terminatore nul (\0) in dest.

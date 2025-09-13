@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 11-09-2025 13.56.47
+// Date .........: 13-09-2025 17.02.15
 */
 
 
@@ -38,8 +38,8 @@ const char* LnTime_Class::msecToHMS(char *buffer, uint8_t buffer_len, uint32_t m
     }
     else {
         snprintf(buffer, buffer_len, "%02d:%02d:%02d", hour, min, sec);  // snprintf() scrive al massimo n-1 caratteri più il terminatore nul (\0) in dest.
-
     }
+
 
     if (stripHours && hour == 0)  {
         return buffer+3;
@@ -50,16 +50,11 @@ const char* LnTime_Class::msecToHMS(char *buffer, uint8_t buffer_len, uint32_t m
 
 
 const char* LnTime_Class::msecToHMS(uint32_t millisec, bool withMilliSec, bool stripHours) {
-    // const char buff_SIZE = 16;
-    // char buffer[16];
-    // return msecToHMS(buffer, sizeof(buffer), millisec, withMilliSec, stripHours);
     return msecToHMS(sharedTimeBUFFER, sizeof(sharedTimeBUFFER), millisec, withMilliSec, stripHours);
 }
 
 
 const char* LnTime_Class::secToHMS(uint32_t seconds, bool stripHours) {
-    // const char buff_SIZE = 16;
-    // char buffer[16];
     return msecToHMS(sharedTimeBUFFER, sizeof(sharedTimeBUFFER), seconds*1000UL, false, stripHours);
 }
 
@@ -101,29 +96,8 @@ struct tm LnTime_Class::getTimeStruct(void) {
     return rtc.getTimeStruct();
 }
 
-// Nuovo metodo per esporre l'istanza di ESP32Time
+// Nuovo metodo per esportare l'istanza di ESP32Time
 ESP32Time& LnTime_Class::getRtcInstance() {
     return rtc;
 }
 
-
-
-// Allinea l'esecuzione all'inizio del minuto
-// void LnTime_Class::alignToMinute() {
-//     LOG_DEBUG("waiting for minute o'clock");
-//     m_timeinfo = rtc.getTimeStruct();
-//     while (m_timeinfo.tm_sec != 0) {
-//         delay(50); // Piccolo ritardo per evitare busy-waiting eccessivo
-//         m_timeinfo = rtc.getTimeStruct();
-//     }
-// }
-
-
-// Attende il cambio di secondo
-// int8_t LnTime_Class::waitForSecond() {
-//     m_last_second = m_timeinfo.tm_sec; // Usa m_timeinfo che dovrebbe essere aggiornato dall'ultima chiamata a getTimeStruct
-//     while (rtc.getTimeStruct().tm_sec == m_last_second) { // Rileggi direttamente da rtc per l'attesa
-//         delay(50);
-//     }
-//     return rtc.getTimeStruct().tm_sec - m_last_second;
-// }

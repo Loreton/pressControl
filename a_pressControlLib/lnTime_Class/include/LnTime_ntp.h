@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 17.06.24
+// Date .........: 13-09-2025 16.08.29
 //
 
 #pragma once
@@ -36,6 +36,7 @@ private:
 public:
     void initNTP(); // Nuovo metodo pubblico per la sincronizzazione
     bool isNtpSynched(void) const { return m_NTP_synched; }
+    const char * ntpSyncStatus(void);
     // bool checkNtpSynched(bool force=false);
     bool updateNtpSyncStatus(void);
 

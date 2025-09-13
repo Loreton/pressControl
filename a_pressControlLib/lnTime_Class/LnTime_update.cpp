@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 17.22.02
+// Date .........: 13-09-2025 15.53.42
 */
 
 
@@ -21,34 +21,14 @@
 void LnTime_Class::update(void) {
     m_timeinfo = rtc.getTimeStruct(); // lo facciamo qui una volta sola....
 
-    // if (WiFi.status() == WL_CONNECTED ) {
-    //     if (!m_ntp_active) {
-    //         LOG_INFO("WiFi is connected. Starting NTP client...");
-    //         initNTP(); // Imposta il fuso orario e i server NTP
-    //     } else if (! checkNtpSynched() ) {
-    //         LOG_ERROR("NTP sync failed or timed out. Restarting NTP client.");
-    //         sntp_stop();
-    //         initNTP(); // Avvia un nuovo tentativo
-    //     } else {
-    //         m_lastNtpAttempt = millis(); // Resetta il timer per un nuovo tentativo al prossimo reconnect
-    //     }
-    // }
-    // else {
-    //     // Se il WiFi è disconnesso, disattiva l'NTP per evitare tentativi inutili
-    //     if (m_ntp_active) {
-    //         sntp_stop();
-    //         m_ntp_active = false;
-    //         LOG_WARN("No WiFi available. NTP stopped.");
-    //     }
-    // }
-
-
     // verifichiamo NTP ogni due minuti
     if (m_timeinfo.tm_min % 2 == 0 && m_timeinfo.tm_min != m_last_ntp_update) {
         m_last_ntp_update = m_timeinfo.tm_min;
         updateNtpSyncStatus();
     }
 
+    // --- se non è impostato il customUpdate allora lo facciamo qui
+    // --- se lo facciamo qui ovviamente perdiamo l'evento id onXXX()
     if (!m_dhmCustomUpdate) {
         LOG_SPEC("Faccio aggiornameti alle ore. minuti e day");
         // // Controlla e gestisci il cambio dei giorni

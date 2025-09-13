@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 17.21.45
+// Date .........: 13-09-2025 16.56.39
 */
 
 #include <Arduino.h> // ESP32Time.cpp
@@ -18,39 +18,61 @@
 
 
 
-// ==================   NTP functions ==========================
-// ==================   NTP functions ==========================
-// ==================   NTP functions ==========================
-
-#define EUROPE_ROME_TZ "CET-1CEST,M3.5.0,M10.5.0/3" // https://github.com/nayarsystems/posix_tz_db/blob/master/zones.csv
-
-
-const char* sntp_status[] = {
-    "SNTP_SYNC_STATUS_RESET",
-    "SNTP_SYNC_STATUS_COMPLETED",
-    "SNTP_SYNC_STATUS_IN_PROGRESS"
-};
-
-// Implementazione del metodo statico (non posso accedere agli attributi della calsse)
-void LnTime_Class::cbSyncTime(struct timeval *tv) {
-    uint8_t status = sntp_get_sync_status();
-    LOG_NOTIFY("NTP time synched: %d [%s]", status, sntp_status[status]);
-    // LOG_NOTIFY("NTP time synched: %d [xxx]", status);
-}
 
 
 /**
- * @brief Set the sync interval of SNTP operation
+ * ref:
+ *      /home/loreto/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/lwip/include/apps/esp_sntp.h
+ * @brief Get status of time sync
  *
- * Note: SNTPv4 RFC 4330 enforces a minimum sync interval of 15 seconds.
- * This sync interval will be used in the next attempt update time throught SNTP.
- * To apply the new sync interval call the sntp_restart() function,
- * otherwise, it will be applied after the last interval expired.
+ * After the update is completed, the status will be returned as SNTP_SYNC_STATUS_COMPLETED.
+ * After that, the status will be reset to SNTP_SYNC_STATUS_RESET.
+ * If the update operation is not completed yet, the status will be SNTP_SYNC_STATUS_RESET.
+ * If a smooth mode was chosen and the synchronization is still continuing (adjtime works), then it will be SNTP_SYNC_STATUS_IN_PROGRESS.
  *
- * @param interval_ms   The sync interval in ms. It cannot be lower than 15 seconds, otherwise 15 seconds will be set.
+ * @return  SNTP_SYNC_STATUS_RESET: Reset status.
+ *          SNTP_SYNC_STATUS_COMPLETED: Time is synchronized.
+ *          SNTP_SYNC_STATUS_IN_PROGRESS: Smooth time sync in progress.
  */
+const char* sntp_status[] = {
+    "RESET",
+    "COMPLETED",
+    "IN_PROGRESS"
+};
+
+#define EUROPE_ROME_TZ "CET-1CEST,M3.5.0,M10.5.0/3" // https://github.com/nayarsystems/posix_tz_db/blob/master/zones.csv
+volatile uint8_t g_ntpSyncStatus = 0; // devo far uso di una variabile globale per catturare lo status di cbSyncTime()
 
 
+
+
+// ==================   NTP functions ==========================
+// ==================   NTP functions ==========================
+// ==================   NTP functions ==========================
+
+
+
+// ###########################################################
+// # Implementazione del metodo statico (non posso accedere agli attributi della calsse)
+// ###########################################################
+void LnTime_Class::cbSyncTime(struct timeval *tv) {
+    uint8_t status = sntp_get_sync_status();
+    LOG_NOTIFY("NTP time synched: %d [%s]", status, sntp_status[status]);
+    g_ntpSyncStatus = status;
+}
+
+// ###########################################################
+// #
+// ###########################################################
+const char *LnTime_Class::ntpSyncStatus(void) {
+    return sntp_status[g_ntpSyncStatus];
+}
+
+
+
+// ###########################################################
+// #
+// ###########################################################
 bool LnTime_Class::updateNtpSyncStatus() {
     // ---- Gestione WiFi ----
     if (WiFi.status() == WL_CONNECTED) {
@@ -59,8 +81,7 @@ bool LnTime_Class::updateNtpSyncStatus() {
             LOG_INFO("WiFi is connected. Starting NTP client...");
             initNTP(); // Avvia NTP e aggiorna fuso orario/server
             m_ntpStartTime = millis();
-            // esci: lasciamo lavorare l'NTP client
-            return false;
+            return false; // esci: lasciamo lavorare l'NTP client
         }
     } else {
         // Se il WiFi si disconnette, ferma NTP
@@ -114,6 +135,16 @@ bool LnTime_Class::updateNtpSyncStatus() {
 
 
 
+/**
+ * @brief Set the sync interval of SNTP operation
+ *
+ * Note: SNTPv4 RFC 4330 enforces a minimum sync interval of 15 seconds.
+ * This sync interval will be used in the next attempt update time throught SNTP.
+ * To apply the new sync interval call the sntp_restart() function,
+ * otherwise, it will be applied after the last interval expired.
+ *
+ * @param interval_ms   The sync interval in ms. It cannot be lower than 15 seconds, otherwise 15 seconds will be set.
+*/
 void LnTime_Class::initNTP(void) {
     // Controlla se il Wi-Fi è connesso prima di avviare l'NTP
     if (WiFi.status() == WL_CONNECTED) {
@@ -126,7 +157,7 @@ void LnTime_Class::initNTP(void) {
         sntp_set_time_sync_notification_cb(cbSyncTime);
 
         // Imposta l'intervallo di sincronizzazione
-        sntp_set_sync_interval(m_NTP_SYNC_INTERVAL); // xx minuti
+        sntp_set_sync_interval(m_NTP_SYNC_INTERVAL); // in millisec
         m_lastNtpAttempt = millis();
 
         // Imposta i server NTP
@@ -150,19 +181,4 @@ void LnTime_Class::initNTP(void) {
     }
 }
 
-
-/**
- * ref:
- *      /home/loreto/.platformio/packages/framework-arduinoespressif32-libs/esp32s3/include/lwip/include/apps/esp_sntp.h
- * @brief Get status of time sync
- *
- * After the update is completed, the status will be returned as SNTP_SYNC_STATUS_COMPLETED.
- * After that, the status will be reset to SNTP_SYNC_STATUS_RESET.
- * If the update operation is not completed yet, the status will be SNTP_SYNC_STATUS_RESET.
- * If a smooth mode was chosen and the synchronization is still continuing (adjtime works), then it will be SNTP_SYNC_STATUS_IN_PROGRESS.
- *
- * @return  SNTP_SYNC_STATUS_RESET: Reset status.
- *          SNTP_SYNC_STATUS_COMPLETED: Time is synchronized.
- *          SNTP_SYNC_STATUS_IN_PROGRESS: Smooth time sync in progress.
- */
 

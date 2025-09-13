@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-09-2025 17.22.55
+// Date .........: 13-09-2025 16.17.24
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -59,7 +59,6 @@ void wifiConnectedCB(arduino_event_id_t event) {
 // #
 // ##########################################################################
 void telegramWifiConnectedMessage() {
-    // LOG_NOTIFY("WiFi Connected!");
     myBot.startNewMessage("<b>PressControl\nTime:</b> %s\n", lnTime.now());
     myBot.addFormattedString("<b>WiFi: </b> CONNECTED\n");
     myBot.addFormattedString("<b>SSID: </b> %s\n", WiFi.SSID().c_str() );
@@ -67,11 +66,24 @@ void telegramWifiConnectedMessage() {
     myBot.addFormattedString("<b>RSSI: </b> %d\n", WiFi.RSSI() );
     myBot.addFormattedString("<b>IP:   </b> %s\n", WiFi.localIP().toString().c_str() );
 
+
+    myBot.addFormattedString("<b>NTP status:</b>\n");
     if (lnTime.isNtpSynched()) {
-        myBot.addFormattedString("<b>NTP:</b> Synched\n");
+        myBot.addFormattedString(" Synched - %s\n", lnTime.ntpSyncStatus() );
     } else {
-        myBot.addFormattedString("<b>NTP:</b> OUT of sync\n");
+        myBot.addFormattedString(" OUT of sync - %s\n", lnTime.ntpSyncStatus() );
     }
+
+
+    // if (lnTime.isNtpSynched()) {
+    //     myBot.addFormattedString("<b>NTP:</b> Synched\n");
+    // } else {
+    //     myBot.addFormattedString("<b>NTP:</b> OUT of sync\n");
+    // }
+
+    // myBot.addFormattedString("<b>NTP status:</b> %s\n", lnTime.ntpSyncStatus());
+
+
 
     myBot.send();
 }
