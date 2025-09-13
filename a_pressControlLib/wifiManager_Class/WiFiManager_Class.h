@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 28-08-2025 09.07.45
+// Date .........: 13-09-2025 17.32.34
 //
 
 
@@ -51,6 +51,7 @@
             bool                m_scanning;
             bool                m_starting = true;
             uint8_t             m_eventCounter = 0;
+            int8_t              m_rssiGap = 7;
 
             ConnectCallback     m_onConnectCallback = nullptr;
             // MillisTimer         m_disconnectedTimer;

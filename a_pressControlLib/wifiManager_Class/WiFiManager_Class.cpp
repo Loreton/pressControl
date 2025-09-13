@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-09-2025 17.15.37
+// Date .........: 13-09-2025 17.33.23
 //
 
 
@@ -195,13 +195,13 @@ void WiFiManager_Class::processScanResults(int networks) {
 
     // --- non cambiamo se il gap di livello è inferiore a 10
     int8_t currRSSI = WiFi.RSSI();
-    if ( (currRSSI == 0) || (bestRSSI - currRSSI >= 10) ) {
+    if ( (currRSSI == 0) || (bestRSSI - currRSSI >= m_rssiGap) ) {
         connectToSSID(bestNetworkIndex);
     } else {
         LOG_NOTIFY("WiFi Status");
         LOG_INFO("   currSSID: %-12s (%d dBm)", WiFi.SSID().c_str(), WiFi.RSSI());
         LOG_INFO("   newSSID:  %-12s (%d dBm)", WiFi.SSID(bestNetworkIndex), bestRSSI);  // il nome lo prelevo dalla mia struttura che è char*
-        LOG_INFO("   RSSI gap is less than 10. Mantaining current SSID");
+        LOG_INFO("   RSSI gap is less than %ddBm. Mantaining current SSID", m_rssiGap);
     }
 }
 
