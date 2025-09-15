@@ -74,7 +74,7 @@
 
 
         // Frequenze per una scala Do Maggiore (approssimate)
-        int C_major_scale[] = {
+        uint16_t C_major_scale[] = {
             262, // C4
             294, // D4
             330, // E4
@@ -85,7 +85,7 @@
             523  // C5
         };
         // int num_notes_C_major = sizeof(C_major_scale) / sizeof(C_major_scale[0]);
-        int C_major_num_notes = sizeof(C_major_scale) / sizeof(C_major_scale[0]);
+        uint8_t C_major_num_notes = sizeof(C_major_scale) / sizeof(C_major_scale[0]);
 
         // Crea un'istanza della classe telegramBot_Class
         TelegramBot_Class myBot;
@@ -113,8 +113,8 @@
         extern RelayManager_Class     pressControlRelay;
         extern RelayManager_Class     magnetoTermicoRelay;
 
-        extern int C_major_scale[];
-        extern int  C_major_num_notes;
+        extern uint16_t C_major_scale[];
+        extern uint8_t  C_major_num_notes;
 
 
         extern TelegramBot_Class      myBot;

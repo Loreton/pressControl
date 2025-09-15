@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 13-09-2025 16.17.24
+// Date .........: 15-09-2025 15.28.52
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -34,6 +34,7 @@ void wifiConnectedCB(arduino_event_id_t event) {
             fWifiConnected=true;
             // activeBuzzer.pulse(1000);
             activeBuzzer.blinking(300, 200, 3, f.waitForPulseEnding);
+            // sirenaBitonale();
             // activeBuzzer.waitForPulseEnding(2000);
         }
     }
@@ -42,7 +43,8 @@ void wifiConnectedCB(arduino_event_id_t event) {
         LOG_ERROR("WiFi_callBack - DISCONNECTED");
         if (!fWifiDisconnected) {
             fWifiConnected=false;
-            activeBuzzer.blinking(300, 200, 5, f.waitForPulseEnding);
+            // activeBuzzer.blinking(300, 200, 5, f.waitForPulseEnding);
+            sirenaBitonale();
             // activeBuzzer.waitForPulseEnding(3000);
 
         }

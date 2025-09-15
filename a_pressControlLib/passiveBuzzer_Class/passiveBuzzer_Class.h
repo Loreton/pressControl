@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 02-09-2025 09.42.38
+// Date .........: 15-09-2025 14.21.21
 //
 
 #pragma once
@@ -19,8 +19,9 @@ class PassiveBuzzer_Class {
         void begin();
         void playToneDutyCycle(int frequency, float dutyCyclePercent, uint32_t duration);
         // void playToneFixed(int frequency, uint32_t duration);
-        void playFixedTone(int frequency, uint32_t duration);
-        void playScale(int noteFrequencies[], int numberOfNotes, uint32_t singleNoteDuration, bool upDirection);
+        void playFixedTone(uint16_t frequency, uint32_t duration, bool waitForPulseEnding=false);
+        void playScale(uint16_t noteFrequencies[], uint8_t numberOfNotes, uint32_t singleNoteDuration, bool upDirection);
+        void playScale2(uint16_t noteFrequencies[], uint8_t numberOfNotes, uint32_t singleNoteDuration[], bool upDirection, bool waitForEnding);
         void myNoTone();
         void update();
         bool isPlayingSomething();
@@ -51,7 +52,7 @@ class PassiveBuzzer_Class {
         bool     m_isPlaying = false;
 
         // Nuove variabili per la gestione della scala non bloccante
-        int* m_scaleNotes = nullptr;
+        uint16_t * m_scaleNotes = nullptr;
         int      m_numNotes = 0;
         int      m_currentNoteIndex = 0;
         uint32_t m_noteStartTime = 0;

@@ -1,3 +1,0 @@
-IDF_PYTHON_ENV_PATH=/home/[XXX]/.espressif/python_env/idf6.0_py3.12_env
-ln_PYTHON_GIT_REPO_DIR=/Python
-PYTHON=/home/[XXX]/.espressif/python_env/idf6.0_py3.12_env/bin/python
