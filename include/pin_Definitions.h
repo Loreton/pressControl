@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 08-08-2025 11.06.08
+// Date .........: 16-09-2025 12.36.43
 //
 
 #pragma once
@@ -65,25 +65,7 @@
     // #define PROTOTYPE
 
     #if ln_ESP32_BOARD_TYPE == ln_ESP32_WROOM_32E_MODULE_2RELAY
-        #define SPECIAL_ON_OFF_LEVEL               1 // cambia in base alla board utilizzata
-        #define passiveBuzzer_pin           GPIO_22  // OUTPUT
-        #define activeBuzzer_pin            GPIO_23  // OUTPUT
-        #define pressControlLED_pin         GPIO_25  // OUTPUT
-        #define pumpLED_pin                 GPIO_26  // OUTPUT
-
-        #define pressControlRelay_pin       GPIO_16  // OUTPUT  GPIO16 mandatory on Esp32_X2_realy_board
-        #define pumpHornAlarm_pin           GPIO_17  // OUTPUT  GPIO17 mandatory on Esp32_X2_realy_board
-        #define led_internal_pin            GPIO_23  // OUTPUT  GPIO23 mandatory on Esp32_X2_realy_board
-
-        #define pressControl_pin            GPIO_18  // INPUT
-        #define pumpState_pin               GPIO_19  // INPUT
-        #define startButton_pin             GPIO_21  // INPUT
-        #ifdef _I_AM_PIN_INITIALIZATION_CPP_
-            #pragma message("using board:\n- ESP32_WROOM_32E_MODULE_2RELAY\n- ESP32_WROOM_32E_MODULE_2RELAY\n- ESP32_WROOM_32E_MODULE_2RELAY")
-        #endif
-
-    #elif ln_ESP32_BOARD_TYPE == ln_ESP32_WROOM_32E_MODULE
-        #define SPECIAL_ON_OFF_LEVEL               0
+        #define SPECIAL_ON_OFF_LEVEL        HIGH  // cambia in base alla board utilizzata
         #define passiveBuzzer_pin           GPIO_22  // OUTPUT
         #define activeBuzzer_pin            GPIO_23  // OUTPUT
         #define pressControlLED_pin         GPIO_25  // OUTPUT
@@ -101,6 +83,31 @@
         #define pressControl_pin            GPIO_18  // INPUT
         #define pumpState_pin               GPIO_19  // INPUT
         #define startButton_pin             GPIO_21  // INPUT
+
+        #ifdef _I_AM_PIN_INITIALIZATION_CPP_
+            #pragma message("using board:\n- ESP32_WROOM_32E_MODULE_2RELAY\n- ESP32_WROOM_32E_MODULE_2RELAY\n- ESP32_WROOM_32E_MODULE_2RELAY")
+        #endif
+
+    #elif ln_ESP32_BOARD_TYPE == ln_ESP32_WROOM_32E_MODULE
+        #define SPECIAL_ON_OFF_LEVEL         LOW
+        #define passiveBuzzer_pin           GPIO_22  // OUTPUT
+        #define activeBuzzer_pin            GPIO_23  // OUTPUT
+        #define pressControlLED_pin         GPIO_25  // OUTPUT
+        #define pumpLED_pin                 GPIO_26  // OUTPUT
+
+        #define JTAG_TDI_reserved           GPIO_12  // TDI
+        #define JTAG_TCK_reserved           GPIO_13  // TCK
+        #define JTAG_TMS_reserved           GPIO_14  // TMS
+        #define JTAG_TDO_reserved           GPIO_15  // TDO
+
+
+        #define pressControlRelay_pin       GPIO_16  // OUTPUT
+        #define magnetoTermicoRelay_pin     GPIO_17  // OUTPUT
+
+        #define pressControl_pin            GPIO_18  // INPUT
+        #define pumpState_pin               GPIO_19  // INPUT
+        #define startButton_pin             GPIO_21  // INPUT
+
         #ifdef _I_AM_PIN_INITIALIZATION_CPP_
             #pragma message("using board:\n- ln_ESP32_WROOM_32E_MODULE\n- ln_ESP32_WROOM_32E_MODULE\n- ln_ESP32_WROOM_32E_MODULE")
         #endif

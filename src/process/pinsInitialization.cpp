@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 10-09-2025 14.37.59
+// Date .........: 16-09-2025 12.33.17
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -77,6 +77,13 @@ void pinsInitialization(void) {
         pressControl.showStatus();
     #endif
 
+    // #if ln_ESP32_BOARD_TYPE == ln_ESP32_WROOM_32E_MODULE_2RELAY
+    //     #define __SPECIAL_ACTIVE__ HIGH // attivo con il positivo
+    // #elif ln_ESP32_BOARD_TYPE == ln_ESP32_WROOM_32E_MODULE
+    //     #define __SPECIAL_ACTIVE__ LOW
+    // #endif
+
+
 
     //====================================================
     //= set output pins
@@ -107,14 +114,17 @@ void pinsInitialization(void) {
     LOG_NOTIFY("\t[%s] initialized", pumpLED.pinID());
 
 
-    pressControlRelay.init("pressControlRelay", pressControlRelay_pin, LOW);
+
+
+    pressControlRelay.init("pressControlRelay", pressControlRelay_pin, SPECIAL_ON_OFF_LEVEL);
     LOG_NOTIFY("\t[%s] initialized", pressControlRelay.pinID());
 
-    magnetoTermicoRelay.init("magnetoTermicoRelay", magnetoTermicoRelay_pin, LOW);
+    magnetoTermicoRelay.init("magnetoTermicoRelay", magnetoTermicoRelay_pin, SPECIAL_ON_OFF_LEVEL);
     LOG_NOTIFY("\t[%s] initialized", magnetoTermicoRelay.pinID());
 
     passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 150, false); // Scala discendente, 150ms per nota)
     passiveBuzzer.waitForPulseEnding(1000);
+
 }
 
 

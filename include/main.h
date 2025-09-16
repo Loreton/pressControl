@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-09-2025 16.35.51
+// Date .........: 16-09-2025 12.57.44
 //
 
 
@@ -47,7 +47,7 @@
         #define ACTION_STATUS_DISPLAY_INTERVAL  5*60*1000UL  // xx minuti
         #define PRESS_CONTROL_PIN_MAX_TIME     30*60*1000UL  // tempo in cui il pressControl starà acceso.
         #define PRESS_CONTROL_RELAY_MAX_TIME   30*60*1000UL  // tempo in cui il relay interno starà acceso.
-        #define MAGNETOTERMIC_RELAY_PULSETIME      5*1000UL  // tempo magnetotermico relay sarà off
+        #define MAGNETOTERMIC_RELAY_PULSETIME     15*1000UL  // tempo magnetotermico relay sarà off
     #endif
 
 

@@ -42,11 +42,9 @@ myFlags="${myFlags} -Dln_TIME_CLASS_HOURS_VECTOR_xx"
 
 myFlags="${myFlags} -Dln_DEVEL=${ln_DEVEL}"
 myFlags="${myFlags} -Dln_PRODUCTION=${ln_PRODUCTION}"
-myFlags="${myFlags} -Dln_RELEASE_TYPE=${ln_RELEASE_TYPE}"
 
 myFlags="${myFlags} -Dln_ESP32_WROOM_32E_MODULE=${ln_ESP32_WROOM_32E_MODULE}"
 myFlags="${myFlags} -Dln_ESP32_WROOM_32E_MODULE_2RELAY=${ln_ESP32_WROOM_32E_MODULE_2RELAY}"
-myFlags="${myFlags} -Dln_ESP32_BOARD_TYPE=${ln_ESP32_BOARD_TYPE}"
 
 
 
