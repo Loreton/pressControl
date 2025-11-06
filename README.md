@@ -1,5 +1,9 @@
 # pressControl
 ESP32 - Gestione pompa ed allarme in caso di lunga apertura
+PROBLEM: purtroppo il suono emesso dai buzzer in casa è molto basso.
+PROBLEM: purtroppo il suono emesso dai buzzer in casa è molto basso.
+PROBLEM: purtroppo il suono emesso dai buzzer in casa è molto basso.
+PROBLEM: purtroppo il suono emesso dai buzzer in casa è molto basso.
 
 ESP32 - devo controllare una pompa provvista di un press-control.
     Ho un relè per comandare il press-control.
