@@ -1,10 +1,10 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 15-09-2025 15.20.36
+// Date .........: 22-11-2025 17.04.17
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
-
+#include <stdint.h>    // per gli uintxx_t
 
 // ---------------------------------
 // --- lnLibrary headers files

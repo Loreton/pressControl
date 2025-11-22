@@ -1,9 +1,10 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-09-2025 16.21.36
+// Date .........: 22-11-2025 18.04.36
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
+// #include <stdint.h>    // per gli uintxx_t
 
 
 
@@ -17,7 +18,7 @@
 #include "functionPrototypes.h" // per functions protoype
 #include "main.h"
 
-
+#define USE_PASSIVE_BUZZERxxx // purtroppo il passive buzzere si sente male
 
 //###########################################################################
 //# richiamata quando il pulsante viene rilasciato
@@ -48,8 +49,14 @@ void pumpHandler(ButtonLongPress_Class *p) {
 
     // Dopo aver processato i dati, li resettiamo per la prossima pressione.
     p->reset();
-    passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 150, f.discendent); // Scala ascendente, 150ms per nota)
-    passiveBuzzer.waitForPulseEnding(3000);
+    #ifdef USE_PASSIVE_BUZZER
+        // purtroppo il passive buzzere si sente male
+        passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 150, f.discendent); // Scala ascendente, 150ms per nota)
+        passiveBuzzer.waitForPulseEnding(3000);
+    #else
+        activeBuzzer.blinking(200, 100, 5, f.waitForPulseEnding); // pompa spenta
+    #endif
+
     f.PUMP_ALARM = false;
 }
 
@@ -68,7 +75,12 @@ void pumpNotificationCB(ButtonLongPress_Class *p) {
         switch (cpLevel) {
             case PRESSED_LEVEL_1:
                 LOG_NOTIFY("%s has been detected ON", p->pinID());
-                passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 150, f.ascendent); // Scala ascendente, 150ms per nota)
+                #ifdef USE_PASSIVE_BUZZER
+                    passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 150, f.ascendent); // Scala ascendente, 150ms per nota)
+                    passiveBuzzer.waitForPulseEnding(3000);
+                #else
+                    activeBuzzer.blinking(200, 100, 3, f.waitForPulseEnding); // pompa accesa
+                #endif
                 break;
 
             case PRESSED_LEVEL_2:

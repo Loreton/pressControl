@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 16-09-2025 12.57.44
+// Date .........: 22-11-2025 15.50.06
 //
 
 
@@ -24,7 +24,7 @@
 
 
     // ---  TEST
-    #if ln_RELEASE_TYPE == ln_DEVEL
+    #if ln_RELEASE_TYPE == ln_TEST
         #define PUMP_PHASE_01                      5*1000UL  // milliSeconds
         #define PUMP_PHASE_02                     15*1000UL // milliSeconds
         #define PUMP_PHASE_03                     20*1000UL // milliSeconds
@@ -48,6 +48,8 @@
         #define PRESS_CONTROL_PIN_MAX_TIME     30*60*1000UL  // tempo in cui il pressControl starà acceso.
         #define PRESS_CONTROL_RELAY_MAX_TIME   30*60*1000UL  // tempo in cui il relay interno starà acceso.
         #define MAGNETOTERMIC_RELAY_PULSETIME     15*1000UL  // tempo magnetotermico relay sarà off
+    #else
+        #pragma error "please specify PRODUCTION or TEST"
     #endif
 
 

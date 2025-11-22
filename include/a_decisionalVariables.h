@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 16-09-2025 12.39.51
+// Date .........: 22-11-2025 15.47.45
 //
 #pragma once
 
@@ -14,7 +14,7 @@
         #if ln_RELEASE_TYPE == ln_PRODUCTION
             #pragma message "siamo in PRODUCTION"
         #else
-            #pragma message "siamo in SVIL"
+            #pragma message "siamo in TEST"
         #endif
 
         #if ln_ESP32_BOARD_TYPE == ln_ESP32_WROOM_32E_MODULE

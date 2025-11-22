@@ -1,13 +1,13 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-09-2025 17.04.09
+// Date .........: 22-11-2025 17.04.08
 //
 
 
 
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
-
+#include <stdint.h>    // per gli uintxx_t
 
 
 

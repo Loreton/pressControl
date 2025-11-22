@@ -1,6 +1,6 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 15-09-2025 15.28.52
+// Date .........: 22-11-2025 18.52.42
 //
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -33,7 +33,7 @@ void wifiConnectedCB(arduino_event_id_t event) {
         if (!fWifiConnected) {
             fWifiConnected=true;
             // activeBuzzer.pulse(1000);
-            activeBuzzer.blinking(300, 200, 3, f.waitForPulseEnding);
+            activeBuzzer.blinking(50, 200, 3, f.waitForPulseEnding);
             // sirenaBitonale();
             // activeBuzzer.waitForPulseEnding(2000);
         }

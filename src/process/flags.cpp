@@ -1,11 +1,12 @@
 //
 // updated by ...: Loreto Notarantonio
-// Date .........: 12-09-2025 17.11.23
+// Date .........: 22-11-2025 17.04.24
 //
 
 //--- flags.cpp
 
 #include "Arduino.h"
+#include <stdint.h>    // per gli uintxx_t
 #include "flags.h"
 
 // Stampa tutti i flag e il loro valore

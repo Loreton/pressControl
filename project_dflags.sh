@@ -15,7 +15,7 @@ declare -A LOG_LEVEL_MAP=(
 )
 
 
-ln_DEVEL=1
+ln_TEST=1
 ln_PRODUCTION=2
 
 ln_ESP32_WROOM_32E_MODULE=1
@@ -38,7 +38,7 @@ myFlags="${myFlags} -Dln_TIME_CLASS_MINUTESS_VECTOR_xx"
 myFlags="${myFlags} -Dln_TIME_CLASS_HOURS_VECTOR_xx"
 
 
-myFlags="${myFlags} -Dln_DEVEL=${ln_DEVEL}"
+myFlags="${myFlags} -Dln_TEST=${ln_TEST}"
 myFlags="${myFlags} -Dln_PRODUCTION=${ln_PRODUCTION}"
 
 myFlags="${myFlags} -Dln_ESP32_WROOM_32E_MODULE=${ln_ESP32_WROOM_32E_MODULE}"
@@ -47,7 +47,7 @@ myFlags="${myFlags} -Dln_ESP32_WROOM_32E_MODULE_2RELAY=${ln_ESP32_WROOM_32E_MODU
 
 
 #... selezione board and releas type
-ln_RELEASE_TYPE=$ln_DEVEL
+ln_RELEASE_TYPE=$ln_TEST
 ln_ESP32_BOARD_TYPE=$ln_ESP32_WROOM_32E_MODULE
 
 

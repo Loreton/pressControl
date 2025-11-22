@@ -1,6 +1,6 @@
 /*
 // updated by ...: Loreto Notarantonio
-// Date .........: 16-09-2025 12.33.17
+// Date .........: 22-11-2025 18.53.53
 */
 
 #include <Arduino.h>    // in testa anche per le definizioni dei type
@@ -89,15 +89,15 @@ void pinsInitialization(void) {
     //= set output pins
     //====================================================
     passiveBuzzer.init("passiveBuzzer", passiveBuzzer_pin, HIGH, 0, 10);
-    passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 150, true); // Scala ascendente, 150ms per nota)
-    passiveBuzzer.waitForPulseEnding(2000);
+    // passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 150, true); // Scala ascendente, 150ms per nota)
+    // passiveBuzzer.waitForPulseEnding(2000);
     LOG_NOTIFY("\t[%s] initialized", passiveBuzzer.pinID());
 
 
 
     delay(500);
     activeBuzzer.init("Buzzer", activeBuzzer_pin, HIGH);
-    activeBuzzer.pulse(500, true);
+    activeBuzzer.pulse(300, true);
     // activeBuzzer.waitForPulseEnding(500);
     LOG_NOTIFY("\t[%s] initialized", activeBuzzer.pinID());
 
@@ -122,8 +122,8 @@ void pinsInitialization(void) {
     magnetoTermicoRelay.init("magnetoTermicoRelay", magnetoTermicoRelay_pin, SPECIAL_ON_OFF_LEVEL);
     LOG_NOTIFY("\t[%s] initialized", magnetoTermicoRelay.pinID());
 
-    passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 150, false); // Scala discendente, 150ms per nota)
-    passiveBuzzer.waitForPulseEnding(1000);
+    // passiveBuzzer.playScale(C_major_scale, C_major_num_notes, 150, false); // Scala discendente, 150ms per nota)
+    // passiveBuzzer.waitForPulseEnding(1000);
 
 }
 
