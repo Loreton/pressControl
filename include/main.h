@@ -55,7 +55,8 @@
 
 
     #ifdef __I_AM_MAIN_CPP__
-        #include "wifiManager_ssid_credentials.h"
+        // #include "wifiManager_ssid_credentials.h"
+        #include <esp32_ssid_credentials.h>
         #include "@ln_esp32_telegram_credentials.h"
 
 
